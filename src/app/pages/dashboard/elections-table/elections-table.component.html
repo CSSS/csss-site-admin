@@ -1,1 +1,8 @@
-<cs-crud-table title="Elections" [entries]="elections" [columns]="columns" />
+<ng-template #activeTemplate let-entry>
+  <p-tag
+    [severity]="entry.isActive ? 'success' : 'warn'"
+    [value]="entry.isActive ? 'active' : 'inactive'"
+  />
+</ng-template>
+
+<cs-crud-table title="Elections" [entries]="elections" [columns]="columns()" />

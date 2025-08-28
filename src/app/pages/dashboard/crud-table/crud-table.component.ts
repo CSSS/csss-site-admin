@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input, TemplateRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -18,11 +19,13 @@ export interface CrudColumn<T> {
    * Flag if the column should show an anchor.
    */
   isExternalLink?: boolean;
+
+  cellTemplate?: TemplateRef<unknown>;
 }
 
 @Component({
   selector: 'cs-crud-table',
-  imports: [TableModule, ToolbarModule, ButtonModule],
+  imports: [TableModule, ToolbarModule, ButtonModule, NgTemplateOutlet],
   templateUrl: './crud-table.component.html',
   styleUrl: './crud-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

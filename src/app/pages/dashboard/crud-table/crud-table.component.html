@@ -22,7 +22,11 @@
     <tr>
       @for (column of columns(); track column.key) {
         <td>
-          @if (column.isExternalLink && entry[column.key]) {
+          @if (column.cellTemplate) {
+            <ng-container
+              *ngTemplateOutlet="column.cellTemplate; context: { $implicit: entry }"
+            ></ng-container>
+          } @else if (column.isExternalLink && entry[column.key]) {
             <a [href]="entry[column.key]">
               {{ entry[column.key] }} <i class="pi pi-external-link"></i>
             </a>
