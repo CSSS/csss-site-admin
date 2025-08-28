@@ -1,6 +1,6 @@
 export type ElectionType = 'general' | 'by-election' | 'council-rep';
 
-export interface ElectionViewModel {
+export interface ElectionModel {
   slug: string;
   name: string;
   type: ElectionType;
@@ -11,7 +11,7 @@ export interface ElectionViewModel {
   survey_link?: string;
 }
 
-export const ELECTIONS: ElectionViewModel[] = [
+export const ELECTIONS: ElectionModel[] = [
   {
     slug: 'test-election-1',
     name: 'test election   1',

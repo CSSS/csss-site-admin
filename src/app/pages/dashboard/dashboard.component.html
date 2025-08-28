@@ -7,6 +7,7 @@
         <th>Slug</th>
         <th>Name</th>
         <th>Type</th>
+        <th>Year</th>
         <th>Start Nominations</th>
         <th>Start Voting</th>
         <th>End Voting</th>
@@ -14,22 +15,26 @@
         <th>Survey Link</th>
       </tr>
     </ng-template>
+    <ng-template #groupHeader let-election>
+      <tr>
+        <td colspan="8"></td>
+      </tr>
+    </ng-template>
     <ng-template #body let-election>
       <tr>
         <td>{{ election.slug }}</td>
         <td>{{ election.name }}</td>
         <td>{{ election.type }}</td>
+        <td>{{ election.year }}</td>
         <td>{{ election.datetime_start_nominations }}</td>
         <td>{{ election.datetime_start_voting }}</td>
         <td>{{ election.datetime_end_voting }}</td>
         <td>{{ election.available_positions }}</td>
-        @if (election.survey_link) {
-          <td>
+        <td>
+          @if (election.survey_link) {
             <a [href]="election.survey_link" target="_blank">{{ election.survey_link }}</a>
-          </td>
-        } @else {
-          <td></td>
-        }
+          }
+        </td>
       </tr>
     </ng-template>
   </p-table>
