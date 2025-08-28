@@ -24,7 +24,8 @@ interface ElectionTableEntry extends ElectionModel {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ElectionsTableComponent {
-  activeTemplate = viewChild.required<TemplateRef<unknown>>('activeTemplate');
+  protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');
+  protected createDialog = viewChild.required<TemplateRef<unknown>>('dialog');
 
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
@@ -49,7 +50,7 @@ export class ElectionsTableComponent {
     {
       label: 'Status',
       key: 'isActive',
-      cellTemplate: this.activeTemplate()
+      cellTemplate: this.activeChipCell()
     },
     {
       label: 'Nominations Start',

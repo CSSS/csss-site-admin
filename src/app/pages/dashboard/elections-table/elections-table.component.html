@@ -1,8 +1,15 @@
-<ng-template #activeTemplate let-entry>
+<ng-template #activeChipCell let-entry>
   <p-tag
     [severity]="entry.isActive ? 'success' : 'warn'"
     [value]="entry.isActive ? 'active' : 'inactive'"
   />
 </ng-template>
 
-<cs-crud-table title="Elections" [entries]="elections" [columns]="columns()" />
+<cs-crud-table
+  title="Elections"
+  [entries]="elections"
+  [columns]="columns()"
+  [createTemplate]="createDialog()"
+/>
+
+<ng-template #dialog> </ng-template>
