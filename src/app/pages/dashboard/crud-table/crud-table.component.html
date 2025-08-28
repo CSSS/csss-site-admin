@@ -1,0 +1,38 @@
+<p-toolbar>
+  <ng-template #start>
+    <h3>{{ title() }}</h3>
+  </ng-template>
+  <ng-template #end>
+    <p-button icon="pi pi-plus" label="New"></p-button>
+  </ng-template>
+</p-toolbar>
+
+<p-table [value]="entries()">
+  <ng-template #header>
+    <tr>
+      @for (column of columns(); track column.key) {
+        <th>{{ column.label }}</th>
+      }
+    </tr>
+  </ng-template>
+  <ng-template #groupHeader let-entry>
+    <tr>
+      <td colspan="8"></td>
+    </tr>
+  </ng-template>
+  <ng-template #body let-entry>
+    <tr>
+      @for (column of columns(); track column.key) {
+        <td>
+          @if (column.isExternalLink && entry[column.key]) {
+            <a [href]="entry[column.key]">
+              {{ entry[column.key] }} <i class="pi pi-external-link"></i>
+            </a>
+          } @else {
+            {{ entry[column.key] }}
+          }
+        </td>
+      }
+    </tr>
+  </ng-template>
+</p-table>
