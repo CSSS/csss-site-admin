@@ -3,9 +3,20 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 
-interface CrudColumn<T> {
+export interface CrudColumn<T> {
+  /**
+   * The label of the column in the table header.
+   */
   label: string;
+
+  /**
+   * The key to access the column value in the entries.
+   */
   key: keyof T;
+
+  /**
+   * Flag if the column should show an anchor.
+   */
   isExternalLink?: boolean;
 }
 
@@ -17,7 +28,18 @@ interface CrudColumn<T> {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CrudTableComponent<T> {
+  /**
+   * Title of the table.
+   */
   title = input<string>();
-  entries = input.required<unknown[]>();
+
+  /**
+   * The entries in the table.
+   */
+  entries = input.required<T[]>();
+
+  /**
+   * The columns displayed on the table.
+   */
   columns = input.required<CrudColumn<T>[]>();
 }

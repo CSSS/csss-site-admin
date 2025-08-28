@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CrudTableComponent } from '../crud-table/crud-table.component';
+import { CrudColumn, CrudTableComponent } from '../crud-table/crud-table.component';
 import { ELECTIONS, ElectionModel } from '../temp-interfaces';
 
-interface ElectionViewModel extends ElectionModel {
+interface ElectionTableEntry extends ElectionModel {
   year: number;
   startNominations: Date;
+  isActive: boolean;
 }
 
 @Component({
@@ -15,7 +16,7 @@ interface ElectionViewModel extends ElectionModel {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ElectionsTableComponent {
-  protected columns = [
+  protected columns: CrudColumn<ElectionTableEntry>[] = [
     {
       label: 'Slug',
       key: 'slug'
@@ -31,6 +32,10 @@ export class ElectionsTableComponent {
     {
       label: 'Type',
       key: 'type'
+    },
+    {
+      label: 'Active?',
+      key: 'isActive'
     },
     {
       label: 'Nominations Start',
@@ -55,12 +60,17 @@ export class ElectionsTableComponent {
     }
   ];
 
-  protected elections: ElectionViewModel[] = ELECTIONS.map(e => {
+  readonly currentTime = new Date();
+
+  protected elections: ElectionTableEntry[] = ELECTIONS.map(e => {
     const startNominations = new Date(e.datetime_start_nominations);
+    const endVoting = new Date(e.datetime_end_voting);
+    const isActive = this.currentTime < startNominations || this.currentTime > endVoting;
     return {
       ...e,
       year: startNominations.getFullYear(),
-      startNominations
+      startNominations,
+      isActive
     };
     // Latest elections should be at the stop, based on when nominations start.
   }).sort(
