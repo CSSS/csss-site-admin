@@ -14,7 +14,7 @@ export interface CrudColumn<T> {
   label: string;
 
   /**
-   * The key to access the column value in the entries.
+   * The key to access the column value in each entry.
    */
   key: keyof T;
 
@@ -56,8 +56,6 @@ export class CrudTableComponent<T> {
    * Handles the toast notifications.
    */
   private messageService = inject(MessageService);
-
-  private isCreateDialogVisible = false;
 
   onSubmit(entryKey: string): void {
     this.messageService.add({

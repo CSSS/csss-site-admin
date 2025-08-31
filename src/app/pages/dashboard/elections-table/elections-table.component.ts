@@ -8,9 +8,10 @@ import {
 } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { CrudColumn, CrudTableComponent } from '../crud-table/crud-table.component';
+import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
 import { ElectionModel, ELECTIONS } from '../temp-interfaces';
 
-interface ElectionsTableEntry extends ElectionModel {
+export interface ElectionsTableEntry extends ElectionModel {
   year: number;
   startNominations: Date;
   isActive: boolean;
@@ -18,7 +19,7 @@ interface ElectionsTableEntry extends ElectionModel {
 
 @Component({
   selector: 'cs-elections-table',
-  imports: [CrudTableComponent, TagModule],
+  imports: [CrudTableComponent, TagModule, ElectionsDialogComponent],
   templateUrl: './elections-table.component.html',
   styleUrl: './elections-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

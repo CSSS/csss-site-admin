@@ -1,1 +1,26 @@
-<p>elections-dialog works!</p>
+<form class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
+  <cs-input
+    id="elections-field__name"
+    name="name"
+    label="Election Name"
+    formControlName="name"
+    [required]="true"
+    [invalid]="isInvalid('name')"
+  />
+  <div class="dialog-form__field">
+    <p-select
+      [options]="electionTypes"
+      formControlName="type"
+      placeholder="Election Type"
+      dataKey="value"
+      optionLabel="label"
+      optionValue="value"
+      [invalid]="isInvalid('type')"
+    />
+    @if (isInvalid('type')) {
+      <p-message severity="error" size="small" variant="simple">
+        Election type is required
+      </p-message>
+    }
+  </div>
+</form>

@@ -1,4 +1,10 @@
-export type ElectionType = 'general' | 'by-election' | 'council-rep';
+export const electionTypes = ['general', 'by-election', 'council-rep'] as const;
+export type ElectionType = (typeof electionTypes)[number];
+export const electionTypeLabels: Record<ElectionType, string> = {
+  general: 'General',
+  'by-election': 'By-election',
+  'council-rep': 'Council Representative'
+};
 
 export interface ElectionModel {
   slug: string;
