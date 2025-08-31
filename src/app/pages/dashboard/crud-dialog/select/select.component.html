@@ -1,0 +1,18 @@
+<p-floatlabel>
+  <p-select
+    [id]="id()"
+    [options]="options()"
+    [dataKey]="dataKey()"
+    [optionLabel]="optionLabel()"
+    [optionValue]="optionValue()"
+    [disabled]="isDisabled"
+    [invalid]="isInvalid()"
+    (onChange)="onChange($event.value)"
+    (onBlur)="onTouched()"
+  >
+  </p-select>
+  <label for="id()"></label>
+</p-floatlabel>
+@if (isRequiredMissing()) {
+  <p-message severity="error" variant="simple">"{{ label() }}" is required</p-message>
+}

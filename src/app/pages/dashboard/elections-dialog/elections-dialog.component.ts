@@ -4,12 +4,13 @@ import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { DialogComponent } from '../crud-dialog/crud-dialog';
 import { InputComponent } from '../crud-dialog/input/input.component';
+import { SelectComponent } from '../crud-dialog/select/select.component';
 import { ElectionsTableEntry } from '../elections-table/elections-table.component';
 import { electionTypeLabels, electionTypes } from '../temp-interfaces';
 
 @Component({
   selector: 'cs-elections-dialog',
-  imports: [ReactiveFormsModule, InputComponent, SelectModule, MessageModule],
+  imports: [ReactiveFormsModule, InputComponent, SelectModule, MessageModule, SelectComponent],
   templateUrl: './elections-dialog.component.html',
   styleUrl: './elections-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

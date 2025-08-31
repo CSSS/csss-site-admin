@@ -2,7 +2,6 @@
   <input
     pInputText
     id="id()"
-    name="name()"
     [disabled]="isDisabled"
     [invalid]="isInvalid()"
     (input)="onChange($event.target.value)"
@@ -11,6 +10,6 @@
   />
   <label for="id()">{{ label() }}</label>
 </p-floatlabel>
-@if (isRequired() && ngControl?.invalid && ngControl?.touched && ngControl?.errors?.['required']) {
-  <p-message severity="error" size="small" variant="simple">"{{ label() }}" is required</p-message>
+@if (isRequiredMissing()) {
+  <p-message severity="error" variant="simple">"{{ label() }}" is required</p-message>
 }

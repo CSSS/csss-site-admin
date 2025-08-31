@@ -10,7 +10,9 @@ import { MessageService } from 'primeng/api';
 })
 export abstract class DialogComponent<T> {
   protected fb = inject(NonNullableFormBuilder);
+
   protected messageService = inject(MessageService);
+
   protected abstract form: FormGroup;
 
   protected abstract submit(): T | null;
