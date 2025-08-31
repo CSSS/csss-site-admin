@@ -10,7 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { CrudColumn, CrudTableComponent } from '../crud-table/crud-table.component';
 import { ElectionModel, ELECTIONS } from '../temp-interfaces';
 
-interface ElectionTableEntry extends ElectionModel {
+interface ElectionsTableEntry extends ElectionModel {
   year: number;
   startNominations: Date;
   isActive: boolean;
@@ -30,7 +30,7 @@ export class ElectionsTableComponent {
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
    */
-  protected columns: Signal<CrudColumn<ElectionTableEntry>[]> = computed(() => [
+  protected columns: Signal<CrudColumn<ElectionsTableEntry>[]> = computed(() => [
     {
       label: 'Slug',
       key: 'slug'
@@ -77,7 +77,7 @@ export class ElectionsTableComponent {
 
   readonly currentTime = new Date();
 
-  protected elections: ElectionTableEntry[] = ELECTIONS.map(e => {
+  protected elections: ElectionsTableEntry[] = ELECTIONS.map(e => {
     const startNominations = new Date(e.datetime_start_nominations);
     const endVoting = new Date(e.datetime_end_voting);
     const isActive = this.currentTime >= startNominations && this.currentTime <= endVoting;
@@ -87,7 +87,7 @@ export class ElectionsTableComponent {
       startNominations,
       isActive
     };
-    // Latest elections should be at the stop, based on when nominations start.
+    // Latest elections should be at the top, based on when nominations start.
   }).sort(
     (a, b) => b.startNominations.getUTCMilliseconds() - a.startNominations.getUTCMilliseconds()
   );

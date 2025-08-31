@@ -5,13 +5,20 @@
   </ng-template>
   <ng-template #end>
     <div class="toolbar__actions">
-      <p-button icon="pi pi-plus" label="New" (onClick)="createNew()"></p-button>
-      <p-button icon="pi pi-trash" label="Delete" severity="danger"></p-button>
+      <p-button icon="pi pi-plus" label="New" (onClick)="createNew()" />
+      <p-button
+        [disabled]="!selectedEntry"
+        icon="pi pi-pencil"
+        label="Edit"
+        (onClick)="createNew()"
+        severity="info"
+      />
+      <p-button [disabled]="!selectedEntry" icon="pi pi-trash" label="Delete" severity="danger" />
     </div>
   </ng-template>
 </p-toolbar>
 
-<p-table [value]="entries()">
+<p-table [value]="entries()" selectionMode="single" [(selection)]="selectedEntry">
   <ng-template #header>
     <tr>
       @for (column of columns(); track column.key) {
@@ -20,13 +27,11 @@
     </tr>
   </ng-template>
   <ng-template #body let-entry>
-    <tr>
+    <tr [pSelectableRow]="entry">
       @for (column of columns(); track column.key) {
         <td>
           @if (column.cellTemplate) {
-            <ng-container
-              *ngTemplateOutlet="column.cellTemplate; context: { $implicit: entry }"
-            ></ng-container>
+            <ng-container *ngTemplateOutlet="column.cellTemplate; context: { $implicit: entry }" />
           } @else if (column.isExternalLink && entry[column.key]) {
             <a [href]="entry[column.key]">
               {{ entry[column.key] }} <i class="pi pi-external-link"></i>

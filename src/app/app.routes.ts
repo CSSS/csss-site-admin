@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
+import { routes as dashboardRoutes } from './pages/dashboard/dashboard.routes';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'dashboard',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    title: 'Dashboard | CSSS Admin'
+    children: dashboardRoutes,
+    title: 'Dashboard'
   }
 ];

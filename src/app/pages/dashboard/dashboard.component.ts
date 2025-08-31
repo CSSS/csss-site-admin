@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TopBarComponent } from '../../components/top-bar/top-bar.component';
-import { ElectionsTableComponent } from './elections-table/elections-table.component';
 
 @Component({
   selector: 'cs-dashboard',
-  imports: [TopBarComponent, ElectionsTableComponent],
+  imports: [RouterModule, TopBarComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

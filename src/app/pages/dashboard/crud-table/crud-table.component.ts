@@ -51,6 +51,7 @@ export class CrudTableComponent<T> {
 
   createTemplate = input.required<TemplateRef<unknown>>();
 
+  protected selectedEntry?: T;
   /**
    * Handles the toast notifications.
    */
