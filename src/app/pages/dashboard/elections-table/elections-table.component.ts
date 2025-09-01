@@ -22,20 +22,23 @@ export interface ElectionsTableEntry extends ElectionModel {
 
 @Component({
   selector: 'cs-elections-table',
-  imports: [CrudTableComponent, TagModule, ElectionsDialogComponent],
+  imports: [CrudTableComponent, TagModule],
   templateUrl: './elections-table.component.html',
   styleUrl: './elections-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElectionsTableComponent {
+export class ElectionsTableComponent extends CrudTableComponent<
+  ElectionsTableEntry,
+  ElectionsDialogComponent
+> {
   protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');
+
   protected availablePosCell = viewChild.required<TemplateRef<unknown>>('availablePositionsCell');
-  protected createDialog = viewChild.required<TemplateRef<unknown>>('dialog');
 
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
    */
-  protected columns: Signal<CrudColumn<ElectionsTableEntry>[]> = computed(() => [
+  protected tableColumns: Signal<CrudColumn<ElectionsTableEntry>[]> = computed(() => [
     {
       label: 'Slug',
       key: 'slug'
@@ -101,4 +104,15 @@ export class ElectionsTableComponent {
   }).sort(
     (a, b) => b.startNominations.getUTCMilliseconds() - a.startNominations.getUTCMilliseconds()
   );
+
+  protected openDialog(entry: ElectionsTableEntry | null): void {
+    this.dialogRef = this.dialogService.open(ElectionsDialogComponent, {
+      ...ElectionsDialogComponent.dialogDefaults,
+      header: `${entry ? 'Create' : 'New'} Entry`
+    });
+
+    this.dialogRef.onClose.subscribe((election: ElectionsTableEntry) => {
+      console.log('close');
+    });
+  }
 }

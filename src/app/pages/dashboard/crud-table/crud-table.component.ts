@@ -1,11 +1,20 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  OnDestroy,
+  output,
+  TemplateRef
+} from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { DialogComponent } from '../crud-dialog/crud-dialog';
 
 export interface CrudColumn<T> {
   /**
@@ -37,12 +46,12 @@ export interface CrudColumn<T> {
 
 @Component({
   selector: 'cs-crud-table',
-  imports: [TableModule, ToolbarModule, ButtonModule, NgTemplateOutlet, ToastModule, DialogModule],
+  imports: [TableModule, ToolbarModule, ButtonModule, NgTemplateOutlet, ToastModule],
   templateUrl: './crud-table.component.html',
   styleUrl: './crud-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrudTableComponent<T> {
+export class CrudTableComponent<T, D extends DialogComponent<T>> implements OnDestroy {
   /**
    * Title of the table.
    */
@@ -58,16 +67,26 @@ export class CrudTableComponent<T> {
    */
   columns = input.required<CrudColumn<T>[]>();
 
-  createTemplate = input.required<TemplateRef<unknown>>();
+  dialogOpened = output();
 
-  protected selectedEntry?: T;
+  protected dialogService = inject(DialogService);
+
+  protected dialogRef?: DynamicDialogRef<D>;
+
+  protected selectedEntry: T | null = null;
 
   /**
    * Handles the toast notifications.
    */
   private messageService = inject(MessageService);
 
-  onSubmit(entryKey: string): void {
+  ngOnDestroy(): void {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    }
+  }
+
+  protected onSubmit(entryKey: string): void {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
@@ -75,6 +94,4 @@ export class CrudTableComponent<T> {
       life: 3000
     });
   }
-
-  createNew(): void {}
 }

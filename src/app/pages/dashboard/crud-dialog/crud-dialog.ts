@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'cs-dialog',
@@ -8,7 +9,12 @@ import { MessageService } from 'primeng/api';
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export abstract class DialogComponent<T> {
+export abstract class DialogComponent<T> implements OnInit {
+  static dialogDefaults = {
+    modal: true,
+    closable: true
+  };
+
   protected fb = inject(NonNullableFormBuilder);
 
   protected messageService = inject(MessageService);
@@ -18,6 +24,20 @@ export abstract class DialogComponent<T> {
   protected abstract submit(): T | null;
 
   protected formSubmitted = false;
+
+  protected entry!: T;
+
+  private ref = inject(DynamicDialogRef);
+
+  private config = inject(DynamicDialogConfig);
+
+  ngOnInit(): void {
+    this.entry = this.config.data;
+  }
+
+  close(result?: T): void {
+    this.ref.close(result);
+  }
 
   /**
    * Method that checks if a form field is valid.

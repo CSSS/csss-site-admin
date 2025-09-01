@@ -4,4 +4,14 @@
   gap: 1.5rem;
 
   max-width: 60%;
+  margin-top: 1rem;
+}
+
+.p-dialog {
+  padding: 1rem;
+
+  &-content {
+    display: flex;
+    justify-content: center;
+  }
 }

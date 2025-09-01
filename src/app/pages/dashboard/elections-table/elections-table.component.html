@@ -1,12 +1,9 @@
-<cs-elections-dialog> </cs-elections-dialog>
 <cs-crud-table
   title="Elections"
   [entries]="elections"
-  [columns]="columns()"
-  [createTemplate]="createDialog()"
+  [columns]="tableColumns()"
+  (dialogOpened)="openDialog(selectedEntry)"
 />
-
-<ng-template #dialog />
 
 <!-- Template of the Active column cells -->
 <ng-template #activeChipCell let-entry>
