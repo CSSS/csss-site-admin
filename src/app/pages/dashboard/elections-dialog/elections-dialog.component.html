@@ -17,4 +17,46 @@
     [required]="true"
     [invalid]="isInvalid('type')"
   />
+  <div>
+    <cs-datepicker
+      id="elections-field__start-nominations"
+      label="Start Nominations"
+      formControlName="startNominations"
+      [required]="true"
+      [invalid]="isInvalid('startNominations') || form.hasError('nominationsTooLate')"
+    />
+    @if (form.hasError('nominationsTooLate') && (form.touched || form.dirty)) {
+      <p-message severity="error" variant="simple">
+        Nominations must happen before the voting period
+      </p-message>
+    }
+  </div>
+  <div>
+    <cs-datepicker
+      id="elections-field__start-voting"
+      label="Start Voting"
+      formControlName="startVoting"
+      [required]="true"
+      [invalid]="isInvalid('startVoting') || form.hasError('startVotingWrong')"
+    />
+    @if (form.hasError('nominationsTooLate') && (form.touched || form.dirty)) {
+      <p-message severity="error" variant="simple">
+        Voting must start after nominations start and before end voting
+      </p-message>
+    }
+  </div>
+  <div>
+    <cs-datepicker
+      id="elections-field__end-voting"
+      label="End Voting"
+      formControlName="endVoting"
+      [required]="true"
+      [invalid]="isInvalid('endVoting') || form.hasError('endVotingTooEarly')"
+    />
+    @if (form.hasError('endVotingTooEarly') && (form.touched || form.dirty)) {
+      <p-message severity="error" variant="simple">
+        End voting time must come after nominations and the start voting time.
+      </p-message>
+    }
+  </div>
 </form>

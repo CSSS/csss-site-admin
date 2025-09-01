@@ -1,16 +1,13 @@
 <p-floatlabel variant="on">
-  <p-select
+  <p-datepicker
     [id]="id()"
-    [options]="options()"
-    [dataKey]="dataKey()"
-    [optionLabel]="optionLabel()"
-    [optionValue]="optionValue()"
     [disabled]="isDisabled"
     [invalid]="isInvalid()"
-    (onChange)="onChange($event.value)"
+    (onSelect)="onChange($event)"
     (onBlur)="onTouched()"
-  >
-  </p-select>
+    iconDisplay="input"
+    [showIcon]="true"
+  />
   <label [for]="id()">{{ label() }}</label>
 </p-floatlabel>
 @if (isRequiredMissing()) {
