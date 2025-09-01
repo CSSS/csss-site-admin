@@ -37,7 +37,7 @@
               {{ entry[column.key] }} <i class="pi pi-external-link"></i>
             </a>
           } @else {
-            {{ entry[column.key] }}
+            {{ column.transform ? column.transform(entry[column.key]) : entry[column.key] }}
           }
         </td>
       }

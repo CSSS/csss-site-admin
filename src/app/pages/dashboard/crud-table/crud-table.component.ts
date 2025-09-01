@@ -23,7 +23,15 @@ export interface CrudColumn<T> {
    */
   isExternalLink?: boolean;
 
+  /**
+   * Template of what the cell should look like.
+   */
   cellTemplate?: TemplateRef<unknown>;
+
+  /**
+   * Transformation to apply to the value before displaying it in the cell.
+   */
+  transform?: (input: string) => string;
 }
 
 @Component({

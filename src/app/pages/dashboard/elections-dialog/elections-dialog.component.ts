@@ -6,7 +6,7 @@ import { DatepickerComponent } from '../crud-dialog/datepicker/datepicker.compon
 import { InputComponent } from '../crud-dialog/input/input.component';
 import { SelectComponent } from '../crud-dialog/select/select.component';
 import { ElectionsTableEntry } from '../elections-table/elections-table.component';
-import { electionTypeLabels, electionTypes } from '../temp-interfaces';
+import { electionTypeLabels } from '../temp-interfaces';
 import { electionDatesValidator } from './elections-dates.validator';
 
 @Component({
@@ -36,10 +36,10 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntr
     { validators: [electionDatesValidator()] }
   );
 
-  electionTypes = electionTypes.map(e => {
+  electionTypes = Object.entries(electionTypeLabels).map(([k, v]) => {
     return {
-      label: electionTypeLabels[e],
-      value: e
+      label: v,
+      value: k
     };
   });
 

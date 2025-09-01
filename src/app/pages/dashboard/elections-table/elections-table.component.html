@@ -15,3 +15,11 @@
     [value]="entry.isActive ? 'active' : 'inactive'"
   />
 </ng-template>
+
+<ng-template #availablePositionsCell let-entry>
+  @for (pos of entry.availablePositions; track pos) {
+    <div>
+      {{ pos }}
+    </div>
+  }
+</ng-template>

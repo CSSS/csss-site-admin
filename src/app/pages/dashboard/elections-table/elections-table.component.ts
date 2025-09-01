@@ -7,14 +7,16 @@ import {
   viewChild
 } from '@angular/core';
 import { TagModule } from 'primeng/tag';
+import { getValueOfKey } from '../../../utils/type-utils';
 import { CrudColumn, CrudTableComponent } from '../crud-table/crud-table.component';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
-import { ElectionModel, ELECTIONS } from '../temp-interfaces';
+import { ElectionModel, ELECTIONS, electionTypeLabels } from '../temp-interfaces';
 
 export interface ElectionsTableEntry extends ElectionModel {
   year: number;
   startNominations: Date;
   isActive: boolean;
+  availablePositions: string[];
 }
 
 @Component({
@@ -26,6 +28,7 @@ export interface ElectionsTableEntry extends ElectionModel {
 })
 export class ElectionsTableComponent {
   protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');
+  protected availablePosCell = viewChild.required<TemplateRef<unknown>>('availablePositionsCell');
   protected createDialog = viewChild.required<TemplateRef<unknown>>('dialog');
 
   /**
@@ -46,7 +49,8 @@ export class ElectionsTableComponent {
     },
     {
       label: 'Type',
-      key: 'type'
+      key: 'type',
+      transform: (value: string) => getValueOfKey(electionTypeLabels, value) ?? value
     },
     {
       label: 'Status',
@@ -67,7 +71,8 @@ export class ElectionsTableComponent {
     },
     {
       label: 'Available Positions',
-      key: 'available_positions'
+      key: 'available_positions',
+      cellTemplate: this.availablePosCell()
     },
     {
       label: 'Survey Link',
@@ -86,7 +91,8 @@ export class ElectionsTableComponent {
       ...e,
       year: startNominations.getFullYear(),
       startNominations,
-      isActive
+      isActive,
+      availablePositions: e.available_positions.split(',')
     };
     // Latest elections should be at the top, based on when nominations start.
   }).sort(

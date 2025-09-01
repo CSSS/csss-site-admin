@@ -1,10 +1,9 @@
-export const electionTypes = ['general', 'by-election', 'council-rep'] as const;
-export type ElectionType = (typeof electionTypes)[number];
-export const electionTypeLabels: Record<ElectionType, string> = {
+export const electionTypeLabels = {
   general: 'General',
   'by-election': 'By-election',
   'council-rep': 'Council Representative'
-};
+} as const;
+export type ElectionType = keyof typeof electionTypeLabels;
 
 export interface ElectionModel {
   slug: string;
