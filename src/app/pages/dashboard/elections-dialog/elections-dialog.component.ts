@@ -4,8 +4,10 @@ import { MessageModule } from 'primeng/message';
 import { DialogComponent } from '../crud-dialog/crud-dialog';
 import { DatepickerComponent } from '../crud-dialog/datepicker/datepicker.component';
 import { InputComponent } from '../crud-dialog/input/input.component';
+import { ListboxComponent } from '../crud-dialog/listbox/listbox.component';
 import { SelectComponent } from '../crud-dialog/select/select.component';
 import { ElectionsTableEntry } from '../elections-table/elections-table.component';
+import { officerLabels } from '../officers';
 import { electionTypeLabels } from '../temp-interfaces';
 import { electionDatesValidator } from './elections-dates.validator';
 
@@ -16,7 +18,8 @@ import { electionDatesValidator } from './elections-dates.validator';
     MessageModule,
     InputComponent,
     SelectComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    ListboxComponent
   ],
   templateUrl: './elections-dialog.component.html',
   styleUrl: './elections-dialog.component.scss',
@@ -30,13 +33,20 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntr
       startNominations: [null, { validators: [Validators.required], updateOn: 'blur' }],
       startVoting: [null, { validators: [Validators.required], updateOn: 'blur' }],
       endVoting: [null, { validators: [Validators.required], updateOn: 'blur' }],
-      availablePositions: [[], Validators.required],
+      availablePositions: [[], [Validators.required, Validators.minLength(1)]],
       surveyLink: [{ value: '', nonNullable: false }]
     },
     { validators: [electionDatesValidator()] }
   );
 
   electionTypes = Object.entries(electionTypeLabels).map(([k, v]) => {
+    return {
+      label: v,
+      value: k
+    };
+  });
+
+  officerPositions = Object.entries(officerLabels).map(([k, v]) => {
     return {
       label: v,
       value: k

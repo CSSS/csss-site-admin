@@ -59,4 +59,15 @@
       </p-message>
     }
   </div>
+  <cs-listbox
+    id="elections-field__available-positions"
+    label="Available Positions"
+    formControlName="availablePositions"
+    [options]="officerPositions"
+    dataKey="label"
+    optionLabel="label"
+    optionValue="value"
+    [required]="true"
+    [invalid]="isInvalid('availablePositions')"
+  ></cs-listbox>
 </form>

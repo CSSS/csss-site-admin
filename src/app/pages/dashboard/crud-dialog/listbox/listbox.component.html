@@ -1,0 +1,17 @@
+<label [for]="id()">{{ label() }}</label>
+<p-listbox
+  [id]="id()"
+  [disabled]="isDisabled"
+  [invalid]="isInvalid()"
+  [multiple]="true"
+  [checkbox]="true"
+  [options]="options()"
+  [dataKey]="dataKey()"
+  [optionLabel]="optionLabel()"
+  [optionValue]="optionValue()"
+  (onChange)="onChange($event.value)"
+  (onBlur)="onTouched()"
+></p-listbox>
+@if (isRequiredMissing()) {
+  <p-message severity="error" variant="simple">"{{ label() }}" is required</p-message>
+}
