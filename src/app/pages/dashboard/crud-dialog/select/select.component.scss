@@ -1,8 +1,8 @@
 :host {
   display: block;
+  width: 15rem;
 }
 
 p-select {
-  min-width: 10rem;
-  width: fit-content;
+  width: 100%;
 }

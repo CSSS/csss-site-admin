@@ -69,5 +69,11 @@
     optionValue="value"
     [required]="true"
     [invalid]="isInvalid('availablePositions')"
-  ></cs-listbox>
+  />
+  <cs-input
+    id="elections-field__survey-link"
+    label="Survey Link"
+    formControlName="surveyLink"
+    [invalid]="isInvalid('surveyLink')"
+  />
 </form>
