@@ -25,7 +25,7 @@
       [required]="true"
       [invalid]="isInvalid('startNominations') || form.hasError('nominationsTooLate')"
     />
-    @if (form.hasError('nominationsTooLate') && (form.touched || form.dirty)) {
+    @if (hasDialogError('nominationsTooLate')) {
       <p-message severity="error" variant="simple">
         Nominations must happen before the voting period
       </p-message>
@@ -39,7 +39,7 @@
       [required]="true"
       [invalid]="isInvalid('startVoting') || form.hasError('startVotingWrong')"
     />
-    @if (form.hasError('nominationsTooLate') && (form.touched || form.dirty)) {
+    @if (hasDialogError('nominationsTooLate')) {
       <p-message severity="error" variant="simple">
         Voting must start after nominations start and before end voting
       </p-message>
@@ -53,7 +53,7 @@
       [required]="true"
       [invalid]="isInvalid('endVoting') || form.hasError('endVotingTooEarly')"
     />
-    @if (form.hasError('endVotingTooEarly') && (form.touched || form.dirty)) {
+    @if (hasDialogError('endVotingTooEarly')) {
       <p-message severity="error" variant="simple">
         End voting time must come after nominations and the start voting time.
       </p-message>

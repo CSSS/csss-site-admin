@@ -33,4 +33,12 @@ export abstract class DialogComponent<T> {
     }
     return control.invalid && (control.touched || this.formSubmitted);
   }
+
+  hasDialogError(...args: string[]): boolean {
+    if (!this.form.touched && !this.form.dirty) {
+      return false;
+    }
+
+    return args.every(arg => this.form.hasError(arg));
+  }
 }
