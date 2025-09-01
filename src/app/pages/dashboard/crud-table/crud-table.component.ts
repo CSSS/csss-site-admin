@@ -31,7 +31,8 @@ export interface CrudColumn<T> {
   /**
    * Transformation to apply to the value before displaying it in the cell.
    */
-  transform?: (input: string) => string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform?: (input: any) => any;
 }
 
 @Component({
@@ -60,6 +61,7 @@ export class CrudTableComponent<T> {
   createTemplate = input.required<TemplateRef<unknown>>();
 
   protected selectedEntry?: T;
+
   /**
    * Handles the toast notifications.
    */

@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { getValueOfKey } from '../../../utils/type-utils';
 import { CrudColumn, CrudTableComponent } from '../crud-table/crud-table.component';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
+import { officerLabels } from '../officers';
 import { ElectionModel, ELECTIONS, electionTypeLabels } from '../temp-interfaces';
 
 export interface ElectionsTableEntry extends ElectionModel {
@@ -71,7 +72,7 @@ export class ElectionsTableComponent {
     },
     {
       label: 'Available Positions',
-      key: 'available_positions',
+      key: 'availablePositions',
       cellTemplate: this.availablePosCell()
     },
     {
@@ -92,7 +93,9 @@ export class ElectionsTableComponent {
       year: startNominations.getFullYear(),
       startNominations,
       isActive,
-      availablePositions: e.available_positions.split(',')
+      availablePositions: e.available_positions
+        .split(',')
+        .map(pos => getValueOfKey(officerLabels, pos) ?? pos)
     };
     // Latest elections should be at the top, based on when nominations start.
   }).sort(
