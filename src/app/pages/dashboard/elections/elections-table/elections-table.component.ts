@@ -8,11 +8,14 @@ import {
 } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { getValueOfKey } from '../../../../utils/type-utils';
+import {
+  CrudColumn,
+  CrudTableComponent
+} from '../../crud-components/crud-table/crud-table.component';
 import { TableComponent } from '../../crud-components/crud-table/table-component';
-import { CrudColumn, CrudTableComponent } from '../../crud-components/crud-table/crud-table.component';
-import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
-import { officerLabels } from '../../officers';
 import { ElectionModel, ELECTIONS, electionTypeLabels } from '../../elections';
+import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
+import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
 
 export interface ElectionsTableEntry extends ElectionModel {
   year: number;
@@ -23,7 +26,7 @@ export interface ElectionsTableEntry extends ElectionModel {
 
 @Component({
   selector: 'cs-elections-table',
-  imports: [CrudTableComponent, TagModule],
+  imports: [CrudTableComponent, TagModule, OfficerFormatPipe],
   templateUrl: './elections-table.component.html',
   styleUrl: './elections-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -78,7 +81,7 @@ export class ElectionsTableComponent extends TableComponent<
     },
     {
       label: 'Available Positions',
-      key: 'availablePositions',
+      key: 'available_positions',
       cellTemplate: this.availablePosCell()
     },
     {
@@ -99,9 +102,7 @@ export class ElectionsTableComponent extends TableComponent<
       year: startNominations.getFullYear(),
       startNominations,
       isActive,
-      availablePositions: e.available_positions
-        .split(',')
-        .map(pos => getValueOfKey(officerLabels, pos) ?? pos)
+      availablePositions: e.available_positions.split(',')
     };
     // Latest elections should be at the top, based on when nominations start.
   }).sort(

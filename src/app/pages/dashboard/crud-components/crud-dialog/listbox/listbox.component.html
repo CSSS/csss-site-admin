@@ -1,5 +1,6 @@
 <label [for]="fieldId()">{{ label() }}</label>
 <p-listbox
+  [(ngModel)]="value"
   [id]="fieldId()"
   [disabled]="isDisabled"
   [invalid]="isInvalid()"

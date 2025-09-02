@@ -39,7 +39,7 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntr
       startVoting: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
       endVoting: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
       availablePositions: [[] as string[], [Validators.required, Validators.minLength(1)]],
-      surveyLink: [{ value: '', nonNullable: false }]
+      surveyLink: ['']
     },
     { validators: [electionDatesValidator()] }
   );

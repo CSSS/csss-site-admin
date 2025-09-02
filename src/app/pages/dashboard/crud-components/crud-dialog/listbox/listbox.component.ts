@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ListboxModule } from 'primeng/listbox';
 import { MessageModule } from 'primeng/message';
@@ -6,7 +7,7 @@ import { CrudFormField } from '../crud-form-field';
 
 @Component({
   selector: 'cs-listbox',
-  imports: [ListboxModule, FloatLabelModule, MessageModule],
+  imports: [FormsModule, ListboxModule, FloatLabelModule, MessageModule],
   templateUrl: './listbox.component.html',
   styleUrl: './listbox.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
