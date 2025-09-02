@@ -1,8 +1,10 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, TemplateRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
+
+export type CrudTableColumnType = 'date' | 'externalLink';
 
 export interface CrudTableColumn<T> {
   /**
@@ -16,14 +18,14 @@ export interface CrudTableColumn<T> {
   key: keyof T;
 
   /**
-   * Flag if the column should show an anchor.
-   */
-  isExternalLink?: boolean;
-
-  /**
    * Template of what the cell should look like.
    */
   cellTemplate?: TemplateRef<unknown>;
+
+  /**
+   * Type of table column that matches the output value.
+   */
+  type?: CrudTableColumnType;
 
   /**
    * Transformation to apply to the value before displaying it in the cell.
@@ -34,7 +36,7 @@ export interface CrudTableColumn<T> {
 
 @Component({
   selector: 'cs-crud-table',
-  imports: [TableModule, ToolbarModule, ButtonModule, NgTemplateOutlet],
+  imports: [TableModule, ToolbarModule, ButtonModule, NgTemplateOutlet, DatePipe],
   templateUrl: './crud-table.component.html',
   styleUrl: './crud-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

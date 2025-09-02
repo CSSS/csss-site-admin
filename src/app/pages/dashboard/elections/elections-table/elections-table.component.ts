@@ -70,15 +70,18 @@ export class ElectionsTableComponent extends TableComponent<
     },
     {
       label: 'Nominations Start',
-      key: 'datetime_start_nominations'
+      key: 'datetime_start_nominations',
+      type: 'date'
     },
     {
       label: 'Voting Start',
-      key: 'datetime_start_voting'
+      key: 'datetime_start_voting',
+      type: 'date'
     },
     {
       label: 'Voting End',
-      key: 'datetime_end_voting'
+      key: 'datetime_end_voting',
+      type: 'date'
     },
     {
       label: 'Available Positions',
@@ -88,7 +91,7 @@ export class ElectionsTableComponent extends TableComponent<
     {
       label: 'Survey Link',
       key: 'survey_link',
-      isExternalLink: true
+      type: 'externalLink'
     }
   ]);
 
