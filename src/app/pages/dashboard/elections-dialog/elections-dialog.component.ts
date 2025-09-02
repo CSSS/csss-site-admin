@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { slugify } from '../../../utils/string-utils';
 import { DialogComponent } from '../crud-dialog/crud-dialog';
 import { DatepickerComponent } from '../crud-dialog/datepicker/datepicker.component';
 import { InputComponent } from '../crud-dialog/input/input.component';
@@ -19,7 +21,8 @@ import { electionDatesValidator } from './elections-dates.validator';
     InputComponent,
     SelectComponent,
     DatepickerComponent,
-    ListboxComponent
+    ListboxComponent,
+    ButtonModule
   ],
   templateUrl: './elections-dialog.component.html',
   styleUrl: './elections-dialog.component.scss',
@@ -28,12 +31,12 @@ import { electionDatesValidator } from './elections-dates.validator';
 export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntry> {
   protected form = this.fb.group(
     {
-      name: [null, Validators.required],
-      type: [null, Validators.required],
-      startNominations: [null, { validators: [Validators.required], updateOn: 'blur' }],
-      startVoting: [null, { validators: [Validators.required], updateOn: 'blur' }],
-      endVoting: [null, { validators: [Validators.required], updateOn: 'blur' }],
-      availablePositions: [[], [Validators.required, Validators.minLength(1)]],
+      name: ['', Validators.required],
+      type: ['', Validators.required],
+      startNominations: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
+      startVoting: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
+      endVoting: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
+      availablePositions: [[] as string[], [Validators.required, Validators.minLength(1)]],
       surveyLink: [{ value: '', nonNullable: false }]
     },
     { validators: [electionDatesValidator()] }
@@ -53,18 +56,23 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntr
     };
   });
 
-  submit(): ElectionsTableEntry | null {
-    this.formSubmitted = true;
-    if (this.form.valid) {
-      this.messageService.add({
-        summary: 'success',
-        detail: 'Successful form submission',
-        life: 3000,
-        severity: 'success'
-      });
-      this.formSubmitted = false;
-    }
-
-    return null;
+  protected override preSubmit(): ElectionsTableEntry {
+    const controls = this.form.controls;
+    const name = controls.name.value;
+    const availablePositions = controls.availablePositions.value;
+    const startNominations = controls.startNominations.value;
+    return {
+      slug: slugify(name),
+      name,
+      type: 'general',
+      datetime_start_nominations: startNominations.toISOString(),
+      datetime_start_voting: controls.startVoting.value.toISOString(),
+      datetime_end_voting: controls.endVoting.value.toISOString(),
+      available_positions: availablePositions.join(',').toLowerCase(),
+      year: startNominations.getFullYear(),
+      startNominations,
+      isActive: false,
+      availablePositions
+    };
   }
 }

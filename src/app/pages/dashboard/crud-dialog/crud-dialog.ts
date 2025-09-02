@@ -3,6 +3,11 @@ import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
+/**
+ * Constructor required to pass instances of concrete dialog components.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type DialogComponentConstructor<T, D extends DialogComponent<T>> = new (...args: any[]) => D;
 @Component({
   selector: 'cs-dialog',
   imports: [],
@@ -21,8 +26,6 @@ export abstract class DialogComponent<T> implements OnInit {
 
   protected abstract form: FormGroup;
 
-  protected abstract submit(): T | null;
-
   protected formSubmitted = false;
 
   protected entry!: T;
@@ -33,10 +36,17 @@ export abstract class DialogComponent<T> implements OnInit {
 
   ngOnInit(): void {
     this.entry = this.config.data;
+    console.log(this.entry);
   }
 
-  close(result?: T): void {
-    this.ref.close(result);
+  protected abstract preSubmit(): T;
+
+  submit(): void {
+    this.formSubmitted = true;
+    if (this.form.valid) {
+      this.ref.close(this.preSubmit());
+    }
+    this.formSubmitted = false;
   }
 
   /**

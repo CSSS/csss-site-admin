@@ -1,8 +1,8 @@
 <cs-crud-table
   title="Elections"
-  [entries]="elections"
-  [columns]="tableColumns()"
-  (dialogOpened)="openDialog(selectedEntry)"
+  [entries]="entries"
+  [columns]="columns()"
+  (dialogOpened)="openDialog($event)"
 />
 
 <!-- Template of the Active column cells -->

@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { getValueOfKey } from '../../../utils/type-utils';
+import { TableComponent } from '../crud-table/crud-table';
 import { CrudColumn, CrudTableComponent } from '../crud-table/crud-table.component';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
 import { officerLabels } from '../officers';
@@ -27,7 +28,7 @@ export interface ElectionsTableEntry extends ElectionModel {
   styleUrl: './elections-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElectionsTableComponent extends CrudTableComponent<
+export class ElectionsTableComponent extends TableComponent<
   ElectionsTableEntry,
   ElectionsDialogComponent
 > {
@@ -35,10 +36,12 @@ export class ElectionsTableComponent extends CrudTableComponent<
 
   protected availablePosCell = viewChild.required<TemplateRef<unknown>>('availablePositionsCell');
 
+  protected override dialogClass = ElectionsDialogComponent;
+
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
    */
-  protected tableColumns: Signal<CrudColumn<ElectionsTableEntry>[]> = computed(() => [
+  protected columns: Signal<CrudColumn<ElectionsTableEntry>[]> = computed(() => [
     {
       label: 'Slug',
       key: 'slug'
@@ -87,7 +90,7 @@ export class ElectionsTableComponent extends CrudTableComponent<
 
   readonly currentTime = new Date();
 
-  protected elections: ElectionsTableEntry[] = ELECTIONS.map(e => {
+  protected entries: ElectionsTableEntry[] = ELECTIONS.map(e => {
     const startNominations = new Date(e.datetime_start_nominations);
     const endVoting = new Date(e.datetime_end_voting);
     const isActive = this.currentTime >= startNominations && this.currentTime <= endVoting;
@@ -104,15 +107,4 @@ export class ElectionsTableComponent extends CrudTableComponent<
   }).sort(
     (a, b) => b.startNominations.getUTCMilliseconds() - a.startNominations.getUTCMilliseconds()
   );
-
-  protected openDialog(entry: ElectionsTableEntry | null): void {
-    this.dialogRef = this.dialogService.open(ElectionsDialogComponent, {
-      ...ElectionsDialogComponent.dialogDefaults,
-      header: `${entry ? 'Create' : 'New'} Entry`
-    });
-
-    this.dialogRef.onClose.subscribe((election: ElectionsTableEntry) => {
-      console.log('close');
-    });
-  }
 }

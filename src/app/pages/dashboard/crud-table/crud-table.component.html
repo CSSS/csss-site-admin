@@ -5,8 +5,14 @@
   </ng-template>
   <ng-template #end>
     <div class="toolbar__actions">
-      <p-button (onClick)="dialogOpened.emit()" icon="pi pi-plus" label="New" />
-      <p-button [disabled]="!selectedEntry" icon="pi pi-pencil" label="Edit" severity="info" />
+      <p-button (onClick)="dialogOpened.emit(null)" icon="pi pi-plus" label="New" />
+      <p-button
+        (onClick)="dialogOpened.emit(selectedEntry)"
+        [disabled]="!selectedEntry"
+        icon="pi pi-pencil"
+        label="Edit"
+        severity="info"
+      />
       <p-button [disabled]="!selectedEntry" icon="pi pi-trash" label="Delete" severity="danger" />
     </div>
   </ng-template>
