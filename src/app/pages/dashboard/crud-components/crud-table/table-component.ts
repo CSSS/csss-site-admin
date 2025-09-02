@@ -1,25 +1,40 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, Signal } from '@angular/core';
+import { Directive, inject, OnDestroy, Signal, WritableSignal } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
 import { CrudEntry } from '../crud-item';
-import { CrudColumn } from './crud-table.component';
+import { CrudTableColumn } from './crud-table.component';
 
-@Component({
-  selector: 'cs-crud-table',
-  imports: [],
-  template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
+/**
+ * Base table component each table should extend.
+ */
+@Directive()
 export abstract class TableComponent<T extends CrudEntry, D extends DialogComponent<T>>
   implements OnDestroy
 {
-  protected abstract columns: Signal<CrudColumn<T>[]>;
-  protected abstract entries: T[];
-  protected dialogService = inject(DialogService);
+  /**
+   * The columns of the table and how they should be displayed.
+   */
+  protected abstract columns: Signal<CrudTableColumn<T>[]>;
 
+  /**
+   * The table entries.
+   */
+  protected abstract entries: WritableSignal<T[]>;
+
+  /**
+   * Reference to the dialog for this table.
+   */
   protected dialogRef?: DynamicDialogRef<D>;
 
+  /**
+   * Class that represents the dialog component that this table uses.
+   */
   protected abstract dialogClass: DialogComponentConstructor<T, D>;
+
+  /**
+   * PrimeNG service that creates the dialog.
+   */
+  private dialogService = inject(DialogService);
 
   ngOnDestroy(): void {
     if (this.dialogRef) {
@@ -27,16 +42,23 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
     }
   }
 
+  /**
+   * Opens the dialog that matches this table.
+   *
+   * @param entry - The entry to open the dialog with.
+   * @param tableName - The name of the table.
+   */
   protected openDialog(entry: T | null, tableName: string): void {
     this.dialogRef = this.dialogService.open(this.dialogClass, {
       ...DialogComponent.dialogDefaults,
       header: `${entry ? 'Edit' : 'New'} ${tableName} Entry`,
-      data: entry,
-      focusOnShow: false
+      data: entry
     });
 
     this.dialogRef.onClose.subscribe(entry => {
-      console.log(entry);
+      this.entries.update(entries => {
+        return [entry, ...entries];
+      });
     });
   }
 }

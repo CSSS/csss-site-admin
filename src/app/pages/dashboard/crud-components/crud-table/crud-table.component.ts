@@ -1,19 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  output,
-  TemplateRef
-} from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ChangeDetectionStrategy, Component, input, output, TemplateRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 
-export interface CrudColumn<T> {
+export interface CrudTableColumn<T> {
   /**
    * The label of the column in the table header.
    */
@@ -38,12 +29,12 @@ export interface CrudColumn<T> {
    * Transformation to apply to the value before displaying it in the cell.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transform?: (input: any) => any;
+  transform?: (input: any) => string;
 }
 
 @Component({
   selector: 'cs-crud-table',
-  imports: [TableModule, ToolbarModule, ButtonModule, NgTemplateOutlet, ToastModule],
+  imports: [TableModule, ToolbarModule, ButtonModule, NgTemplateOutlet],
   templateUrl: './crud-table.component.html',
   styleUrl: './crud-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -62,23 +53,15 @@ export class CrudTableComponent<T> {
   /**
    * The columns displayed on the table.
    */
-  columns = input.required<CrudColumn<T>[]>();
-
-  dialogOpened = output<T | null>();
-
-  protected selectedEntry: T | null = null;
+  columns = input.required<CrudTableColumn<T>[]>();
 
   /**
-   * Handles the toast notifications.
+   * Event emitter to indicate that the dialog has been opened.
    */
-  private messageService = inject(MessageService);
+  dialogOpened = output<T | null>();
 
-  protected onSubmit(entryKey: string): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: `Successfully updated ${entryKey}`,
-      life: 3000
-    });
-  }
+  /**
+   * The currently selected entry.
+   */
+  protected selectedEntry: T | null = null;
 }

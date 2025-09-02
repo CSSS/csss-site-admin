@@ -15,7 +15,8 @@ export type DialogComponentConstructor<T extends CrudEntry, D extends DialogComp
 export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
   static dialogDefaults = {
     modal: true,
-    closable: true
+    closable: true,
+    focusOnShow: false
   };
 
   protected fb = inject(NonNullableFormBuilder);

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  signal,
   Signal,
   TemplateRef,
   viewChild
@@ -9,7 +10,7 @@ import {
 import { TagModule } from 'primeng/tag';
 import { getValueOfKey } from '../../../../utils/type-utils';
 import {
-  CrudColumn,
+  CrudTableColumn,
   CrudTableComponent
 } from '../../crud-components/crud-table/crud-table.component';
 import { TableComponent } from '../../crud-components/crud-table/table-component';
@@ -44,7 +45,7 @@ export class ElectionsTableComponent extends TableComponent<
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
    */
-  protected columns: Signal<CrudColumn<ElectionsTableEntry>[]> = computed(() => [
+  protected columns: Signal<CrudTableColumn<ElectionsTableEntry>[]> = computed(() => [
     {
       label: 'Slug',
       key: 'slug'
@@ -93,19 +94,21 @@ export class ElectionsTableComponent extends TableComponent<
 
   readonly currentTime = new Date();
 
-  protected entries: ElectionsTableEntry[] = ELECTIONS.map(e => {
-    const startNominations = new Date(e.datetime_start_nominations);
-    const endVoting = new Date(e.datetime_end_voting);
-    const isActive = this.currentTime >= startNominations && this.currentTime <= endVoting;
-    return {
-      ...e,
-      year: startNominations.getFullYear(),
-      startNominations,
-      isActive,
-      availablePositions: e.available_positions.split(',')
-    };
-    // Latest elections should be at the top, based on when nominations start.
-  }).sort(
-    (a, b) => b.startNominations.getUTCMilliseconds() - a.startNominations.getUTCMilliseconds()
+  protected entries = signal(
+    ELECTIONS.map(e => {
+      const startNominations = new Date(e.datetime_start_nominations);
+      const endVoting = new Date(e.datetime_end_voting);
+      const isActive = this.currentTime >= startNominations && this.currentTime <= endVoting;
+      return {
+        ...e,
+        year: startNominations.getFullYear(),
+        startNominations,
+        isActive,
+        availablePositions: e.available_positions.split(',')
+      };
+      // Latest elections should be at the top, based on when nominations start.
+    }).sort(
+      (a, b) => b.startNominations.getUTCMilliseconds() - a.startNominations.getUTCMilliseconds()
+    )
   );
 }
