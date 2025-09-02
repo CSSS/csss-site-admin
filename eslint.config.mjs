@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['src/libs/backend-api/**']
+    ignores: ['src/app/api/**']
   },
   eslint.configs.recommended,
   tseslint.configs.recommended,
