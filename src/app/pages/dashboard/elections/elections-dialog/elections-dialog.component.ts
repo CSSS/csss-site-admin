@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { slugify } from '../../../../utils/string-utils';
 import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
@@ -13,6 +14,7 @@ import { electionTypeLabels } from '../../elections';
 import { officerLabels } from '../../officers';
 import { ElectionsTableEntry } from '../elections-table/elections-table.component';
 import { electionDatesValidator } from './elections-dates.validator';
+import { SlugPipe } from './slug-pipe/slug.pipe';
 
 @Component({
   selector: 'cs-elections-dialog',
@@ -23,8 +25,10 @@ import { electionDatesValidator } from './elections-dates.validator';
     SelectComponent,
     DatepickerComponent,
     ListboxComponent,
-    ButtonModule,
-    CrudDialogComponent
+    CrudDialogComponent,
+    InputTextModule,
+    SlugPipe,
+    FloatLabelModule
   ],
   templateUrl: './elections-dialog.component.html',
   styleUrl: './elections-dialog.component.scss',

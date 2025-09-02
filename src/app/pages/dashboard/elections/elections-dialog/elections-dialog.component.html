@@ -1,4 +1,14 @@
 <cs-crud-dialog [formGroup]="form" (ngSubmit)="submit()">
+  <p-floatlabel>
+    <input
+      pInputText
+      id="elections-field__slug"
+      [value]="form.get('name')?.value ?? '' | slug"
+      type="text"
+      [disabled]="true"
+    />
+    <label for="elections-field__slug">Slug</label>
+  </p-floatlabel>
   <cs-input
     fieldId="elections-field__name"
     label="Election Name"
