@@ -1,19 +1,27 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit
+} from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CrudEntry } from '../crud-item';
 
 /**
  * Constructor required to pass instances of concrete dialog components.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DialogComponentConstructor<T, D extends DialogComponent<T>> = new (...args: any[]) => D;
+export type DialogComponentConstructor<T extends CrudEntry, D extends DialogComponent<T>> = new (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ...args: any[]
+) => D;
+
 @Component({
-  selector: 'cs-dialog',
-  imports: [],
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export abstract class DialogComponent<T> implements OnInit {
+export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
   static dialogDefaults = {
     modal: true,
     closable: true
@@ -29,11 +37,18 @@ export abstract class DialogComponent<T> implements OnInit {
 
   private ref = inject(DynamicDialogRef);
 
-  private config = inject(DynamicDialogConfig);
+  private config: DynamicDialogConfig<T, T> = inject(DynamicDialogConfig);
+
+  private cd = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
+    if (!this.config.data) {
+      return;
+    }
     this.entry = this.config.data;
-    console.log(this.entry);
+    this.form.patchValue({ name: 'hello' });
+    console.log(this.form.controls);
+    this.cd.detectChanges();
   }
 
   protected abstract preSubmit(): T;

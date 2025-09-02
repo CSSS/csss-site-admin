@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, Signal } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
+import { CrudEntry } from '../crud-item';
 import { CrudColumn } from './crud-table.component';
 
 @Component({
@@ -9,7 +10,9 @@ import { CrudColumn } from './crud-table.component';
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export abstract class TableComponent<T, D extends DialogComponent<T>> implements OnDestroy {
+export abstract class TableComponent<T extends CrudEntry, D extends DialogComponent<T>>
+  implements OnDestroy
+{
   protected abstract columns: Signal<CrudColumn<T>[]>;
   protected abstract entries: T[];
   protected dialogService = inject(DialogService);

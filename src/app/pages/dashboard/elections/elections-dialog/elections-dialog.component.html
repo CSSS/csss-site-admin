@@ -1,13 +1,13 @@
 <cs-crud-dialog [formGroup]="form" (ngSubmit)="submit()">
   <cs-input
-    id="elections-field__name"
+    fieldId="elections-field__name"
     label="Election Name"
     formControlName="name"
     [required]="true"
     [invalid]="isInvalid('name')"
   />
   <cs-select
-    id="elections-field__type"
+    fieldId="elections-field__type"
     label="Election Type"
     formControlName="type"
     [options]="electionTypes"
@@ -19,7 +19,7 @@
   />
   <div>
     <cs-datepicker
-      id="elections-field__start-nominations"
+      fieldId="elections-field__start-nominations"
       label="Start Nominations"
       formControlName="startNominations"
       [required]="true"
@@ -33,7 +33,7 @@
   </div>
   <div>
     <cs-datepicker
-      id="elections-field__start-voting"
+      fieldId="elections-field__start-voting"
       label="Start Voting"
       formControlName="startVoting"
       [required]="true"
@@ -47,7 +47,7 @@
   </div>
   <div>
     <cs-datepicker
-      id="elections-field__end-voting"
+      fieldId="elections-field__end-voting"
       label="End Voting"
       formControlName="endVoting"
       [required]="true"
@@ -60,7 +60,7 @@
     }
   </div>
   <cs-listbox
-    id="elections-field__available-positions"
+    fieldId="elections-field__available-positions"
     label="Available Positions"
     formControlName="availablePositions"
     [options]="officerPositions"
@@ -71,7 +71,7 @@
     [invalid]="isInvalid('availablePositions')"
   />
   <cs-input
-    id="elections-field__survey-link"
+    fieldId="elections-field__survey-link"
     label="Survey Link"
     formControlName="surveyLink"
     [invalid]="isInvalid('surveyLink')"

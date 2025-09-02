@@ -3,13 +3,12 @@ import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core
 import { ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'cs-input',
   imports: [ReactiveFormsModule],
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export abstract class CrudFormField implements ControlValueAccessor {
-  id = input.required<string>();
+  fieldId = input.required<string>();
   label = input.required<string>();
   isRequired = input<boolean>(false, { alias: 'required' });
   isInvalid = input<boolean>(false, { alias: 'invalid' });

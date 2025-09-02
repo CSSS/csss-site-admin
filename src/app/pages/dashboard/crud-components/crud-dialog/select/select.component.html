@@ -1,6 +1,6 @@
 <p-floatlabel variant="on">
   <p-select
-    [id]="id()"
+    [inputId]="fieldId()"
     [options]="options()"
     [dataKey]="dataKey()"
     [optionLabel]="optionLabel()"
@@ -11,7 +11,7 @@
     (onBlur)="onTouched()"
   >
   </p-select>
-  <label [for]="id()">{{ label() }}</label>
+  <label [for]="fieldId()">{{ label() }}</label>
 </p-floatlabel>
 @if (isRequiredMissing()) {
   <p-message severity="error" variant="simple">"{{ label() }}" is required</p-message>

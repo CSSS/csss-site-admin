@@ -1,6 +1,6 @@
 <p-floatlabel variant="on">
   <p-datepicker
-    [id]="id()"
+    [id]="fieldId()"
     [disabled]="isDisabled"
     [invalid]="isInvalid()"
     (onSelect)="onChange($event)"
@@ -8,7 +8,7 @@
     iconDisplay="input"
     [showIcon]="true"
   />
-  <label [for]="id()">{{ label() }}</label>
+  <label [for]="fieldId()">{{ label() }}</label>
 </p-floatlabel>
 @if (isRequiredMissing()) {
   <p-message severity="error" variant="simple">"{{ label() }}" is required</p-message>
