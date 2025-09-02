@@ -24,10 +24,10 @@ export abstract class TableComponent<T, D extends DialogComponent<T>> implements
     }
   }
 
-  protected openDialog(entry: T | null): void {
+  protected openDialog(entry: T | null, tableName: string): void {
     this.dialogRef = this.dialogService.open(this.dialogClass, {
       ...DialogComponent.dialogDefaults,
-      header: `${entry ? 'Create' : 'New'} Entry`,
+      header: `${entry ? 'Edit' : 'New'} ${tableName} Entry`,
       data: entry
     });
 
