@@ -33,13 +33,16 @@ import { electionDatesValidator } from './elections-dates.validator';
 export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntry> {
   protected form = this.fb.group(
     {
-      name: ['', Validators.required],
-      type: ['', Validators.required],
-      startNominations: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
-      startVoting: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
-      endVoting: [new Date(), { validators: [Validators.required], updateOn: 'blur' }],
-      availablePositions: [[] as string[], [Validators.required, Validators.minLength(1)]],
-      surveyLink: ['']
+      name: this.fb.control('', Validators.required),
+      type: this.fb.control('', Validators.required),
+      startNominations: this.fb.control(new Date(), Validators.required),
+      startVoting: this.fb.control(new Date(), Validators.required),
+      endVoting: this.fb.control(new Date(), Validators.required),
+      availablePositions: this.fb.control<string[]>(
+        [],
+        [Validators.required, Validators.minLength(1)]
+      ),
+      surveyLink: this.fb.control('')
     },
     { validators: [electionDatesValidator()] }
   );
@@ -68,8 +71,8 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntr
       name,
       type: 'general',
       datetime_start_nominations: startNominations.toISOString(),
-      datetime_start_voting: controls.startVoting.value.toISOString(),
-      datetime_end_voting: controls.endVoting.value.toISOString(),
+      datetime_start_voting: controls.startVoting.value?.toISOString(),
+      datetime_end_voting: controls.endVoting.value?.toISOString(),
       available_positions: availablePositions.join(',').toLowerCase(),
       year: startNominations.getFullYear(),
       startNominations,
