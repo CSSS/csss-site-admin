@@ -31,7 +31,8 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
     this.dialogRef = this.dialogService.open(this.dialogClass, {
       ...DialogComponent.dialogDefaults,
       header: `${entry ? 'Edit' : 'New'} ${tableName} Entry`,
-      data: entry
+      data: entry,
+      focusOnShow: false
     });
 
     this.dialogRef.onClose.subscribe(entry => {
