@@ -19,13 +19,18 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
     focusOnShow: false
   };
 
-  protected fb = inject(NonNullableFormBuilder);
+  /**
+   * Called before submitting the entry.
+   */
+  protected abstract preSubmit(): T;
 
   protected abstract form: FormGroup;
 
+  protected fb = inject(NonNullableFormBuilder);
+
   protected formSubmitted = false;
 
-  protected entry!: T;
+  protected entry: T | null = null;
 
   private ref = inject(DynamicDialogRef);
 
@@ -36,11 +41,8 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
       return;
     }
     this.entry = this.config.data;
-    this.form.patchValue(this.entry);
-    console.log(this.form.controls);
+    this.patchForm();
   }
-
-  protected abstract preSubmit(): T;
 
   submit(): void {
     this.formSubmitted = true;
@@ -71,5 +73,16 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
     }
 
     return args.every(arg => this.form.hasError(arg));
+  }
+
+  /**
+   * Called when patching the form with the entry.
+   */
+  protected patchForm(): void {
+    if (!this.entry) {
+      throw new Error('No entry to patch form with.');
+    }
+    this.form.patchValue(this.entry);
+    console.log(this.form.controls);
   }
 }

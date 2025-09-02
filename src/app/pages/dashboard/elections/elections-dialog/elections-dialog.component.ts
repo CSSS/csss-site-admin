@@ -64,6 +64,16 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionModel> {
     };
   });
 
+  protected override patchForm(): void {
+    this.form.patchValue({
+      ...this.entry,
+      availablePositions: this.entry?.available_positions.split(','),
+      startNominations: new Date(this.entry?.datetime_start_nominations ?? ''),
+      startVoting: new Date(this.entry?.datetime_start_voting ?? ''),
+      endVoting: new Date(this.entry?.datetime_end_voting ?? '')
+    });
+  }
+
   protected override preSubmit(): ElectionModel {
     const controls = this.form.controls;
     const name = controls.name.value;
