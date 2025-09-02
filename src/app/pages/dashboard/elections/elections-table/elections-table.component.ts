@@ -48,11 +48,6 @@ export class ElectionsTableComponent extends TableComponent<
       key: 'name'
     },
     {
-      label: 'Year',
-      key: 'datetime_start_nominations',
-      transform: (value: string) => new Date(value).getUTCFullYear().toString()
-    },
-    {
       label: 'Type',
       key: 'type',
       transform: (value: string) => getValueOfKey(electionTypeLabels, value) ?? value
