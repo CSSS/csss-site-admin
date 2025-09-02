@@ -3,14 +3,15 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { slugify } from '../../../../utils/string-utils';
-import { DialogComponent } from '../../crud-components/crud-dialog/dialog-component';
+import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
 import { DatepickerComponent } from '../../crud-components/crud-dialog/datepicker/datepicker.component';
+import { DialogComponent } from '../../crud-components/crud-dialog/dialog-component';
 import { InputComponent } from '../../crud-components/crud-dialog/input/input.component';
 import { ListboxComponent } from '../../crud-components/crud-dialog/listbox/listbox.component';
 import { SelectComponent } from '../../crud-components/crud-dialog/select/select.component';
-import { ElectionsTableEntry } from '../elections-table/elections-table.component';
-import { officerLabels } from '../../officers';
 import { electionTypeLabels } from '../../elections';
+import { officerLabels } from '../../officers';
+import { ElectionsTableEntry } from '../elections-table/elections-table.component';
 import { electionDatesValidator } from './elections-dates.validator';
 
 @Component({
@@ -22,7 +23,8 @@ import { electionDatesValidator } from './elections-dates.validator';
     SelectComponent,
     DatepickerComponent,
     ListboxComponent,
-    ButtonModule
+    ButtonModule,
+    CrudDialogComponent
   ],
   templateUrl: './elections-dialog.component.html',
   styleUrl: './elections-dialog.component.scss',

@@ -1,1 +1,7 @@
-<p>crud-dialog works!</p>
+<form class="dialog-form" [formGroup]="formGroup()">
+  <ng-content></ng-content>
+  <footer>
+    <p-divider></p-divider>
+    <p-button severity="success" type="submit"><span>Submit</span></p-button>
+  </footer>
+</form>

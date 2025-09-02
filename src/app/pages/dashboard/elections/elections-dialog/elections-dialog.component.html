@@ -1,4 +1,4 @@
-<form class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
+<cs-crud-dialog [formGroup]="form" (ngSubmit)="submit()">
   <cs-input
     id="elections-field__name"
     label="Election Name"
@@ -76,5 +76,4 @@
     formControlName="surveyLink"
     [invalid]="isInvalid('surveyLink')"
   />
-  <p-button severity="success" type="submit"><span>Submit</span></p-button>
-</form>
+</cs-crud-dialog>
