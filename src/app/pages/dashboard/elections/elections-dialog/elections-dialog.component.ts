@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { slugify } from '../../../utils/string-utils';
-import { DialogComponent } from '../crud-dialog/crud-dialog';
-import { DatepickerComponent } from '../crud-dialog/datepicker/datepicker.component';
-import { InputComponent } from '../crud-dialog/input/input.component';
-import { ListboxComponent } from '../crud-dialog/listbox/listbox.component';
-import { SelectComponent } from '../crud-dialog/select/select.component';
+import { slugify } from '../../../../utils/string-utils';
+import { DialogComponent } from '../../crud-components/crud-dialog/dialog-component';
+import { DatepickerComponent } from '../../crud-components/crud-dialog/datepicker/datepicker.component';
+import { InputComponent } from '../../crud-components/crud-dialog/input/input.component';
+import { ListboxComponent } from '../../crud-components/crud-dialog/listbox/listbox.component';
+import { SelectComponent } from '../../crud-components/crud-dialog/select/select.component';
 import { ElectionsTableEntry } from '../elections-table/elections-table.component';
-import { officerLabels } from '../officers';
-import { electionTypeLabels } from '../temp-interfaces';
+import { officerLabels } from '../../officers';
+import { electionTypeLabels } from '../../elections';
 import { electionDatesValidator } from './elections-dates.validator';
 
 @Component({

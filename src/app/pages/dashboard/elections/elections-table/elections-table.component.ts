@@ -7,12 +7,12 @@ import {
   viewChild
 } from '@angular/core';
 import { TagModule } from 'primeng/tag';
-import { getValueOfKey } from '../../../utils/type-utils';
-import { TableComponent } from '../crud-table/crud-table';
-import { CrudColumn, CrudTableComponent } from '../crud-table/crud-table.component';
+import { getValueOfKey } from '../../../../utils/type-utils';
+import { TableComponent } from '../../crud-components/crud-table/table-component';
+import { CrudColumn, CrudTableComponent } from '../../crud-components/crud-table/crud-table.component';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
-import { officerLabels } from '../officers';
-import { ElectionModel, ELECTIONS, electionTypeLabels } from '../temp-interfaces';
+import { officerLabels } from '../../officers';
+import { ElectionModel, ELECTIONS, electionTypeLabels } from '../../elections';
 
 export interface ElectionsTableEntry extends ElectionModel {
   year: number;

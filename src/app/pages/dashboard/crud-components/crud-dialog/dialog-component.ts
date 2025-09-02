@@ -22,8 +22,6 @@ export abstract class DialogComponent<T> implements OnInit {
 
   protected fb = inject(NonNullableFormBuilder);
 
-  protected messageService = inject(MessageService);
-
   protected abstract form: FormGroup;
 
   protected formSubmitted = false;

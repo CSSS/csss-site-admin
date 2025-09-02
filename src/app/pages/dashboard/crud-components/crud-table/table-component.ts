@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, Signal } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/crud-dialog';
+import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
 import { CrudColumn } from './crud-table.component';
 
 @Component({
