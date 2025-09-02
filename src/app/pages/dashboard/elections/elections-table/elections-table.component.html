@@ -8,14 +8,14 @@
 <!-- Template of the Active column cells -->
 <ng-template #activeChipCell let-entry>
   <p-tag
-    [severity]="entry.isActive ? 'success' : 'warn'"
-    [value]="entry.isActive ? 'active' : 'inactive'"
+    [severity]="isElectionActive(entry) ? 'success' : 'warn'"
+    [value]="isElectionActive(entry) ? 'active' : 'inactive'"
   />
 </ng-template>
 
 <!-- Template of the Available Positions -->
 <ng-template #availablePositionsCell let-entry>
-  @for (pos of entry.availablePositions; track pos) {
+  @for (pos of entry.available_positions.split(','); track pos) {
     <div>
       {{ pos | officerFormat }}
     </div>

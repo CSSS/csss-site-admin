@@ -18,13 +18,6 @@ import { ElectionModel, ELECTIONS, electionTypeLabels } from '../../elections';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
 import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
 
-export interface ElectionsTableEntry extends ElectionModel {
-  year: number;
-  startNominations: Date;
-  isActive: boolean;
-  availablePositions: string[];
-}
-
 @Component({
   selector: 'cs-elections-table',
   imports: [CrudTableComponent, TagModule, OfficerFormatPipe],
@@ -33,7 +26,7 @@ export interface ElectionsTableEntry extends ElectionModel {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ElectionsTableComponent extends TableComponent<
-  ElectionsTableEntry,
+  ElectionModel,
   ElectionsDialogComponent
 > {
   protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');
@@ -45,7 +38,7 @@ export class ElectionsTableComponent extends TableComponent<
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
    */
-  protected columns: Signal<CrudTableColumn<ElectionsTableEntry>[]> = computed(() => [
+  protected columns: Signal<CrudTableColumn<ElectionModel>[]> = computed(() => [
     {
       label: 'Slug',
       key: 'slug'
@@ -56,7 +49,8 @@ export class ElectionsTableComponent extends TableComponent<
     },
     {
       label: 'Year',
-      key: 'year'
+      key: 'datetime_start_nominations',
+      transform: (value: string) => new Date(value).getUTCFullYear().toString()
     },
     {
       label: 'Type',
@@ -65,7 +59,6 @@ export class ElectionsTableComponent extends TableComponent<
     },
     {
       label: 'Status',
-      key: 'isActive',
       cellTemplate: this.activeChipCell()
     },
     {
@@ -95,23 +88,20 @@ export class ElectionsTableComponent extends TableComponent<
     }
   ]);
 
-  readonly currentTime = new Date();
+  protected isElectionActive(election: ElectionModel): boolean {
+    const currentTime = new Date();
+    return (
+      currentTime >= new Date(election.datetime_start_nominations) &&
+      currentTime <= new Date(election.datetime_end_voting)
+    );
+  }
 
   protected entries = signal(
-    ELECTIONS.map(e => {
-      const startNominations = new Date(e.datetime_start_nominations);
-      const endVoting = new Date(e.datetime_end_voting);
-      const isActive = this.currentTime >= startNominations && this.currentTime <= endVoting;
-      return {
-        ...e,
-        year: startNominations.getFullYear(),
-        startNominations,
-        isActive,
-        availablePositions: e.available_positions.split(',')
-      };
+    ELECTIONS.sort(
       // Latest elections should be at the top, based on when nominations start.
-    }).sort(
-      (a, b) => b.startNominations.getUTCMilliseconds() - a.startNominations.getUTCMilliseconds()
+      (a, b) =>
+        new Date(b.datetime_start_nominations).getUTCMilliseconds() -
+        new Date(a.datetime_start_nominations).getUTCMilliseconds()
     )
   );
 }

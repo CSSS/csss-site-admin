@@ -15,7 +15,7 @@ export interface CrudTableColumn<T> {
   /**
    * The key to access the column value in each entry.
    */
-  key: keyof T;
+  key?: keyof T;
 
   /**
    * Template of what the cell should look like.

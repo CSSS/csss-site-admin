@@ -10,9 +10,8 @@ import { DialogComponent } from '../../crud-components/crud-dialog/dialog-compon
 import { InputComponent } from '../../crud-components/crud-dialog/input/input.component';
 import { ListboxComponent } from '../../crud-components/crud-dialog/listbox/listbox.component';
 import { SelectComponent } from '../../crud-components/crud-dialog/select/select.component';
-import { electionTypeLabels } from '../../elections';
+import { ElectionModel, ElectionType, electionTypeLabels } from '../../elections';
 import { officerLabels } from '../../officers';
-import { ElectionsTableEntry } from '../elections-table/elections-table.component';
 import { electionDatesValidator } from './elections-dates.validator';
 import { SlugPipe } from './slug-pipe/slug.pipe';
 
@@ -34,11 +33,11 @@ import { SlugPipe } from './slug-pipe/slug.pipe';
   styleUrl: './elections-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntry> {
+export class ElectionsDialogComponent extends DialogComponent<ElectionModel> {
   protected form = this.fb.group(
     {
       name: this.fb.control('', Validators.required),
-      type: this.fb.control('', Validators.required),
+      type: this.fb.control<ElectionType>('general', Validators.required),
       startNominations: this.fb.control(new Date(), Validators.required),
       startVoting: this.fb.control(new Date(), Validators.required),
       endVoting: this.fb.control(new Date(), Validators.required),
@@ -65,23 +64,17 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionsTableEntr
     };
   });
 
-  protected override preSubmit(): ElectionsTableEntry {
+  protected override preSubmit(): ElectionModel {
     const controls = this.form.controls;
     const name = controls.name.value;
-    const availablePositions = controls.availablePositions.value;
-    const startNominations = controls.startNominations.value;
     return {
       slug: slugify(name),
       name,
-      type: 'general',
-      datetime_start_nominations: startNominations.toISOString(),
-      datetime_start_voting: controls.startVoting.value?.toISOString(),
-      datetime_end_voting: controls.endVoting.value?.toISOString(),
-      available_positions: availablePositions.join(',').toLowerCase(),
-      year: startNominations.getFullYear(),
-      startNominations,
-      isActive: false,
-      availablePositions
+      type: controls.type.value,
+      datetime_start_nominations: controls.startNominations.value.toISOString(),
+      datetime_start_voting: controls.startVoting.value.toISOString(),
+      datetime_end_voting: controls.endVoting.value.toISOString(),
+      available_positions: controls.availablePositions.value.join(',').toLowerCase()
     };
   }
 }
