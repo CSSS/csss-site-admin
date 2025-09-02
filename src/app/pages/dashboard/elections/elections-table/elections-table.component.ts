@@ -7,8 +7,8 @@ import {
   TemplateRef,
   viewChild
 } from '@angular/core';
+import { getValueOfKey } from '@utils/type-utils';
 import { TagModule } from 'primeng/tag';
-import { getValueOfKey } from '../../../../utils/type-utils';
 import {
   CrudTableColumn,
   CrudTableComponent

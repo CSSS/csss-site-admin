@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { slugify } from '@utils/string-utils';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { slugify } from '../../../../utils/string-utils';
 import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
 import { DatepickerComponent } from '../../crud-components/crud-dialog/datepicker/datepicker.component';
 import { DialogComponent } from '../../crud-components/crud-dialog/dialog-component';

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { getValueOfKey } from '../../../../../utils/type-utils';
-import { officerLabels } from '../../../officers';
+import { officerLabels } from '@dashboard/officers';
+import { getValueOfKey } from '@utils/type-utils';
 
 @Pipe({
   name: 'officerFormat'

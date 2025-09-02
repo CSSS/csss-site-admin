@@ -4,6 +4,21 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
+    "baseUrl": "src",
+    "paths": {
+      "@api/*": [
+        "app/api/*"
+      ],
+      "@pages/*": [
+        "app/pages/*"
+      ],
+      "@dashboard/*": [
+        "app/pages/dashboard/*"
+      ],
+      "@utils/*": [
+        "app/utils/*"
+      ]
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,

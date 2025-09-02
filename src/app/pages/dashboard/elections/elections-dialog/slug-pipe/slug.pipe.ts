@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { slugify } from '../../../../../utils/string-utils';
+import { slugify } from '@utils/string-utils';
 
 @Pipe({
   name: 'slug'
