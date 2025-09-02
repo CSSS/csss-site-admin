@@ -15,9 +15,11 @@
 
 <!-- Template of the Available Positions -->
 <ng-template #availablePositionsCell let-entry>
-  @for (pos of entry.available_positions.split(','); track pos) {
-    <div>
-      {{ pos | officerFormat }}
-    </div>
-  }
+  <ul>
+    @for (pos of entry.available_positions.split(','); track pos) {
+      <li>
+        {{ pos | officerFormat }}
+      </li>
+    }
+  </ul>
 </ng-template>
