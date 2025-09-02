@@ -12,7 +12,12 @@
   [optionValue]="optionValue()"
   (onChange)="onChange($event.value)"
   (onBlur)="onTouched()"
-></p-listbox>
+/>
 @if (isRequiredMissing()) {
   <p-message severity="error" variant="simple">"{{ label() }}" is required</p-message>
+}
+@if (isMinLengthInvalid()) {
+  <p-message severity="error" variant="simple"
+    >"{{ label() }}" required at least {{ minLength() }} options picked</p-message
+  >
 }

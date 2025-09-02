@@ -13,11 +13,37 @@ import { CrudFormField } from '../crud-form-field';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListboxComponent extends CrudFormField {
+  /**
+   * The options available to select.
+   */
   options = input.required<unknown[]>();
 
+  /**
+   * The key in the option objects that uniquely identifies each option.
+   */
   dataKey = input.required<string>();
 
+  /**
+   * The key in the option objects that is used for the label.
+   */
   optionLabel = input.required<string>();
 
+  /**
+   * The key in the option objects that is used for the value.
+   */
   optionValue = input.required<string>();
+
+  /**
+   * Minimum number of options to select.
+   */
+  minLength = input<number>(0);
+
+  isMinLengthInvalid(): boolean {
+    return (
+      this.minLength() > 0 &&
+      this.ngControl?.invalid &&
+      this.ngControl?.touched &&
+      this.ngControl?.errors?.['minLength']
+    );
+  }
 }
