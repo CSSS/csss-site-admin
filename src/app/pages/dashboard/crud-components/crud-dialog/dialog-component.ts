@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  OnInit
-} from '@angular/core';
+import { Directive, inject, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CrudEntry } from '../crud-item';
@@ -17,10 +11,7 @@ export type DialogComponentConstructor<T extends CrudEntry, D extends DialogComp
   ...args: any[]
 ) => D;
 
-@Component({
-  template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
+@Directive()
 export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
   static dialogDefaults = {
     modal: true,
@@ -39,16 +30,13 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
 
   private config: DynamicDialogConfig<T, T> = inject(DynamicDialogConfig);
 
-  private cd = inject(ChangeDetectorRef);
-
   ngOnInit(): void {
     if (!this.config.data) {
       return;
     }
     this.entry = this.config.data;
-    this.form.patchValue({ name: 'hello' });
+    this.form.patchValue(this.entry);
     console.log(this.form.controls);
-    this.cd.detectChanges();
   }
 
   protected abstract preSubmit(): T;

@@ -1,24 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { Directive, inject, input } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
-@Component({
-  imports: [ReactiveFormsModule],
-  template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
+@Directive()
 export abstract class CrudFormField implements ControlValueAccessor {
   fieldId = input.required<string>();
   label = input.required<string>();
   isRequired = input<boolean>(false, { alias: 'required' });
   isInvalid = input<boolean>(false, { alias: 'invalid' });
-  formControlName = input<string>();
 
-  value: any = null;
+  value: any;
   isDisabled = false;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onChange = (_: any): void => {};
-  onTouched = (): void => {};
+  protected onChange = (_: any): void => {};
+  protected onTouched = (): void => {};
 
   protected ngControl = inject(NgControl, { optional: true, self: true });
   constructor() {

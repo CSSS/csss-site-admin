@@ -5,7 +5,7 @@
     [disabled]="isDisabled"
     [invalid]="isInvalid()"
     [value]="value"
-    (onChange)="onChange($event.target.value)"
+    (input)="onChange($event.target.value)"
     (blur)="onTouched()"
     type="text"
   />
