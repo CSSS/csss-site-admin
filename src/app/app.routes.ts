@@ -8,5 +8,16 @@ export const routes: Routes = [
       import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     children: dashboardRoutes,
     title: 'Dashboard'
+  },
+  {
+    path: 'api',
+    pathMatch: 'prefix',
+    loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent),
+    title: 'Redirecting...'
+  },
+  {
+    path: '',
+    loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent),
+    title: 'Login'
   }
 ];

@@ -92,7 +92,8 @@
               "buildTarget": "csss-site-admin:build:production"
             },
             "development": {
-              "buildTarget": "csss-site-admin:build:development"
+              "buildTarget": "csss-site-admin:build:development",
+              "port": 8080
             }
           },
           "defaultConfiguration": "development"

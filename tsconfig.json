@@ -4,19 +4,19 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
       "@api/*": [
-        "app/api/*"
+        "src/app/api/*"
       ],
       "@pages/*": [
-        "app/pages/*"
+        "src/app/pages/*"
       ],
       "@dashboard/*": [
-        "app/pages/dashboard/*"
+        "src/app/pages/dashboard/*"
       ],
       "@utils/*": [
-        "app/utils/*"
+        "src/app/utils/*"
       ]
     },
     "strict": true,
