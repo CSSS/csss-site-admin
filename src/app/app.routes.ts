@@ -10,8 +10,7 @@ export const routes: Routes = [
     title: 'Dashboard'
   },
   {
-    path: 'api',
-    pathMatch: 'prefix',
+    path: 'api/auth/login',
     loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent),
     title: 'Redirecting...'
   },
