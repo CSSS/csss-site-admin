@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginService {
   private casLogInUrl = 'https://cas.sfu.ca/cas/login';
-  private authLogInUrl = '/api/auth/login';
   private redirectUrl = `${environment.appUrl}/auth`;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -23,11 +22,22 @@ export class LoginService {
 
     if (ticket) {
       this.authApi
-        .login({
-          redirectPath: this.redirectUrl,
-          ticket
-        })
-        .subscribe();
+        .login(
+          {
+            service: this.redirectUrl,
+            ticket
+          },
+          'response'
+        )
+        .subscribe({
+          next: response => {
+            console.log(response);
+            if (!response.ok) {
+              return;
+            }
+            this.router.navigate(['dashboard', 'elections']);
+          }
+        });
     }
   }
 }

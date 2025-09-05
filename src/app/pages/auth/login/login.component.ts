@@ -11,8 +11,4 @@ import { LoginService } from '../cas/login.service';
 })
 export class LoginComponent {
   loginService = inject(LoginService);
-
-  test(): void {
-    console.log(this.loginService.getLoginUrl());
-  }
 }
