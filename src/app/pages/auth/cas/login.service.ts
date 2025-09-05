@@ -9,14 +9,13 @@ import { environment } from 'src/environments/environment';
 export class LoginService {
   private casLogInUrl = 'https://cas.sfu.ca/cas/login';
   private authLogInUrl = '/api/auth/login';
+  private redirectUrl = `${environment.appUrl}/auth`;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private authApi = inject(AuthenticationService);
 
   getLoginUrl(): string {
-    return `${this.casLogInUrl}?service=${encodeURIComponent(
-      environment.appUrl + this.authLogInUrl + `?redirect_path=${environment.appUrl}`
-    )}`;
+    return `${this.casLogInUrl}?service=${encodeURIComponent(this.redirectUrl)}`;
   }
 
   validate(): void {
@@ -25,10 +24,10 @@ export class LoginService {
     if (ticket) {
       this.authApi
         .login({
-          redirectPath: environment.appUrl,
+          redirectPath: this.redirectUrl,
           ticket
         })
-        .subscribe(console.log);
+        .subscribe();
     }
   }
 }

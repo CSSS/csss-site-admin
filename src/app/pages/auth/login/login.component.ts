@@ -10,9 +10,9 @@ import { LoginService } from '../cas/login.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  sfuCas = inject(LoginService);
+  loginService = inject(LoginService);
 
   test(): void {
-    console.log(this.sfuCas.getLoginUrl());
+    console.log(this.loginService.getLoginUrl());
   }
 }
