@@ -35,7 +35,7 @@ export class LoginService {
             if (!response.ok) {
               return;
             }
-            this.router.navigate(['dashboard', 'elections']);
+            this.router.navigate(['dashboard']);
           }
         });
     }
