@@ -1,16 +1,18 @@
 {
   "name": "csss-site-admin",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "prebuild": "openapi-generator-cli generate",
+    "api:url": "openapi-generator-cli generate --generator-key csss-backend",
+    "api:file": "openapi-generator-cli generate --generator-key csss-backend-file",
+    "prebuild": "npm run api:file",
     "start": "npm run prebuild && ng serve",
     "build": "npm run prebuild && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "eslint ./src --ext .ts --config eslint.config.mjs",
     "format": "prettier ./src --write",
-    "pre-commit": "npm run lint && npm run format"
+    "precommit": "npm run lint && npm run format"
   },
   "private": true,
   "dependencies": {

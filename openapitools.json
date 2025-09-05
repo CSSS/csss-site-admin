@@ -6,12 +6,22 @@
     "generators": {
       "csss-backend": {
         "generatorName": "typescript-angular",
+        "inputSpec": "http://localhost:3049/api/openapi.json",
+        "output": "#{cwd}/src/app/api/backend-api",
+        "additionalProperties": {
+          "ngVersion": "20.0.0",
+          "supportsES6": "true",
+          "fileNaming": "kebab-case",
+          "withInterfaces": true
+        }
+      },
+      "csss-backend-file": {
+        "generatorName": "typescript-angular",
         "inputSpec": "#{cwd}/src/app/api/backend-api.schema.json",
         "output": "#{cwd}/src/app/api/backend-api",
         "additionalProperties": {
           "ngVersion": "20.0.0",
           "supportsES6": "true",
-          "useSingleRequestParameter": true,
           "fileNaming": "kebab-case",
           "withInterfaces": true
         }
