@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LoginService } from './login.service';
+import { CsssAuthService } from './login.service';
 
 describe('SfuCasService', () => {
-  let service: LoginService;
+  let service: CsssAuthService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(LoginService);
+    service = TestBed.inject(CsssAuthService);
   });
 
   it('should be created', () => {

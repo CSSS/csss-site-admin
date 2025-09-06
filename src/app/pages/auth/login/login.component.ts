@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { LoginService } from '../cas/login.service';
+import { CsssAuthService } from '../csss-auth/login.service';
 
 @Component({
   selector: 'cs-login',
@@ -10,5 +10,5 @@ import { LoginService } from '../cas/login.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  loginService = inject(LoginService);
+  loginService = inject(CsssAuthService);
 }
