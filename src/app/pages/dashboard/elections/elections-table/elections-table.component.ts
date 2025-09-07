@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  signal,
+  inject,
   Signal,
   TemplateRef,
   viewChild
 } from '@angular/core';
+import { ElectionsService } from '@api/backend-api';
+import { ElectionModel } from '@api/backend-api/model/models';
 import { getValueOfKey } from '@utils/type-utils';
 import { TagModule } from 'primeng/tag';
 import {
@@ -14,7 +16,7 @@ import {
   CrudTableComponent
 } from '../../crud-components/crud-table/crud-table.component';
 import { TableComponent } from '../../crud-components/crud-table/table-component';
-import { ElectionModel, ELECTIONS, electionTypeLabels } from '../../elections';
+import { electionTypeLabels } from '../../elections';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
 import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
 
@@ -29,6 +31,7 @@ export class ElectionsTableComponent extends TableComponent<
   ElectionModel,
   ElectionsDialogComponent
 > {
+  private electionApi = inject(ElectionsService);
   protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');
 
   protected availablePosCell = viewChild.required<TemplateRef<unknown>>('availablePositionsCell');
@@ -83,6 +86,19 @@ export class ElectionsTableComponent extends TableComponent<
     }
   ]);
 
+  protected override dataSource = this.electionApi.listElectionsElectionsListGet();
+
+  protected override fetchEntries(): void {
+    this.dataSource.subscribe(res => {
+      const entries = res.sort(
+        // Latest elections should be at the top, based on the end voting date
+        (a, b) =>
+          new Date(b.datetime_end_voting).getTime() - new Date(a.datetime_end_voting).getTime()
+      );
+      this.entries.set(entries);
+    });
+  }
+
   protected isElectionActive(election: ElectionModel): boolean {
     const currentTime = new Date();
     return (
@@ -90,13 +106,4 @@ export class ElectionsTableComponent extends TableComponent<
       currentTime <= new Date(election.datetime_end_voting)
     );
   }
-
-  protected entries = signal(
-    ELECTIONS.sort(
-      // Latest elections should be at the top, based on when nominations start.
-      (a, b) =>
-        new Date(b.datetime_start_nominations).getUTCMilliseconds() -
-        new Date(a.datetime_start_nominations).getUTCMilliseconds()
-    )
-  );
 }

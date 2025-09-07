@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { ElectionModel, ElectionTypeEnum } from '@api/backend-api/model/models';
 import { slugify } from '@utils/string-utils';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,7 +11,7 @@ import { DialogComponent } from '../../crud-components/crud-dialog/dialog-compon
 import { InputComponent } from '../../crud-components/crud-dialog/input/input.component';
 import { ListboxComponent } from '../../crud-components/crud-dialog/listbox/listbox.component';
 import { SelectComponent } from '../../crud-components/crud-dialog/select/select.component';
-import { ElectionModel, ElectionType, electionTypeLabels } from '../../elections';
+import { electionTypeLabels } from '../../elections';
 import { officerLabels } from '../../officers';
 import { electionDatesValidator } from './elections-dates.validator';
 import { SlugPipe } from './slug-pipe/slug.pipe';
@@ -37,7 +38,7 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionModel> {
   protected form = this.fb.group(
     {
       name: this.fb.control('', Validators.required),
-      type: this.fb.control<ElectionType>('general', Validators.required),
+      type: this.fb.control<ElectionTypeEnum>('general_election', Validators.required),
       startNominations: this.fb.control(new Date(), Validators.required),
       startVoting: this.fb.control(new Date(), Validators.required),
       endVoting: this.fb.control(new Date(), Validators.required),
