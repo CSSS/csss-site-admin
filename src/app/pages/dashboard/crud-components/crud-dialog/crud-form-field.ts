@@ -23,12 +23,7 @@ export abstract class CrudFormField implements ControlValueAccessor {
   }
 
   isRequiredMissing(): boolean {
-    return (
-      this.isRequired() &&
-      this.ngControl?.invalid &&
-      this.ngControl?.touched &&
-      this.ngControl?.errors?.['required']
-    );
+    return this.isRequired() && this.isInvalid() && this.ngControl?.errors?.['required'];
   }
 
   writeValue(value: any): void {

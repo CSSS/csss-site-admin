@@ -49,7 +49,6 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
     if (this.form.valid) {
       this.ref.close(this.preSubmit());
     }
-    this.formSubmitted = false;
   }
 
   /**

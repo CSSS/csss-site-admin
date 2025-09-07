@@ -39,11 +39,6 @@ export class ListboxComponent extends CrudFormField {
   minLength = input<number>(0);
 
   isMinLengthInvalid(): boolean {
-    return (
-      this.minLength() > 0 &&
-      this.ngControl?.invalid &&
-      this.ngControl?.touched &&
-      this.ngControl?.errors?.['minLength']
-    );
+    return this.minLength() > 0 && this.isInvalid() && this.ngControl?.errors?.['minLength'];
   }
 }
