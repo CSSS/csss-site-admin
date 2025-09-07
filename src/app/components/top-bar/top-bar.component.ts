@@ -1,51 +1,40 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CsssAuthService } from '@pages/auth/csss-auth/csss-auth.service';
 import { MenuItem, PrimeIcons } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 
 @Component({
   selector: 'cs-top-bar',
-  imports: [MenubarModule],
+  imports: [MenubarModule, MenuModule, ButtonModule, RouterModule],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarComponent {
-  menuItems: MenuItem[] = [
+  protected auth = inject(CsssAuthService);
+  protected menuItems: MenuItem[] = [
     {
-      label: 'Create',
-      icon: PrimeIcons.PLUS,
-      items: [
-        {
-          label: 'Election',
-          icon: PrimeIcons.TICKET
-        },
-        {
-          label: 'Nominee',
-          icon: PrimeIcons.RECEIPT
-        },
-        {
-          label: 'Officer',
-          icon: PrimeIcons.CROWN
-        }
-      ]
+      label: 'Elections',
+      icon: PrimeIcons.TICKET,
+      routerLink: ['/dashboard/elections'],
+      routerLinkActiveOptions: { exact: true }
     },
     {
-      label: 'Edit',
-      icon: PrimeIcons.PENCIL,
-      items: [
-        {
-          label: 'General Election',
-          icon: PrimeIcons.USERS
-        },
-        {
-          label: 'By-Election',
-          icon: PrimeIcons.USER_PLUS
-        },
-        {
-          label: 'Council Representative',
-          icon: PrimeIcons.USER
-        }
-      ]
+      label: 'Officers',
+      icon: PrimeIcons.CROWN,
+      routerLink: ['/dashboard/officers'],
+      routerLinkActiveOptions: { exact: true }
+    }
+  ];
+
+  protected options: MenuItem[] = [
+    {
+      label: 'Log out',
+      icon: PrimeIcons.SIGN_OUT,
+      command: () => console.log('Sign out')
     }
   ];
 }

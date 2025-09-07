@@ -2,3 +2,13 @@
   display: block;
   margin: 1rem 1rem 0;
 }
+
+img {
+  width: 2rem;
+  aspect-ratio: 1 / 1;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: center;
+}

@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class CsssAuthService {
-  user = signal<SiteUserModel | null>(null);
+  user = signal<SiteUserModel | undefined>(undefined);
   isAuthenticated = computed<boolean>(() => !!this.user());
 
   private route = inject(ActivatedRoute);
@@ -27,7 +27,7 @@ export class CsssAuthService {
     switchMap(params => {
       const ticket = params['ticket'];
       this.router.navigate([], {
-        queryParams: { ticket: null },
+        queryParams: { ticket: undefined },
         queryParamsHandling: 'merge',
         relativeTo: this.route,
         replaceUrl: true
