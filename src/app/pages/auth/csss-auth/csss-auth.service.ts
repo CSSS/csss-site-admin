@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService, SiteUserModel } from '@api/backend-api';
 import { of } from 'rxjs';
@@ -10,8 +10,13 @@ import { environment } from 'src/environments/environment';
 })
 export class CsssAuthService {
   user = signal<SiteUserModel | null>(null);
+  isAuthenticated = computed<boolean>(() => !!this.user());
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private authApi = inject(AuthenticationService);
+
+  readonly loginUrl = `https://cas.sfu.ca/cas/login?service=${encodeURIComponent(environment.appUrl)}`;
 
   logIn$ = this.route.queryParams.pipe(
     // Don't fire if there is already a user logged in.
@@ -41,30 +46,7 @@ export class CsssAuthService {
     }),
     // Get the user of the current session
     concatMap(() => this.authApi.getUser()),
-    // Set it in the service
+    // Set the user
     tap(this.user.set)
   );
-
-  private casLogInUrl = 'https://cas.sfu.ca/cas/login';
-
-  private authApi = inject(AuthenticationService);
-
-  getLoginUrl(): string {
-    return `${this.casLogInUrl}?service=${encodeURIComponent(environment.appUrl)}`;
-  }
-
-  /**
-   * Ask the backend to verify and create a session for us.
-   */
-  // private logIn(ticket: string): Observable<SiteUserModel> {
-  //   return this.authApi
-  //     .login(
-  //       {
-  //         service: environment.appUrl,
-  //         ticket
-  //       },
-  //       'response'
-  //     )
-  //     .pipe(concatMap(() => this.authApi.getUser()));
-  // }
 }

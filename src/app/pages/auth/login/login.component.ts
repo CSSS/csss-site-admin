@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { CsssAuthService } from '../csss-auth/csss-auth.service';
 
 @Component({
   selector: 'cs-login',
@@ -8,5 +9,6 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class LoginComponent {}
+export class LoginComponent {
+  auth = inject(CsssAuthService);
+}
