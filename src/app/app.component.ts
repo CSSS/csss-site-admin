@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { CsssAuthService } from '@pages/auth/csss-auth/csss-auth.service';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 
@@ -11,6 +12,19 @@ import { DialogService } from 'primeng/dynamicdialog';
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {
-  title = 'csss-site-admin';
+export class AppComponent implements OnInit {
+  private csssAuth = inject(CsssAuthService);
+  private router = inject(Router);
+
+  ngOnInit(): void {
+    this.csssAuth.logIn$.subscribe({
+      next: user => {
+        console.log(user);
+        this.router.navigate(['dashboard']);
+      },
+      error: err => {
+        throw new Error(err);
+      }
+    });
+  }
 }

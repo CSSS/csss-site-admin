@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://sfucsss.org/api',
-  appUrl: 'https://sfucsss.org'
+  apiUrl: 'https://admin.sfucsss.org/api',
+  appUrl: 'https://admin.sfucsss.org'
 };

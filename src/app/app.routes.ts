@@ -10,11 +10,6 @@ export const routes: Routes = [
     title: 'Dashboard'
   },
   {
-    path: 'auth',
-    loadComponent: () => import('./pages/auth/auth.component').then(m => m.AuthComponent),
-    title: 'Redirecting...'
-  },
-  {
     path: '',
     loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent),
     title: 'Login'
