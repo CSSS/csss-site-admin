@@ -1,6 +1,6 @@
 export const officerLabels = {
   president: 'President',
-  'vice-president': 'Vice President',
+  'vice-president': 'Vice-President',
   treasurer: 'Treasurer',
   'director of resources': 'Director of Resources',
   'director of events': 'Director of Events',

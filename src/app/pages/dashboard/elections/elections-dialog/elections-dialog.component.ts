@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { ElectionResponse, ElectionTypeEnum } from '@api/backend-api/model/models';
+import {
+  ElectionParams,
+  ElectionResponse,
+  ElectionTypeEnum,
+  ElectionUpdateParams
+} from '@api/backend-api/model/models';
+import { ElectionsSourceService } from '@pages/dashboard/crud-sources/elections/elections.source.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -33,7 +39,13 @@ import { SlugPipe } from './pipes/slug.pipe';
   styleUrl: './elections-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElectionsDialogComponent extends DialogComponent<ElectionResponse> {
+export class ElectionsDialogComponent extends DialogComponent<
+  ElectionResponse,
+  ElectionParams,
+  ElectionUpdateParams
+> {
+  protected dataSource = inject(ElectionsSourceService);
+
   protected form = this.fb.group(
     {
       name: this.fb.control('', Validators.required),
@@ -74,7 +86,7 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionResponse> 
     });
   }
 
-  protected override preSubmit(): void {
+  protected override preSubmit(): ElectionParams {
     const controls = this.form.controls;
     const name = controls.name.value;
     return {
@@ -83,7 +95,8 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionResponse> 
       datetime_start_nominations: controls.startNominations.value.toISOString(),
       datetime_start_voting: controls.startVoting.value.toISOString(),
       datetime_end_voting: controls.endVoting.value.toISOString(),
-      available_positions: controls.availablePositions.value
+      available_positions: controls.availablePositions.value,
+      survey_link: controls.surveyLink.value ?? null
     };
   }
 }

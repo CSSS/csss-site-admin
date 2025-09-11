@@ -9,7 +9,7 @@ import { CrudTableColumn } from './crud-table.component';
  * Base table component each table should extend.
  */
 @Directive()
-export abstract class TableComponent<T extends CrudEntry, D extends DialogComponent<T>>
+export abstract class TableComponent<T extends CrudEntry, D extends DialogComponent<T, C, U>, C, U>
   implements OnInit, OnDestroy
 {
   /**
@@ -20,7 +20,7 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
   /**
    * The data used for the table entries.
    */
-  protected abstract dataSource: CrudSource<T>;
+  protected abstract dataSource: CrudSource<T, C, U>;
 
   /**
    * Reference to the dialog for this table.
@@ -30,7 +30,7 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
   /**
    * Class that represents the dialog component that this table uses.
    */
-  protected abstract dialogClass: DialogComponentConstructor<T, D>;
+  protected abstract dialogClass: DialogComponentConstructor<T, D, C, U>;
 
   /**
    * PrimeNG service that creates the dialog.

@@ -1,40 +1,57 @@
 import { Directive, inject, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CrudEntry } from '../crud-item';
 
 /**
  * Constructor required to pass instances of concrete dialog components.
  */
-export type DialogComponentConstructor<T extends CrudEntry, D extends DialogComponent<T>> = new (
+export type DialogComponentConstructor<
+  T extends CrudEntry,
+  D extends DialogComponent<T, C, U>,
+  C,
+  U
+> = new (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...args: any[]
 ) => D;
 
 @Directive()
-export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
+export abstract class DialogComponent<T extends CrudEntry, C, U> implements OnInit {
   static dialogDefaults = {
     modal: true,
     closable: true,
     focusOnShow: false
   };
 
+  private ref = inject(DynamicDialogRef);
+
+  private config = inject(DynamicDialogConfig);
+
+  protected fb = inject(NonNullableFormBuilder);
+
+  protected abstract dataSource: CrudSource<T, C, U>;
+
   /**
    * Called before submitting the entry.
    */
   protected abstract preSubmit(): void;
 
+  /**
+   * The form in the dialog.
+   */
   protected abstract form: FormGroup;
 
-  protected fb = inject(NonNullableFormBuilder);
-
+  /**
+   * Flag to indicate if there has been an attempted form submission.
+   */
   protected formSubmitted = false;
 
+  /**
+   * The original entry being edited.
+   */
   protected entry: T | null = null;
-
-  private ref = inject(DynamicDialogRef);
-
-  private config: DynamicDialogConfig<T, T> = inject(DynamicDialogConfig);
 
   ngOnInit(): void {
     if (!this.config.data) {
@@ -46,9 +63,10 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
 
   submit(): void {
     this.formSubmitted = true;
-    if (this.form.valid) {
-      this.ref.close(this.preSubmit());
+    if (!this.form.valid) {
+      return;
     }
+    this.ref.close(this.preSubmit());
   }
 
   /**
@@ -66,6 +84,12 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
     return control.invalid && (control.touched || this.formSubmitted);
   }
 
+  /**
+   * Function to check if the form has a certain error.
+   *
+   * @param args - Form control names
+   * @returns True if the dialog has either been touched or is dirty and all the controls show an error.
+   */
   hasDialogError(...args: string[]): boolean {
     if (!this.form.touched && !this.form.dirty) {
       return false;
@@ -82,6 +106,5 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
       throw new Error('No entry to patch form with.');
     }
     this.form.patchValue(this.entry);
-    console.log(this.form.controls);
   }
 }

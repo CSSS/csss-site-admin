@@ -7,8 +7,14 @@ import {
   TemplateRef,
   viewChild
 } from '@angular/core';
-import { ElectionsService } from '@api/backend-api';
-import { ElectionModel, ElectionTypeEnum } from '@api/backend-api/model/models';
+import {
+  ElectionParams,
+  ElectionResponse,
+  ElectionStatusEnum,
+  ElectionTypeEnum,
+  ElectionUpdateParams
+} from '@api/backend-api/model/models';
+import { ElectionsSourceService } from '@pages/dashboard/crud-sources/elections/elections.source.service';
 import { getValueOfKey } from '@utils/type-utils';
 import { TagModule } from 'primeng/tag';
 import {
@@ -27,10 +33,11 @@ import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ElectionsTableComponent extends TableComponent<
-  ElectionModel,
-  ElectionsDialogComponent
+  ElectionResponse,
+  ElectionsDialogComponent,
+  ElectionParams,
+  ElectionUpdateParams
 > {
-  private electionApi = inject(ElectionsService);
   protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');
 
   protected availablePosCell = viewChild.required<TemplateRef<unknown>>('availablePositionsCell');
@@ -40,7 +47,7 @@ export class ElectionsTableComponent extends TableComponent<
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
    */
-  protected columns: Signal<CrudTableColumn<ElectionModel>[]> = computed(() => [
+  protected columns: Signal<CrudTableColumn<ElectionResponse>[]> = computed(() => [
     {
       label: 'Slug',
       key: 'slug'
@@ -85,24 +92,12 @@ export class ElectionsTableComponent extends TableComponent<
     }
   ]);
 
-  protected override dataSource = this.electionApi.getAllElections();
+  protected override dataSource = inject(ElectionsSourceService);
 
-  protected override fetchEntries(): void {
-    this.dataSource.subscribe(res => {
-      const entries = res.sort(
-        // Latest elections should be at the top, based on the end voting date
-        (a, b) =>
-          new Date(b.datetime_end_voting).getTime() - new Date(a.datetime_end_voting).getTime()
-      );
-      this.entries.set(entries);
-    });
-  }
-
-  protected isElectionActive(election: ElectionModel): boolean {
-    const currentTime = new Date();
+  protected isElectionActive(election: ElectionResponse): boolean {
     return (
-      currentTime >= new Date(election.datetime_start_nominations) &&
-      currentTime <= new Date(election.datetime_end_voting)
+      election.status !== ElectionStatusEnum.AfterVoting &&
+      election.status !== ElectionStatusEnum.BeforeNominations
     );
   }
 }

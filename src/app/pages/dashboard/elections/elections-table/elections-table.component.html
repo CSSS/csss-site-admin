@@ -1,6 +1,6 @@
 <cs-crud-table
   title="Elections"
-  [entries]="entries()"
+  [entries]="dataSource.entries()"
   [columns]="columns()"
   (dialogOpened)="openDialog($event, 'Elections')"
 />
@@ -16,7 +16,7 @@
 <!-- Template of the Available Positions -->
 <ng-template #availablePositionsCell let-entry>
   <ul>
-    @for (pos of entry.available_positions.split(','); track pos) {
+    @for (pos of entry.available_positions; track pos) {
       <li>
         {{ pos | officerFormat }}
       </li>
