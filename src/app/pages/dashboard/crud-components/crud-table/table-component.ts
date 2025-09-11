@@ -38,7 +38,9 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
   private dialogService = inject(DialogService);
 
   ngOnInit(): void {
-    this.dataSource.fetch();
+    if (!this.dataSource.loaded) {
+      this.dataSource.fetch();
+    }
   }
 
   ngOnDestroy(): void {

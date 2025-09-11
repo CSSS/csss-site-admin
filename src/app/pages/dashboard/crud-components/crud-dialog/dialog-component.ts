@@ -27,7 +27,7 @@ export abstract class DialogComponent<T extends CrudEntry, C, U> implements OnIn
 
   private ref = inject(DynamicDialogRef);
 
-  private config = inject(DynamicDialogConfig);
+  private config: DynamicDialogConfig<T, T> = inject(DynamicDialogConfig);
 
   protected fb = inject(NonNullableFormBuilder);
 
@@ -51,13 +51,10 @@ export abstract class DialogComponent<T extends CrudEntry, C, U> implements OnIn
   /**
    * The original entry being edited.
    */
-  protected entry: T | null = null;
+  protected entry!: T;
 
   ngOnInit(): void {
-    if (!this.config.data) {
-      return;
-    }
-    this.entry = this.config.data;
+    this.entry = this.config.data ?? this.dataSource.default();
     this.patchForm();
   }
 
@@ -100,11 +97,9 @@ export abstract class DialogComponent<T extends CrudEntry, C, U> implements OnIn
 
   /**
    * Called when patching the form with the entry.
+   * Override for items that need to be changed to certain objects.
    */
   protected patchForm(): void {
-    if (!this.entry) {
-      throw new Error('No entry to patch form with.');
-    }
     this.form.patchValue(this.entry);
   }
 }
