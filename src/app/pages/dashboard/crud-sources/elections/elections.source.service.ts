@@ -6,17 +6,23 @@ import {
   ElectionUpdateParams
 } from '@api/backend-api';
 import { Observable } from 'rxjs';
-import { CrudSource } from '../crud-source';
+import { CrudEntry, CrudSource } from '../crud-source';
+
+export class ElectionsSourceEntry extends CrudEntry<ElectionResponse> {}
 
 @Injectable({
   providedIn: 'root'
 })
-export class ElectionsSourceService extends CrudSource<
-  ElectionResponse,
-  ElectionParams,
-  ElectionUpdateParams
-> {
+export class ElectionsSourceService extends CrudSource<ElectionResponse, ElectionsSourceEntry> {
+  protected override entryClass = ElectionsSourceEntry;
   electionsApi = inject(ElectionsService);
+
+  override updateEntry$(
+    entry: ElectionsSourceEntry,
+    params: ElectionUpdateParams
+  ): Observable<ElectionResponse> {
+    return this.electionsApi.updateElection(entry.data[this.PRIMARY_KEY], params);
+  }
 
   protected override readonly PRIMARY_KEY = 'slug';
 
@@ -26,13 +32,19 @@ export class ElectionsSourceService extends CrudSource<
     return this.electionsApi.createElection(newEntry);
   }
 
-  protected override updateEntry$(
-    entry: ElectionResponse,
-    params: ElectionUpdateParams
-  ): Observable<ElectionResponse> {
-    return this.electionsApi.updateElection(entry[this.PRIMARY_KEY], params);
+  override default(): ElectionsSourceEntry {
+    return new ElectionsSourceEntry('', {
+      slug: '',
+      name: '',
+      type: 'general_election',
+      datetime_start_nominations: '',
+      datetime_start_voting: '',
+      datetime_end_voting: '',
+      available_positions: [],
+      status: 'before_nominations'
+    });
   }
 
-  protected override sortFn = (a: ElectionResponse, b: ElectionResponse): number =>
-    new Date(b.datetime_end_voting).getTime() - new Date(a.datetime_end_voting).getTime();
+  protected override sortFn = (a: ElectionsSourceEntry, b: ElectionsSourceEntry): number =>
+    new Date(b.data.datetime_end_voting).getTime() - new Date(a.data.datetime_end_voting).getTime();
 }

@@ -32,13 +32,15 @@
           @if (column.cellTemplate) {
             <ng-container *ngTemplateOutlet="column.cellTemplate; context: { $implicit: entry }" />
           } @else if (column.type === 'date') {
-            {{ entry[column.key] | date: 'medium' }}
-          } @else if (column.type === 'externalLink' && entry[column.key]) {
-            <a [href]="entry[column.key]">
-              {{ entry[column.key] }} <i class="pi pi-external-link"></i>
+            {{ entry.data[column.key] | date: 'medium' }}
+          } @else if (column.type === 'externalLink' && entry.data[column.key]) {
+            <a [href]="entry.data[column.key]">
+              {{ entry.data[column.key] }} <i class="pi pi-external-link"></i>
             </a>
           } @else {
-            {{ column.transform ? column.transform(entry[column.key]) : entry[column.key] }}
+            {{
+              column.transform ? column.transform(entry.data[column.key]) : entry.data[column.key]
+            }}
           }
         </td>
       }

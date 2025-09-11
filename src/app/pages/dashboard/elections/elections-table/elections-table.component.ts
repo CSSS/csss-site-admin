@@ -8,13 +8,14 @@ import {
   viewChild
 } from '@angular/core';
 import {
-  ElectionParams,
   ElectionResponse,
   ElectionStatusEnum,
-  ElectionTypeEnum,
-  ElectionUpdateParams
+  ElectionTypeEnum
 } from '@api/backend-api/model/models';
-import { ElectionsSourceService } from '@pages/dashboard/crud-sources/elections/elections.source.service';
+import {
+  ElectionsSourceEntry,
+  ElectionsSourceService
+} from '@pages/dashboard/crud-sources/elections/elections.source.service';
 import { getValueOfKey } from '@utils/type-utils';
 import { TagModule } from 'primeng/tag';
 import {
@@ -34,9 +35,8 @@ import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
 })
 export class ElectionsTableComponent extends TableComponent<
   ElectionResponse,
-  ElectionsDialogComponent,
-  ElectionParams,
-  ElectionUpdateParams
+  ElectionsSourceEntry,
+  ElectionsDialogComponent
 > {
   protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');
 

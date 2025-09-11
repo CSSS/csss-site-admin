@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { ElectionParams, ElectionResponse, ElectionTypeEnum } from '@api/backend-api/model/models';
 import {
-  ElectionParams,
-  ElectionResponse,
-  ElectionTypeEnum,
-  ElectionUpdateParams
-} from '@api/backend-api/model/models';
-import { ElectionsSourceService } from '@pages/dashboard/crud-sources/elections/elections.source.service';
+  ElectionsSourceEntry,
+  ElectionsSourceService
+} from '@pages/dashboard/crud-sources/elections/elections.source.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -41,8 +39,7 @@ import { SlugPipe } from './pipes/slug.pipe';
 })
 export class ElectionsDialogComponent extends DialogComponent<
   ElectionResponse,
-  ElectionParams,
-  ElectionUpdateParams
+  ElectionsSourceEntry
 > {
   protected dataSource = inject(ElectionsSourceService);
 
@@ -79,10 +76,10 @@ export class ElectionsDialogComponent extends DialogComponent<
   protected override patchForm(): void {
     this.form.patchValue({
       ...this.entry,
-      availablePositions: this.entry?.available_positions,
-      startNominations: new Date(this.entry?.datetime_start_nominations ?? ''),
-      startVoting: new Date(this.entry?.datetime_start_voting ?? ''),
-      endVoting: new Date(this.entry?.datetime_end_voting ?? '')
+      availablePositions: this.entry?.data.available_positions,
+      startNominations: new Date(this.entry?.data.datetime_start_nominations ?? ''),
+      startVoting: new Date(this.entry?.data.datetime_start_voting ?? ''),
+      endVoting: new Date(this.entry?.data.datetime_end_voting ?? '')
     });
   }
 

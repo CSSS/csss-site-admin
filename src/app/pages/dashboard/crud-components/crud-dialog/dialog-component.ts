@@ -1,24 +1,26 @@
 import { Directive, inject, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { CrudSource } from '@pages/dashboard/crud-sources/crud-source';
+import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { CrudEntry } from '../crud-item';
 
 /**
  * Constructor required to pass instances of concrete dialog components.
  */
 export type DialogComponentConstructor<
-  T extends CrudEntry,
-  D extends DialogComponent<T, C, U>,
-  C,
-  U
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends Record<string, any>,
+  E extends CrudEntry<T>,
+  D extends DialogComponent<T, E>
 > = new (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...args: any[]
 ) => D;
 
 @Directive()
-export abstract class DialogComponent<T extends CrudEntry, C, U> implements OnInit {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class DialogComponent<T extends Record<string, any>, E extends CrudEntry<T>>
+  implements OnInit
+{
   static dialogDefaults = {
     modal: true,
     closable: true,
@@ -27,11 +29,11 @@ export abstract class DialogComponent<T extends CrudEntry, C, U> implements OnIn
 
   private ref = inject(DynamicDialogRef);
 
-  private config: DynamicDialogConfig<T, T> = inject(DynamicDialogConfig);
+  private config: DynamicDialogConfig<E, E> = inject(DynamicDialogConfig);
 
   protected fb = inject(NonNullableFormBuilder);
 
-  protected abstract dataSource: CrudSource<T, C, U>;
+  protected abstract dataSource: CrudSource<T, E>;
 
   /**
    * Called before submitting the entry.
@@ -51,7 +53,7 @@ export abstract class DialogComponent<T extends CrudEntry, C, U> implements OnIn
   /**
    * The original entry being edited.
    */
-  protected entry!: T;
+  protected entry!: E;
 
   ngOnInit(): void {
     this.entry = this.config.data ?? this.dataSource.default();

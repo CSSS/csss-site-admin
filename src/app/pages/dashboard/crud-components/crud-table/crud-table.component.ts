@@ -1,5 +1,6 @@
 import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, TemplateRef } from '@angular/core';
+import { CrudEntry } from '@pages/dashboard/crud-sources/crud-source';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -41,7 +42,7 @@ export interface CrudTableColumn<T> {
   styleUrl: './crud-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrudTableComponent<T> {
+export class CrudTableComponent<T, E extends CrudEntry<T>> {
   /**
    * Title of the table.
    */
@@ -50,7 +51,7 @@ export class CrudTableComponent<T> {
   /**
    * The entries in the table.
    */
-  entries = input.required<T[]>();
+  entries = input.required<E[]>();
 
   /**
    * The columns displayed on the table.
@@ -60,10 +61,10 @@ export class CrudTableComponent<T> {
   /**
    * Event emitter to indicate that the dialog has been opened.
    */
-  dialogOpened = output<T | null>();
+  dialogOpened = output<E | null>();
 
   /**
    * The currently selected entry.
    */
-  protected selectedEntry: T | null = null;
+  protected selectedEntry: E | null = null;
 }

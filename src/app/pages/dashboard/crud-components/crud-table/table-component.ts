@@ -1,17 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Directive, inject, OnDestroy, OnInit, Signal } from '@angular/core';
-import { CrudSource } from '@pages/dashboard/crud-sources/crud-source';
+import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
-import { CrudEntry } from '../crud-item';
 import { CrudTableColumn } from './crud-table.component';
 
 /**
  * Base table component each table should extend.
  */
 @Directive()
-export abstract class TableComponent<T extends CrudEntry, D extends DialogComponent<T, C, U>, C, U>
+export abstract class TableComponent<
+    T extends Record<string, any>,
+    E extends CrudEntry<T>,
+    D extends DialogComponent<T, E>
+  >
   implements OnInit, OnDestroy
 {
+  /**
+   * Class that represents the dialog component that this table uses.
+   */
+  protected abstract dialogClass: DialogComponentConstructor<T, E, D>;
+
   /**
    * The columns of the table and how they should be displayed.
    */
@@ -20,17 +29,12 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
   /**
    * The data used for the table entries.
    */
-  protected abstract dataSource: CrudSource<T, C, U>;
+  protected abstract dataSource: CrudSource<T, E>;
 
   /**
    * Reference to the dialog for this table.
    */
   protected dialogRef?: DynamicDialogRef<D>;
-
-  /**
-   * Class that represents the dialog component that this table uses.
-   */
-  protected abstract dialogClass: DialogComponentConstructor<T, D, C, U>;
 
   /**
    * PrimeNG service that creates the dialog.
@@ -55,7 +59,7 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
    * @param entry - The entry to open the dialog with.
    * @param tableName - The name of the table.
    */
-  protected openDialog(entry: T | null, tableName: string): void {
+  protected openDialog(entry: E | null, tableName: string): void {
     this.dialogRef = this.dialogService.open(this.dialogClass, {
       ...DialogComponent.dialogDefaults,
       header: `${entry ? 'Edit' : 'New'} ${tableName} Entry`,

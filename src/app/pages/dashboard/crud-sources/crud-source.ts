@@ -1,10 +1,47 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Constructor required to create new CRUD entries.
+ */
+export type CrudEntryConstructor<T extends Record<string, any>, E extends CrudEntry<T>> = new (
+  ...args: any[]
+) => E;
+
+export abstract class CrudEntry<T> {
+  /**
+   * Unique ID of the entry within the source.
+   */
+  id: string | number;
+
+  /**
+   * The data of the entry.
+   */
+  data: T;
+
+  constructor(id: string | number, data: T) {
+    this.id = id;
+    this.data = data;
+  }
+}
+
+/**
+ * Wrapper for sources of data.
+ * Made as a service so that data doesn't need to be fetched every time we load a page.
+ * T = type of the entries
+ * E = The type of the entries as CRUD entries
+ * C = Parameters to create an entry
+ */
 @Injectable({
   providedIn: 'root'
 })
-export abstract class CrudSource<T, C, U> {
+export abstract class CrudSource<T extends Record<string, any>, E extends CrudEntry<T>> {
+  /**
+   * Class used to construct entries.
+   */
+  protected abstract entryClass: CrudEntryConstructor<T, E>;
+
   /**
    * The key that uniquely identifies each entry.
    */
@@ -18,22 +55,24 @@ export abstract class CrudSource<T, C, U> {
   /**
    * Creates an observable that creates an entry on the backend.
    */
-  protected abstract createEntry$(newEntry: C): Observable<T>;
-
-  /**
-   * Creates an observable that updates an entry on the backend.
-   */
-  protected abstract updateEntry$(entry: T, params: U): Observable<T>;
+  protected abstract createEntry$(newEntry: T): Observable<T>;
 
   /**
    * Flag that indicates the source has been fully loaded.
    */
-  protected loaded = false;
+  loaded = false;
 
   /**
    * The entries that have been fetched.
    */
-  entries: WritableSignal<T[]> = signal([]);
+  entries: WritableSignal<E[]> = signal([]);
+
+  /**
+   * Returns an entry with the default values.
+   */
+  abstract default(): E;
+
+  abstract updateEntry$(entry: E, params: Partial<T>): Observable<T>;
 
   /**
    * Fetches all the entries form the backend.
@@ -42,10 +81,11 @@ export abstract class CrudSource<T, C, U> {
   fetch(): void {
     this.dataSource$.subscribe({
       next: res => {
+        const entries = res.map(e => new this.entryClass(e[this.PRIMARY_KEY], e));
         if (this.sortFn) {
-          res.sort(this.sortFn);
+          entries.sort(this.sortFn);
         }
-        this.entries.set(res);
+        this.entries.set(entries);
         this.loaded = true;
       }
     });
@@ -53,11 +93,11 @@ export abstract class CrudSource<T, C, U> {
 
   /**
    * Adds a new entry to the local list and then sorts the entries.
-   * Does not add the entry to the backend.
+   * Run this locally if you want to update the changes to this list.
    *
    * @param entry - Entry to add
    */
-  addEntry(entry: T): void {
+  addEntry(entry: E): void {
     this.entries.update(entries => {
       const newEntries = [entry, ...entries];
       if (this.sortFn) {
@@ -71,5 +111,5 @@ export abstract class CrudSource<T, C, U> {
    * The function to sort the entries.
    * Called after `addEntry()` and `fetch()`.
    */
-  protected sortFn?: (a: T, b: T) => number;
+  protected sortFn?: (a: E, b: E) => number;
 }
