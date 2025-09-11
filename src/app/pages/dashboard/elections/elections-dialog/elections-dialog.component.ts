@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { ElectionModel, ElectionTypeEnum } from '@api/backend-api/model/models';
-import { slugify } from '@utils/string-utils';
+import { ElectionResponse, ElectionTypeEnum } from '@api/backend-api/model/models';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -11,10 +10,10 @@ import { DialogComponent } from '../../crud-components/crud-dialog/dialog-compon
 import { InputComponent } from '../../crud-components/crud-dialog/input/input.component';
 import { ListboxComponent } from '../../crud-components/crud-dialog/listbox/listbox.component';
 import { SelectComponent } from '../../crud-components/crud-dialog/select/select.component';
-import { electionTypeLabels } from '../../elections';
 import { officerLabels } from '../../officers';
 import { electionDatesValidator } from './elections-dates.validator';
-import { SlugPipe } from './slug-pipe/slug.pipe';
+import { electionTypeLabels } from './pipes/election-type.pipe';
+import { SlugPipe } from './pipes/slug.pipe';
 
 @Component({
   selector: 'cs-elections-dialog',
@@ -34,7 +33,7 @@ import { SlugPipe } from './slug-pipe/slug.pipe';
   styleUrl: './elections-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElectionsDialogComponent extends DialogComponent<ElectionModel> {
+export class ElectionsDialogComponent extends DialogComponent<ElectionResponse> {
   protected form = this.fb.group(
     {
       name: this.fb.control('', Validators.required),
@@ -53,8 +52,8 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionModel> {
 
   electionTypes = Object.entries(electionTypeLabels).map(([k, v]) => {
     return {
-      label: v,
-      value: k
+      label: k,
+      value: v
     };
   });
 
@@ -68,24 +67,23 @@ export class ElectionsDialogComponent extends DialogComponent<ElectionModel> {
   protected override patchForm(): void {
     this.form.patchValue({
       ...this.entry,
-      availablePositions: this.entry?.available_positions.split(','),
+      availablePositions: this.entry?.available_positions,
       startNominations: new Date(this.entry?.datetime_start_nominations ?? ''),
       startVoting: new Date(this.entry?.datetime_start_voting ?? ''),
       endVoting: new Date(this.entry?.datetime_end_voting ?? '')
     });
   }
 
-  protected override preSubmit(): ElectionModel {
+  protected override preSubmit(): void {
     const controls = this.form.controls;
     const name = controls.name.value;
     return {
-      slug: slugify(name),
       name,
       type: controls.type.value,
       datetime_start_nominations: controls.startNominations.value.toISOString(),
       datetime_start_voting: controls.startVoting.value.toISOString(),
       datetime_end_voting: controls.endVoting.value.toISOString(),
-      available_positions: controls.availablePositions.value.join(',').toLowerCase()
+      available_positions: controls.availablePositions.value
     };
   }
 }

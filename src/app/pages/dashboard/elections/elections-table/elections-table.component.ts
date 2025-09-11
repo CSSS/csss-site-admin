@@ -8,7 +8,7 @@ import {
   viewChild
 } from '@angular/core';
 import { ElectionsService } from '@api/backend-api';
-import { ElectionModel } from '@api/backend-api/model/models';
+import { ElectionModel, ElectionTypeEnum } from '@api/backend-api/model/models';
 import { getValueOfKey } from '@utils/type-utils';
 import { TagModule } from 'primeng/tag';
 import {
@@ -16,7 +16,6 @@ import {
   CrudTableComponent
 } from '../../crud-components/crud-table/crud-table.component';
 import { TableComponent } from '../../crud-components/crud-table/table-component';
-import { electionTypeLabels } from '../../elections';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
 import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
 
@@ -53,7 +52,7 @@ export class ElectionsTableComponent extends TableComponent<
     {
       label: 'Type',
       key: 'type',
-      transform: (value: string) => getValueOfKey(electionTypeLabels, value) ?? value
+      transform: (value: string) => getValueOfKey(ElectionTypeEnum, value) ?? value
     },
     {
       label: 'Status',
@@ -86,7 +85,7 @@ export class ElectionsTableComponent extends TableComponent<
     }
   ]);
 
-  protected override dataSource = this.electionApi.listElectionsElectionsListGet();
+  protected override dataSource = this.electionApi.getAllElections();
 
   protected override fetchEntries(): void {
     this.dataSource.subscribe(res => {

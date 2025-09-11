@@ -1,14 +1,6 @@
-import {
-  Directive,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  Signal,
-  WritableSignal
-} from '@angular/core';
+import { Directive, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Observable } from 'rxjs';
 import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
 import { CrudEntry } from '../crud-item';
 import { CrudTableColumn } from './crud-table.component';
@@ -25,12 +17,10 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
    */
   protected abstract columns: Signal<CrudTableColumn<T>[]>;
 
-  protected abstract dataSource: Observable<T[]>;
-
   /**
-   * The table entries.
+   * The data used for the table entries.
    */
-  protected entries: WritableSignal<T[]> = signal([]);
+  protected abstract dataSource: CrudSource<T>;
 
   /**
    * Reference to the dialog for this table.
@@ -48,22 +38,13 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
   private dialogService = inject(DialogService);
 
   ngOnInit(): void {
-    this.fetchEntries();
+    this.dataSource.fetch();
   }
 
   ngOnDestroy(): void {
     if (this.dialogRef) {
       this.dialogRef.close();
     }
-  }
-
-  /**
-   * Method to fetch the entries.
-   * Uses the datasource by default.
-   * Override this to change how the entries are fetched and processed.
-   */
-  protected fetchEntries(): void {
-    this.dataSource.subscribe(this.entries.set);
   }
 
   /**
@@ -80,9 +61,7 @@ export abstract class TableComponent<T extends CrudEntry, D extends DialogCompon
     });
 
     this.dialogRef.onClose.subscribe(entry => {
-      this.entries.update(entries => {
-        return [entry, ...entries];
-      });
+      this.dataSource.addEntry(entry);
     });
   }
 }

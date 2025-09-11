@@ -22,7 +22,7 @@ export abstract class DialogComponent<T extends CrudEntry> implements OnInit {
   /**
    * Called before submitting the entry.
    */
-  protected abstract preSubmit(): T;
+  protected abstract preSubmit(): void;
 
   protected abstract form: FormGroup;
 
