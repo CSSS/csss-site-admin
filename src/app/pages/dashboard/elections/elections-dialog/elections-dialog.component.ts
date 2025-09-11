@@ -61,8 +61,8 @@ export class ElectionsDialogComponent extends DialogComponent<
 
   electionTypes = Object.entries(electionTypeLabels).map(([k, v]) => {
     return {
-      label: k,
-      value: v
+      label: v,
+      value: k
     };
   });
 

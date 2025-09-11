@@ -81,6 +81,7 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   fetch(): void {
     this.dataSource$.subscribe({
       next: res => {
+        // Wrap the entries so they're CRUD entries.
         const entries = res.map(e => new this.entryClass(e[this.PRIMARY_KEY], e));
         if (this.sortFn) {
           entries.sort(this.sortFn);

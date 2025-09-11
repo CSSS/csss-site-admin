@@ -37,9 +37,9 @@ export class ElectionsSourceService extends CrudSource<ElectionResponse, Electio
       slug: '',
       name: '',
       type: 'general_election',
-      datetime_start_nominations: '',
-      datetime_start_voting: '',
-      datetime_end_voting: '',
+      datetime_start_nominations: new Date().toISOString(),
+      datetime_start_voting: new Date().toISOString(),
+      datetime_end_voting: new Date().toISOString(),
       available_positions: [],
       status: 'before_nominations'
     });
