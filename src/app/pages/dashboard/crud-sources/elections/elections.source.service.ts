@@ -5,7 +5,7 @@ import {
   ElectionsService,
   ElectionUpdateParams
 } from '@api/backend-api';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { CrudEntry, CrudSource } from '../crud-source';
 
 export class ElectionsSourceEntry extends CrudEntry<ElectionResponse> {}
@@ -17,19 +17,31 @@ export class ElectionsSourceService extends CrudSource<ElectionResponse, Electio
   protected override entryClass = ElectionsSourceEntry;
   electionsApi = inject(ElectionsService);
 
-  override updateEntry$(
-    entry: ElectionsSourceEntry,
-    params: ElectionUpdateParams
-  ): Observable<ElectionResponse> {
-    return this.electionsApi.updateElection(entry.data[this.PRIMARY_KEY], params);
-  }
-
   protected override readonly PRIMARY_KEY = 'slug';
 
   protected override dataSource$ = this.electionsApi.getAllElections();
 
-  protected override createEntry$(newEntry: ElectionParams): Observable<ElectionResponse> {
-    return this.electionsApi.createElection(newEntry);
+  override createEntry$(newEntry: ElectionParams): Observable<ElectionsSourceEntry> {
+    return this.electionsApi.createElection(newEntry).pipe(
+      map(res => {
+        const entry = new ElectionsSourceEntry(res.slug, res);
+        return entry;
+      }),
+      tap(entry => this.addEntry(entry))
+    );
+  }
+
+  override updateEntry$(
+    entry: ElectionsSourceEntry,
+    params: ElectionUpdateParams
+  ): Observable<ElectionsSourceEntry> {
+    return this.electionsApi.updateElection(entry.data[this.PRIMARY_KEY], params).pipe(
+      map(res => {
+        const entry = new ElectionsSourceEntry(res.slug, res);
+        return entry;
+      }),
+      tap(entry => this.updateEntry(entry))
+    );
   }
 
   override default(): ElectionsSourceEntry {

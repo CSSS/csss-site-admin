@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Directive, inject, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
@@ -7,17 +8,12 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
  * Constructor required to pass instances of concrete dialog components.
  */
 export type DialogComponentConstructor<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends Record<string, any>,
   E extends CrudEntry<T>,
   D extends DialogComponent<T, E>
-> = new (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...args: any[]
-) => D;
+> = new (...args: any[]) => D;
 
 @Directive()
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class DialogComponent<T extends Record<string, any>, E extends CrudEntry<T>>
   implements OnInit
 {
@@ -35,10 +31,9 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
 
   protected abstract dataSource: CrudSource<T, E>;
 
-  /**
-   * Called before submitting the entry.
-   */
-  protected abstract preSubmit(): void;
+  protected abstract newEntry(): Record<string, any>;
+
+  // protected abstract patchEntry(): T;
 
   /**
    * The form in the dialog.
@@ -51,12 +46,22 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
   protected formSubmitted = false;
 
   /**
+   * Flag that indicates the user is editing an existing entry.
+   */
+  protected isEditing = true;
+
+  /**
    * The original entry being edited.
    */
   protected entry!: E;
 
   ngOnInit(): void {
-    this.entry = this.config.data ?? this.dataSource.default();
+    if (!this.config.data) {
+      this.entry = this.dataSource.default();
+      this.isEditing = false;
+    } else {
+      this.entry = this.config.data;
+    }
     this.patchForm();
   }
 
@@ -65,7 +70,14 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
     if (!this.form.valid) {
       return;
     }
-    this.ref.close(this.preSubmit());
+    if (this.isEditing) {
+      console.log('editing');
+    } else {
+      this.dataSource.createEntry$(this.entry.data).subscribe(res => {
+        console.log(res);
+        this.ref.close(res);
+      });
+    }
   }
 
   /**

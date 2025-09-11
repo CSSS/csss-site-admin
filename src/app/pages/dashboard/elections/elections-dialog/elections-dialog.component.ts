@@ -83,11 +83,10 @@ export class ElectionsDialogComponent extends DialogComponent<
     });
   }
 
-  protected override preSubmit(): ElectionParams {
+  protected override newEntry(): ElectionParams {
     const controls = this.form.controls;
-    const name = controls.name.value;
     return {
-      name,
+      name: controls.name.value,
       type: controls.type.value,
       datetime_start_nominations: controls.startNominations.value.toISOString(),
       datetime_start_voting: controls.startVoting.value.toISOString(),

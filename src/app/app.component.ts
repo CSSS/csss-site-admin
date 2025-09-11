@@ -18,8 +18,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.csssAuth.logIn$.subscribe({
-      next: user => {
-        console.log(user);
+      next: () => {
         this.router.navigate(['dashboard']);
       },
       error: err => {

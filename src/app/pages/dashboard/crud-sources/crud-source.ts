@@ -53,11 +53,6 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   protected abstract dataSource$: Observable<T[]>;
 
   /**
-   * Creates an observable that creates an entry on the backend.
-   */
-  protected abstract createEntry$(newEntry: T): Observable<T>;
-
-  /**
    * Flag that indicates the source has been fully loaded.
    */
   loaded = false;
@@ -72,7 +67,12 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
    */
   abstract default(): E;
 
-  abstract updateEntry$(entry: E, params: Partial<T>): Observable<T>;
+  /**
+   * Creates an observable that creates an entry on the backend.
+   */
+  abstract createEntry$(newEntry: T): Observable<E>;
+
+  abstract updateEntry$(entry: E, params: Partial<T>): Observable<E>;
 
   /**
    * Fetches all the entries form the backend.
@@ -103,6 +103,20 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
       const newEntries = [entry, ...entries];
       if (this.sortFn) {
         newEntries.sort(this.sortFn);
+      }
+      return newEntries;
+    });
+  }
+
+  updateEntry(updatedEntry: E): void {
+    this.entries.update(entries => {
+      const newEntries = [];
+      for (const e of entries) {
+        if (e.id === updatedEntry.id) {
+          newEntries.push(updatedEntry);
+        } else {
+          newEntries.push(e);
+        }
       }
       return newEntries;
     });
