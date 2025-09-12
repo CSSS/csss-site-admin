@@ -75,7 +75,7 @@ export class ElectionsDialogComponent extends DialogComponent<
 
   protected override patchForm(): void {
     this.form.patchValue({
-      ...this.entry,
+      ...this.entry.data,
       availablePositions: this.entry?.data.available_positions,
       startNominations: new Date(this.entry?.data.datetime_start_nominations ?? ''),
       startVoting: new Date(this.entry?.data.datetime_start_voting ?? ''),
