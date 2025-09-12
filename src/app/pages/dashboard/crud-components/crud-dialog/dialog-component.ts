@@ -2,6 +2,7 @@
 import { Directive, inject, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
+import { PartialNullable } from '@utils/type-utils';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 /**
@@ -31,9 +32,9 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
 
   protected abstract dataSource: CrudSource<T, E>;
 
-  protected abstract newEntry(): Record<string, any>;
+  protected abstract formToEntry(): void;
 
-  // protected abstract patchEntry(): T;
+  protected abstract getPatchedValues(): PartialNullable<T>;
 
   /**
    * The form in the dialog.
@@ -71,8 +72,10 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
       return;
     }
     if (this.isEditing) {
-      console.log('editing');
+      console.log(this.getPatchedValues());
+      // this.dataSource.updateEntry$(this.entry, this.getPatchedValues());
     } else {
+      this.formToEntry();
       this.dataSource.createEntry$(this.entry.data).subscribe(res => {
         console.log(res);
         this.ref.close(res);
@@ -115,5 +118,10 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
    */
   protected patchForm(): void {
     this.form.patchValue(this.entry);
+  }
+
+  protected getIfDirty(controlName: string): any | undefined {
+    const control = this.form.get(controlName);
+    return control?.dirty ? control.value : undefined;
   }
 }

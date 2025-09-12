@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { ElectionParams, ElectionResponse, ElectionTypeEnum } from '@api/backend-api/model/models';
+import {
+  ElectionResponse,
+  ElectionTypeEnum,
+  ElectionUpdateParams
+} from '@api/backend-api/model/models';
 import {
   ElectionsSourceEntry,
   ElectionsSourceService
@@ -83,16 +87,30 @@ export class ElectionsDialogComponent extends DialogComponent<
     });
   }
 
-  protected override newEntry(): ElectionParams {
+  protected override formToEntry(): void {
     const controls = this.form.controls;
-    return {
+    this.entry.data = {
+      ...this.entry.data,
       name: controls.name.value,
       type: controls.type.value,
       datetime_start_nominations: controls.startNominations.value.toISOString(),
       datetime_start_voting: controls.startVoting.value.toISOString(),
       datetime_end_voting: controls.endVoting.value.toISOString(),
       available_positions: controls.availablePositions.value,
-      survey_link: controls.surveyLink.value ?? null
+      survey_link: controls.surveyLink.value?.length > 0 ? controls.surveyLink.value : null
     };
+  }
+
+  protected getPatchedValues(): ElectionUpdateParams {
+    const result: ElectionUpdateParams = {};
+
+    result.type = this.getIfDirty('type');
+    result.datetime_start_nominations = this.getIfDirty('startNominations');
+    result.datetime_start_voting = this.getIfDirty('startVoting');
+    result.datetime_end_voting = this.getIfDirty('endVoting');
+    result.available_positions = this.getIfDirty('availablePositions');
+    result.survey_link = this.getIfDirty('surveyLink');
+
+    return result;
   }
 }

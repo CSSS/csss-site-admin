@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, signal, WritableSignal } from '@angular/core';
+import { PartialNullable } from '@utils/type-utils';
 import { Observable } from 'rxjs';
 
 /**
@@ -72,7 +73,7 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
    */
   abstract createEntry$(newEntry: T): Observable<E>;
 
-  abstract updateEntry$(entry: E, params: Partial<T>): Observable<E>;
+  abstract updateEntry$(entry: E, params: PartialNullable<T>): Observable<E>;
 
   /**
    * Fetches all the entries form the backend.
