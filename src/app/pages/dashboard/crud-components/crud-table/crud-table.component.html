@@ -17,7 +17,13 @@
   </ng-template>
 </p-toolbar>
 
-<p-table [value]="entries()" selectionMode="single" [(selection)]="selectedEntry">
+<p-table
+  [value]="entries()"
+  selectionMode="single"
+  [(selection)]="selectedEntry"
+  [scrollable]="true"
+  scrollHeight="flex"
+>
   <ng-template #header>
     <tr>
       @for (column of columns(); track column.key) {
