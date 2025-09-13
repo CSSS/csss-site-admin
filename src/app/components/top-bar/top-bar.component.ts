@@ -23,11 +23,17 @@ export class TopBarComponent {
       routerLinkActiveOptions: { exact: true }
     },
     {
-      label: 'Officers',
-      icon: PrimeIcons.CROWN,
-      routerLink: ['/dashboard/officers'],
+      label: 'Nominees',
+      icon: PrimeIcons.USERS,
+      routerLink: ['/dashboard/nominees'],
       routerLinkActiveOptions: { exact: true }
     }
+    // {
+    //   label: 'Officers',
+    //   icon: PrimeIcons.CROWN,
+    //   routerLink: ['/dashboard/officers'],
+    //   routerLinkActiveOptions: { exact: true }
+    // }
   ];
 
   protected options: MenuItem[] = [

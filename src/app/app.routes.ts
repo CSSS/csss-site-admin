@@ -8,6 +8,7 @@ export const routes: Routes = [
       import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     children: dashboardRoutes,
     title: 'Dashboard'
+    // TODO: Enable me before hosting
     // canActivate: [authGuard],
     // canActivateChild: [authGuard]
   },
