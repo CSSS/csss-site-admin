@@ -3,12 +3,20 @@ import {
   ElectionParams,
   ElectionResponse,
   ElectionsService,
+  ElectionStatusEnum,
   ElectionUpdateParams
 } from '@api/backend-api';
 import { map, Observable, tap } from 'rxjs';
 import { CrudEntry, CrudSource } from '../crud-source';
 
-export class ElectionsSourceEntry extends CrudEntry<ElectionResponse> {}
+export class ElectionsSourceEntry extends CrudEntry<ElectionResponse> {
+  isActive(): boolean {
+    return (
+      this.data.status !== ElectionStatusEnum.AfterVoting &&
+      this.data.status !== ElectionStatusEnum.BeforeNominations
+    );
+  }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +59,20 @@ export class ElectionsSourceService extends CrudSource<ElectionResponse, Electio
     });
   }
 
-  protected override sortFn = (a: ElectionsSourceEntry, b: ElectionsSourceEntry): number =>
-    new Date(b.data.datetime_end_voting).getTime() - new Date(a.data.datetime_end_voting).getTime();
+  protected override sortFn = (a: ElectionsSourceEntry, b: ElectionsSourceEntry): number => {
+    // Active elections come first
+    const aActive = a.isActive();
+    const bActive = b.isActive();
+    if (aActive && !bActive) {
+      return -1;
+    }
+    if (!aActive && bActive) {
+      return 1;
+    }
+    // Sort by the nomination start time if they have the same activity.
+    return (
+      new Date(b.data.datetime_start_nominations).getTime() -
+      new Date(a.data.datetime_start_nominations).getTime()
+    );
+  };
 }

@@ -115,7 +115,7 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   /**
    * Finds the changed entry by its unique ID and replaces it.
    *
-   * @param updatedEntry - The values that the entry should be updated with.
+   * @param updatedEntry - The entry with its updated values.
    */
   updateEntry(updatedEntry: E): void {
     this.entries.update(entries => {

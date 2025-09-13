@@ -7,11 +7,7 @@ import {
   TemplateRef,
   viewChild
 } from '@angular/core';
-import {
-  ElectionResponse,
-  ElectionStatusEnum,
-  ElectionTypeEnum
-} from '@api/backend-api/model/models';
+import { ElectionResponse, ElectionTypeEnum } from '@api/backend-api/model/models';
 import {
   ElectionsSourceEntry,
   ElectionsSourceService
@@ -93,11 +89,4 @@ export class ElectionsTableComponent extends TableComponent<
   ]);
 
   protected override dataSource = inject(ElectionsSourceService);
-
-  protected isElectionActive(election: ElectionResponse): boolean {
-    return (
-      election.status !== ElectionStatusEnum.AfterVoting &&
-      election.status !== ElectionStatusEnum.BeforeNominations
-    );
-  }
 }

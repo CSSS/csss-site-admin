@@ -8,8 +8,8 @@
 <!-- Template of the Active column cells -->
 <ng-template #activeChipCell let-entry>
   <p-tag
-    [severity]="isElectionActive(entry.data) ? 'success' : 'warn'"
-    [value]="isElectionActive(entry.data) ? 'active' : 'inactive'"
+    [severity]="entry.isActive() ? 'success' : 'warn'"
+    [value]="entry.isActive() ? 'active' : 'inactive'"
   />
 </ng-template>
 
