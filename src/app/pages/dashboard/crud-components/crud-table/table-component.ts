@@ -66,8 +66,6 @@ export abstract class TableComponent<
       data: entry
     });
 
-    this.dialogRef.onClose.subscribe(entry => {
-      this.dataSource.addEntry(entry);
-    });
+    this.dialogRef.onClose.subscribe(entry => entry);
   }
 }

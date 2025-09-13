@@ -69,10 +69,13 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   abstract default(): E;
 
   /**
-   * Creates an observable that creates an entry on the backend.
+   * Creates an observable that sends a request to create the entry on the backend.
    */
   abstract createEntry$(newEntry: T): Observable<E>;
 
+  /**
+   * Creates an observable that sends a request to patch the entry on the backend.
+   */
   abstract updateEntry$(entry: E, params: PartialNullable<T>): Observable<E>;
 
   /**
@@ -109,6 +112,11 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
     });
   }
 
+  /**
+   * Finds the changed entry by its unique ID and replaces it.
+   *
+   * @param updatedEntry - The values that the entry should be updated with.
+   */
   updateEntry(updatedEntry: E): void {
     this.entries.update(entries => {
       const newEntries = [];

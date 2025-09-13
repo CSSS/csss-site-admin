@@ -4,6 +4,7 @@ import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { PartialNullable } from '@utils/type-utils';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Observable } from 'rxjs';
 
 /**
  * Constructor required to pass instances of concrete dialog components.
@@ -24,17 +25,35 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
     focusOnShow: false
   };
 
+  /**
+   * Reference to the PrimeNG dynamic dialog.
+   */
   private ref = inject(DynamicDialogRef);
 
+  /**
+   * Configuration of the PrimeNG dynamic dialog.
+   */
   private config: DynamicDialogConfig<E, E> = inject(DynamicDialogConfig);
 
+  /**
+   * The form builder for the dialog.
+   */
   protected fb = inject(NonNullableFormBuilder);
 
+  /**
+   * The datasource that the entry is a part of.
+   */
   protected abstract dataSource: CrudSource<T, E>;
 
-  protected abstract formToEntry(): void;
+  /**
+   * Takes all the values in the form fields and creates an object of the data type.
+   */
+  protected abstract formToEntry(): T;
 
-  protected abstract getPatchedValues(): PartialNullable<T>;
+  /**
+   * Used to get the dirty values to create the patch request.
+   */
+  protected abstract getDirtyValues(): PartialNullable<T>;
 
   /**
    * The form in the dialog.
@@ -66,21 +85,24 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
     this.patchForm();
   }
 
+  /**
+   * Submits the form and tells the datasource to make the changes.
+   * If successful the dialog will close.
+   */
   submit(): void {
     this.formSubmitted = true;
     if (!this.form.valid) {
       return;
     }
+    let apiCall: Observable<E>;
     if (this.isEditing) {
-      console.log(this.getPatchedValues());
-      // this.dataSource.updateEntry$(this.entry, this.getPatchedValues());
+      apiCall = this.dataSource.updateEntry$(this.entry, this.getDirtyValues());
     } else {
-      this.formToEntry();
-      this.dataSource.createEntry$(this.entry.data).subscribe(res => {
-        console.log(res);
-        this.ref.close(res);
-      });
+      apiCall = this.dataSource.createEntry$(this.formToEntry());
     }
+    apiCall.subscribe(res => {
+      this.ref.close(res);
+    });
   }
 
   /**
@@ -99,7 +121,7 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
   }
 
   /**
-   * Function to check if the form has a certain error.
+   * Method to check if the form has a certain error.
    *
    * @param args - Form control names
    * @returns True if the dialog has either been touched or is dirty and all the controls show an error.
@@ -113,15 +135,26 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
   }
 
   /**
-   * Called when patching the form with the entry.
-   * Override for items that need to be changed to certain objects.
+   * Populates the form values with the entry you are editing.
+   * Override for items that need to be changed to certain interfaces.
    */
   protected patchForm(): void {
     this.form.patchValue(this.entry);
   }
 
+  /**
+   * Retrieves the value or returns undefined if the value has not been changed.
+   * Throws an error if the control does not exist.
+   *
+   * @param controlName - Name of the control in the form to check
+   * @returns The value of the control if it has been marked dirty, undefined otherwise.
+   */
   protected getIfDirty(controlName: string): any | undefined {
+    // TODO: Check arrays differently, since deselecting and reselecting the same option will always mark something as dirty.
     const control = this.form.get(controlName);
+    if (!control) {
+      throw new Error(`No control ${controlName} in dialog.`);
+    }
     return control?.dirty ? control.value : undefined;
   }
 }

@@ -23,10 +23,7 @@ export class ElectionsSourceService extends CrudSource<ElectionResponse, Electio
 
   override createEntry$(newEntry: ElectionParams): Observable<ElectionsSourceEntry> {
     return this.electionsApi.createElection(newEntry).pipe(
-      map(res => {
-        const entry = new ElectionsSourceEntry(res.slug, res);
-        return entry;
-      }),
+      map(res => new ElectionsSourceEntry(res[this.PRIMARY_KEY], res)),
       tap(entry => this.addEntry(entry))
     );
   }
@@ -36,10 +33,7 @@ export class ElectionsSourceService extends CrudSource<ElectionResponse, Electio
     params: ElectionUpdateParams
   ): Observable<ElectionsSourceEntry> {
     return this.electionsApi.updateElection(entry.data[this.PRIMARY_KEY], params).pipe(
-      map(res => {
-        const entry = new ElectionsSourceEntry(res.slug, res);
-        return entry;
-      }),
+      map(res => new ElectionsSourceEntry(res[this.PRIMARY_KEY], res)),
       tap(entry => this.updateEntry(entry))
     );
   }

@@ -60,9 +60,14 @@ export class ElectionsDialogComponent extends DialogComponent<
       ),
       surveyLink: this.fb.control('')
     },
+    // `electionDatesValidator()` ensures that the dates are sequential to each other.
+    // This means startNominations must be before start voting and start voting must be before end voting.
     { validators: [electionDatesValidator()] }
   );
 
+  /**
+   * The options in the Election Types dropdown.
+   */
   electionTypes = Object.entries(electionTypeLabels).map(([k, v]) => {
     return {
       label: v,
@@ -70,6 +75,9 @@ export class ElectionsDialogComponent extends DialogComponent<
     };
   });
 
+  /**
+   * The options in the Officer Positions listbox.
+   */
   officerPositions = Object.entries(officerLabels).map(([k, v]) => {
     return {
       label: v,
@@ -87,9 +95,9 @@ export class ElectionsDialogComponent extends DialogComponent<
     });
   }
 
-  protected override formToEntry(): void {
+  protected override formToEntry(): ElectionResponse {
     const controls = this.form.controls;
-    this.entry.data = {
+    return {
       ...this.entry.data,
       name: controls.name.value,
       type: controls.type.value,
@@ -101,7 +109,7 @@ export class ElectionsDialogComponent extends DialogComponent<
     };
   }
 
-  protected getPatchedValues(): ElectionUpdateParams {
+  protected getDirtyValues(): ElectionUpdateParams {
     const result: ElectionUpdateParams = {};
 
     result.type = this.getIfDirty('type');

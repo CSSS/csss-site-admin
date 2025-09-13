@@ -6,6 +6,9 @@ export type PartialNullable<T> = {
   [K in keyof T]?: T[K] | null;
 };
 
+/**
+ * Helper function to extract the value from the key of an object.
+ */
 export function getValueOfKey<T extends Record<string, any>, K extends string>(
   obj: T,
   key: K
