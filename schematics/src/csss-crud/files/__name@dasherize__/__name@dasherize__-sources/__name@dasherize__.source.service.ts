@@ -6,7 +6,7 @@ import {
   <%= classify(name) %>UpdateParams
 } from '@api/backend-api';
 import { map, Observable, tap } from 'rxjs';
-import { CrudEntry, CrudSource } from '../crud-sources/crud-source';
+import { CrudEntry, CrudSource } from '../../crud-sources/crud-source';
 
 export class <%= classify(name) %>SourceEntry extends CrudEntry<<%= classify(name) %>Response> {}
 
