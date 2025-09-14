@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NomineeApplicationModel } from '@api/backend-api/model/models';
+import { OfficerFormatPipe } from '@pages/dashboard/elections/elections-table/officer-format/officer-format.pipe';
 import { filter, map, Subscription, tap } from 'rxjs';
 import {
   CrudTableColumn,
@@ -49,9 +50,12 @@ export class NomineeApplicationComponent
     },
     {
       label: 'Position',
-      key: 'position'
+      key: 'position',
+      transform: (value: string) => this.officerPipe.transform(value)
     }
   ]);
+
+  private officerPipe = inject(OfficerFormatPipe);
 
   private activatedRoute = inject(ActivatedRoute);
 
