@@ -19,8 +19,8 @@ import { <%= classify(name) %>DialogComponent } from '../<%= dasherize(name) %>-
 
 @Component({
   selector: 'cs-<%= dasherize(name) %>',
-  templateUrl: './<%= dasherize(name).component.html %>',
-  styleUrl: './<%= dasherize(name).component.scss %>',
+  templateUrl: './<%= dasherize(name) %>.component.html',
+  styleUrl: './<%= dasherize(name) %>.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class <%= classify(name) %>Component extends TableComponent<

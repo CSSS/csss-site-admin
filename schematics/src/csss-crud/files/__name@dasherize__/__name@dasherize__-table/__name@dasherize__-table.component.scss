@@ -1,6 +1,0 @@
-<cs-crud-table
-  title="<%= classify(name) %>"
-  [entries]="dataSource.entries()"
-  [columns]="columns()"
-  (dialogOpened)="openDialog($event, '<%= classify(name) %>')"
-/>
