@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   <%= classify(name) %>Response,
-  <%= classify(name) %>TypeEnum,
   <%= classify(name) %>UpdateParams
 } from '@api/backend-api/model/models';
 import {
