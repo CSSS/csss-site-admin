@@ -15,14 +15,14 @@ export class <%= classify(name) %>SourceEntry extends CrudEntry<<%= classify(nam
 })
 export class <%= classify(name) %>SourceService extends CrudSource<<%= classify(name) %>Response, <%= classify(name) %>SourceEntry> {
   protected override entryClass = <%= classify(name) %>SourceEntry;
-  <%= dasherize(name) %>Api = inject(<%= classify(name) %>Service);
+  <%= classify(name) %>Api = inject(<%= classify(name) %>Service);
 
   protected override readonly PRIMARY_KEY = '';
 
-  protected override dataSource$ = this.<%= dasherize(name) %>Api.get<%= classify(name) %>();
+  protected override dataSource$ = this.<%= classify(name) %>Api.get<%= classify(name) %>();
 
   override createEntry$(newEntry: <%= classify(name) %>Params): Observable<<%= classify(name) %>SourceEntry> {
-    return this.<%= dasherize(name) %>Api.create<%= classify(name) %>(newEntry).pipe(
+    return this.<%= classify(name) %>Api.create<%= classify(name) %>(newEntry).pipe(
       map(res => new <%= classify(name) %>SourceEntry(res[this.PRIMARY_KEY], res)),
       tap(entry => this.addEntry(entry))
     );
@@ -32,7 +32,7 @@ export class <%= classify(name) %>SourceService extends CrudSource<<%= classify(
     entry: <%= classify(name) %>SourceEntry,
     params: <%= classify(name) %>UpdateParams
   ): Observable<<%= classify(name) %>SourceEntry> {
-    return this.<%= dasherize(name) %>Api.update<%= classify(name) %>(entry.data[this.PRIMARY_KEY], params).pipe(
+    return this.<%= classify(name) %>Api.update<%= classify(name) %>(entry.data[this.PRIMARY_KEY], params).pipe(
       map(res => new <%= classify(name) %>SourceEntry(res[this.PRIMARY_KEY], res)),
       tap(entry => this.updateEntry(entry))
     );
