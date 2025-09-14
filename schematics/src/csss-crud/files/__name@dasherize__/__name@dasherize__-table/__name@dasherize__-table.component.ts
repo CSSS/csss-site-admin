@@ -9,7 +9,7 @@ import { <%= classify(name) %>Response } from '@api/backend-api/model/models';
 import {
   <%= classify(name) %>SourceEntry,
   <%= classify(name) %>SourceService
-} from '@pages/dashboard/crud-sources/elections/elections.source.service';
+} from '../<%= dasherize(name) %>-sources/<%= dasherize(name) %>/<%= dasherize(name) %>.source.service';
 import {
   CrudTableColumn,
   CrudTableComponent
@@ -19,6 +19,7 @@ import { <%= classify(name) %>DialogComponent } from '../<%= dasherize(name) %>-
 
 @Component({
   selector: 'cs-<%= dasherize(name) %>',
+  imports: [CrudTableComponent],
   templateUrl: './<%= dasherize(name) %>-table.component.html',
   styleUrl: './<%= dasherize(name) %>-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
