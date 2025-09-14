@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  ElectionResponse,
-  ElectionTypeEnum,
-  ElectionUpdateParams
-} from '@api/backend-api/model/models';
+import { ElectionResponse } from '@api/backend-api/model/election-response';
+import { ElectionUpdateParams } from '@api/backend-api/model/election-update-params';
+import { ElectionTypeEnum } from '@api/backend-api/model/models';
 import {
   ElectionsSourceEntry,
   ElectionsSourceService

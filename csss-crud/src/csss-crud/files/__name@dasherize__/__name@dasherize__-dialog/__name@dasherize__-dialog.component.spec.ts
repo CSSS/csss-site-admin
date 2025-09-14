@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { <%= classify(name) %>sDialogComponent } from './<%= dasherize(name) %>-dialog.component';
+import { <%= classify(name) %>DialogComponent } from './<%= dasherize(name) %>-dialog.component';
 
-describe('<%= classify(name) %>sDialogComponent', () => {
-  let component: <%= classify(name) %>sDialogComponent;
-  let fixture: ComponentFixture<<%= classify(name) %>sDialogComponent>;
+describe('<%= classify(name) %>DialogComponent', () => {
+  let component: <%= classify(name) %>DialogComponent;
+  let fixture: ComponentFixture<<%= classify(name) %>DialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [<%= classify(name) %>sDialogComponent]
+      imports: [<%= classify(name) %>DialogComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(<%= classify(name) %>sDialogComponent);
+    fixture = TestBed.createComponent(<%= classify(name) %>DialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
