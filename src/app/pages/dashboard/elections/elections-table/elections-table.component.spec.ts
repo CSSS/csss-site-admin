@@ -9,8 +9,7 @@ describe('ElectionsTableComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ElectionsTableComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ElectionsTableComponent);
     component = fixture.componentInstance;
