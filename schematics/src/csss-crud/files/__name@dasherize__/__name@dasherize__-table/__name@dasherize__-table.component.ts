@@ -9,7 +9,7 @@ import { <%= classify(name) %>Response } from '@api/backend-api/model/models';
 import {
   <%= classify(name) %>SourceEntry,
   <%= classify(name) %>SourceService
-} from '../<%= dasherize(name) %>-sources/<%= dasherize(name) %>/<%= dasherize(name) %>.source.service';
+} from '../<%= dasherize(name) %>-sources/<%= dasherize(name) %>.source.service';
 import {
   CrudTableColumn,
   CrudTableComponent
