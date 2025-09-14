@@ -9,11 +9,13 @@ import {
   <%= classify(name) %>SourceEntry,
   <%= classify(name) %>SourceService
 } from '../<%= dasherize(name) %>-sources/<%= dasherize(name) %>.source.service';
+import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
 
 @Component({
   selector: 'cs-<%= dasherize(name) %>-dialog',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CrudDialogComponent
   ],
   templateUrl: './<%= dasherize(name) %>-dialog.component.html',
   styleUrl: './<%= dasherize(name) %>-dialog.component.scss',
