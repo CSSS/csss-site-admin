@@ -1,11 +1,15 @@
 {
-  "$id": "table",
+  "$id": "crud",
   "title": "Creates a new database table, dialog, and sources",
   "type": "object",
   "properties": {
     "name": {
       "type": "string",
-      "description": "The name of the component."
+      "description": "The name of the component.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
     }
   },
   "required": ["name"]
