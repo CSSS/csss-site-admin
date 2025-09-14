@@ -9,6 +9,7 @@ import {
   <%= classify(name) %>SourceService
 } from '../<%= dasherize(name) %>-sources/<%= dasherize(name) %>.source.service';
 import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
+import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/dialog-component';
 
 @Component({
   selector: 'cs-<%= dasherize(name) %>-dialog',

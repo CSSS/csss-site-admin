@@ -18,8 +18,8 @@
     "typescript": "~5.9.2"
   },
   "devDependencies": {
-    "@types/node": "^20.17.19",
     "@types/jasmine": "~5.1.0",
+    "@types/node": "^20.17.19",
     "jasmine": "^5.0.0"
   }
 }
