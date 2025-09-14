@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "table": {
+      "description": "Generates a new CRUD table",
+      "factory": "./csss-crud/index#table",
+      "schema": "./csss-crud/schema.json"
+    }
+  }
+}
