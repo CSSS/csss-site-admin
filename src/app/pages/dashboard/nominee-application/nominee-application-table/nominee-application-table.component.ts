@@ -1,5 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  OnInit,
+  Signal
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NomineeApplicationModel } from '@api/backend-api/model/models';
+import { filter, map, Subscription, tap } from 'rxjs';
 import {
   CrudTableColumn,
   CrudTableComponent
@@ -18,19 +28,47 @@ import {
   styleUrl: './nominee-application-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NomineeApplicationComponent extends TableComponent<
-  NomineeApplicationModel,
-  NomineeApplicationSourceEntry,
-  NomineeApplicationDialogComponent
-> {
+export class NomineeApplicationComponent
+  extends TableComponent<
+    NomineeApplicationModel,
+    NomineeApplicationSourceEntry,
+    NomineeApplicationDialogComponent
+  >
+  implements OnInit, OnDestroy
+{
+  electionName$?: Subscription;
+
   protected override dialogClass = NomineeApplicationDialogComponent;
 
   protected override dataSource = inject(NomineeApplicationSourceService);
 
   protected columns: Signal<CrudTableColumn<NomineeApplicationModel>[]> = computed(() => [
     {
-      label: 'Label',
-      key: 'Key'
+      label: 'Computing ID',
+      key: 'computing_id'
+    },
+    {
+      label: 'Position',
+      key: 'position'
     }
   ]);
+
+  private activatedRoute = inject(ActivatedRoute);
+
+  override ngOnInit(): void {
+    this.electionName$ = this.activatedRoute.params
+      .pipe(
+        filter(params => !!params['electionName']),
+        map(params => params['electionName'] as string),
+        tap(electionName => (this.dataSource.electionName = electionName))
+      )
+      .subscribe(() => {
+        this.dataSource.fetch();
+      });
+  }
+
+  override ngOnDestroy(): void {
+    this.electionName$?.unsubscribe();
+    super.ngOnDestroy();
+  }
 }

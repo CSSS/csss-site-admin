@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import {
   ElectionParams,
   ElectionResponse,
-  ElectionsService,
+  ElectionService,
   ElectionStatusEnum,
   ElectionUpdateParams
 } from '@api/backend-api';
@@ -23,7 +23,7 @@ export class ElectionsSourceEntry extends CrudEntry<ElectionResponse> {
 })
 export class ElectionsSourceService extends CrudSource<ElectionResponse, ElectionsSourceEntry> {
   protected override entryClass = ElectionsSourceEntry;
-  electionsApi = inject(ElectionsService);
+  electionsApi = inject(ElectionService);
 
   protected override readonly PRIMARY_KEY = 'slug';
 

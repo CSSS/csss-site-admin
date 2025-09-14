@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { ElectionResponse } from '@api/backend-api/model/election-response';
 import { ElectionUpdateParams } from '@api/backend-api/model/election-update-params';
-import { ElectionTypeEnum } from '@api/backend-api/model/models';
+import { ElectionTypeEnum, OfficerPositionEnum } from '@api/backend-api/model/models';
 import {
   ElectionsSourceEntry,
   ElectionsSourceService
@@ -52,7 +52,7 @@ export class ElectionsDialogComponent extends DialogComponent<
       startNominations: this.fb.control(new Date(), Validators.required),
       startVoting: this.fb.control(new Date(), Validators.required),
       endVoting: this.fb.control(new Date(), Validators.required),
-      availablePositions: this.fb.control<string[]>(
+      availablePositions: this.fb.control<OfficerPositionEnum[]>(
         [],
         [Validators.required, Validators.minLength(1)]
       ),

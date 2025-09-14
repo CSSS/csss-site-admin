@@ -23,9 +23,9 @@ export class TopBarComponent {
       routerLinkActiveOptions: { exact: true }
     },
     {
-      label: 'Nominees',
+      label: 'Candidates',
       icon: PrimeIcons.USERS,
-      routerLink: ['/dashboard/nominees'],
+      routerLink: ['/dashboard/candidates/test-election-2'],
       routerLinkActiveOptions: { exact: true }
     }
     // {

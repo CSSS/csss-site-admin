@@ -1,15 +1,18 @@
 import { inject, Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
-  ElectionsService,
   NomineeApplicationModel,
   NomineeApplicationParams,
-  NomineeApplicationUpdateParams
+  NomineeApplicationUpdateParams,
+  RegistrationService
 } from '@api/backend-api';
-import { filter, map, Observable, switchMap, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { CrudEntry, CrudSource } from '../../crud-sources/crud-source';
 
-export class NomineeApplicationSourceEntry extends CrudEntry<NomineeApplicationModel> {}
+export class NomineeApplicationSourceEntry extends CrudEntry<NomineeApplicationModel> {
+  static makeId(entry: NomineeApplicationModel): string {
+    return `${entry.computing_id}-${entry.nominee_election}-${entry.position}`;
+  }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -18,30 +21,37 @@ export class NomineeApplicationSourceService extends CrudSource<
   NomineeApplicationModel,
   NomineeApplicationSourceEntry
 > {
+  electionName: string = '';
+
   protected override entryClass = NomineeApplicationSourceEntry;
 
-  private electionsApi = inject(ElectionsService);
-  private activatedRoute = inject(ActivatedRoute);
+  private registrationApi = inject(RegistrationService);
 
-  protected override readonly PRIMARY_KEY = 'computing_id';
+  protected override readonly PRIMARY_KEY = 'computing_id'; // don't use this
 
-  private electionName$: Observable<string> = this.activatedRoute.params.pipe(
-    filter(params => params['electionName'] !== null),
-    map(params => params['electionName'])
-  );
+  protected override dataSource$ = this.registrationApi.getElectionRegistrations(this.electionName); // unused
 
-  protected override dataSource$ = this.electionName$.pipe(
-    switchMap(electionName => {
-      return this.electionsApi.getElectionRegistrations(electionName);
-    })
-  );
+  override fetch(): void {
+    this.registrationApi.getElectionRegistrations(this.electionName).subscribe({
+      next: res => {
+        // Wrap the entries so they're CRUD entries.
+        const entries = res.map(
+          e => new this.entryClass(NomineeApplicationSourceEntry.makeId(e), e)
+        );
+        if (this.sortFn) {
+          entries.sort(this.sortFn);
+        }
+        this.entries.set(entries);
+        this.loaded = true;
+      }
+    });
+  }
 
   override createEntry$(
     newEntry: NomineeApplicationParams
   ): Observable<NomineeApplicationSourceEntry> {
-    return this.electionName$.pipe(
-      switchMap(electionName => this.electionsApi.register(electionName, newEntry)),
-      map(res => new NomineeApplicationSourceEntry(res[this.PRIMARY_KEY], res)),
+    return this.registrationApi.register(this.electionName, newEntry).pipe(
+      map(res => new NomineeApplicationSourceEntry(NomineeApplicationSourceEntry.makeId(res), res)),
       tap(entry => this.addEntry(entry))
     );
   }
@@ -50,18 +60,12 @@ export class NomineeApplicationSourceService extends CrudSource<
     entry: NomineeApplicationSourceEntry,
     params: NomineeApplicationUpdateParams
   ): Observable<NomineeApplicationSourceEntry> {
-    return this.electionName$.pipe(
-      switchMap(electionName =>
-        this.electionsApi.updateRegistration(
-          electionName,
-          entry.data.computing_id,
-          entry.data.position,
-          params
-        )
-      ),
-      map(res => new NomineeApplicationSourceEntry(res[this.PRIMARY_KEY], res)),
-      tap(entry => this.updateEntry(entry))
-    );
+    return this.registrationApi
+      .updateRegistration(this.electionName, entry.data.computing_id, entry.data.position, params)
+      .pipe(
+        map(res => new NomineeApplicationSourceEntry(res[this.PRIMARY_KEY], res)),
+        tap(entry => this.updateEntry(entry))
+      );
   }
 
   override default(): NomineeApplicationSourceEntry {
