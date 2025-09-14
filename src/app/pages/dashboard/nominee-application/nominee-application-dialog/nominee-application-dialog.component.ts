@@ -1,0 +1,46 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  NomineeApplicationModel,
+  NomineeApplicationUpdateParams
+} from '@api/backend-api/model/models';
+import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/dialog-component';
+import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
+import {
+  NomineeApplicationSourceEntry,
+  NomineeApplicationSourceService
+} from '../nominee-application-sources/nominee-application.source.service';
+
+@Component({
+  selector: 'cs-nominee-application-dialog',
+  imports: [ReactiveFormsModule, CrudDialogComponent],
+  templateUrl: './nominee-application-dialog.component.html',
+  styleUrl: './nominee-application-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class NomineeApplicationDialogComponent extends DialogComponent<
+  NomineeApplicationModel,
+  NomineeApplicationSourceEntry
+> {
+  protected dataSource = inject(NomineeApplicationSourceService);
+
+  protected form = this.fb.group({
+    name: this.fb.control('', Validators.required)
+  });
+
+  protected override formToEntry(): NomineeApplicationModel {
+    const controls = this.form.controls;
+    return {
+      ...this.entry.data,
+      name: controls.name.value
+    };
+  }
+
+  protected getDirtyValues(): NomineeApplicationUpdateParams {
+    const result: NomineeApplicationUpdateParams = {};
+
+    result.name = this.getIfDirty('name');
+
+    return result;
+  }
+}
