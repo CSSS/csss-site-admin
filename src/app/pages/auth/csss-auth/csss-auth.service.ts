@@ -47,6 +47,9 @@ export class CsssAuthService {
     // Get the user of the current session
     concatMap(() => this.authApi.getUser()),
     // Set the user
-    tap(this.user.set)
+    tap(user => {
+      localStorage.setItem('sfuUser', JSON.stringify(user));
+      this.user.set(user);
+    })
   );
 }
