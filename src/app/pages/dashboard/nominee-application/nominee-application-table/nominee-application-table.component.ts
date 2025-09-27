@@ -52,6 +52,10 @@ export class NomineeApplicationComponent
       label: 'Position',
       key: 'position',
       transform: (value: string) => this.officerPipe.transform(value)
+    },
+    {
+      label: 'Speech',
+      key: 'speech'
     }
   ]);
 

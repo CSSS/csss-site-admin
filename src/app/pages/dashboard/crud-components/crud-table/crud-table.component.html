@@ -23,11 +23,13 @@
   [(selection)]="selectedEntry"
   [scrollable]="true"
   scrollHeight="flex"
+  [resizableColumns]="true"
+  showGridlines
 >
   <ng-template #header>
     <tr>
       @for (column of columns(); track column.key) {
-        <th>{{ column.label }}</th>
+        <th pResizableColumn>{{ column.label }}</th>
       }
     </tr>
   </ng-template>
