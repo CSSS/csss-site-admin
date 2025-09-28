@@ -22,18 +22,18 @@ export class TopBarComponent {
       routerLink: ['/dashboard/elections'],
       routerLinkActiveOptions: { exact: true }
     },
-    {
-      label: 'Candidates',
-      icon: PrimeIcons.USERS,
-      routerLink: ['/dashboard/candidates/test-election-2'],
-      routerLinkActiveOptions: { exact: true }
-    }
     // {
-    //   label: 'Officers',
-    //   icon: PrimeIcons.CROWN,
-    //   routerLink: ['/dashboard/officers'],
+    //   label: 'Candidates',
+    //   icon: PrimeIcons.USERS,
+    //   routerLink: ['/dashboard/candidates/test-election-2'],
     //   routerLinkActiveOptions: { exact: true }
     // }
+    {
+      label: 'Officers',
+      icon: PrimeIcons.CROWN,
+      routerLink: ['/dashboard/officers'],
+      routerLinkActiveOptions: { exact: true }
+    }
   ];
 
   protected options: MenuItem[] = [

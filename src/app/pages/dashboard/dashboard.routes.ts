@@ -9,10 +9,10 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'candidates/:electionName',
+    path: 'officers',
     loadComponent: () =>
-      import(
-        './nominee-application/nominee-application-table/nominee-application-table.component'
-      ).then(m => m.NomineeApplicationComponent)
+      import('./elections/elections-table/elections-table.component').then(
+        m => m.ElectionsTableComponent
+      )
   }
 ];

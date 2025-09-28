@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   protected isAdmin = true;
 
   ngOnInit(): void {
+    // TODO: Check the user's session with the backend first before letting them continue
     const localUser = localStorage.getItem('sfuUser');
     if (localUser) {
       this.csssAuth.user.set(JSON.parse(localUser));
