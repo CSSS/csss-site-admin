@@ -17,18 +17,13 @@ export class AppComponent implements OnInit {
   private router = inject(Router);
 
   ngOnInit(): void {
-    const localUser = localStorage.getItem('sfuUser');
-    if (localUser) {
-      this.csssAuth.user.set(JSON.parse(localUser));
-    } else {
-      this.csssAuth.logIn$.subscribe({
-        next: () => {
-          this.router.navigate(['dashboard']);
-        },
-        error: err => {
-          throw new Error(err);
-        }
-      });
-    }
+    this.csssAuth.logIn$.subscribe({
+      next: () => {
+        this.router.navigate(['dashboard']);
+      },
+      error: err => {
+        throw new Error(err);
+      }
+    });
   }
 }
