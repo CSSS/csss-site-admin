@@ -7,7 +7,7 @@ import {
   TemplateRef,
   viewChild
 } from '@angular/core';
-import { ElectionResponse, ElectionTypeEnum } from '@api/backend-api/model/models';
+import { ElectionResponse } from '@api/backend-api/model/models';
 import {
   ElectionsSourceEntry,
   ElectionsSourceService
@@ -20,6 +20,7 @@ import {
 } from '../../crud-components/crud-table/crud-table.component';
 import { TableComponent } from '../../crud-components/crud-table/table-component';
 import { ElectionsDialogComponent } from '../elections-dialog/elections-dialog.component';
+import { electionTypeLabels } from '../elections-dialog/pipes/election-type.pipe';
 import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
 
 @Component({
@@ -55,7 +56,7 @@ export class ElectionsTableComponent extends TableComponent<
     {
       label: 'Type',
       key: 'type',
-      transform: (value: string) => getValueOfKey(ElectionTypeEnum, value) ?? value
+      transform: (value: string) => getValueOfKey(electionTypeLabels, value) ?? value
     },
     {
       label: 'Status',
