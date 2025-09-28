@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
     const localUser = localStorage.getItem('sfuUser');
     if (localUser) {
       this.csssAuth.user.set(JSON.parse(localUser));
-      this.router.navigate(['dashboard']);
     } else {
       this.csssAuth.logIn$.subscribe({
         next: () => {

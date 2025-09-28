@@ -37,7 +37,7 @@
     <tr [pSelectableRow]="entry">
       @for (column of columns(); track column.key) {
         <td>
-          @if (column.cellTemplate) {
+          @if (column.cellTemplate || !column.key) {
             <ng-container *ngTemplateOutlet="column.cellTemplate; context: { $implicit: entry }" />
           } @else if (column.type === 'date') {
             {{ entry.data[column.key] | date: 'medium' }}
