@@ -11,8 +11,6 @@ export const routes: Routes = [
   {
     path: 'officers',
     loadComponent: () =>
-      import('./elections/elections-table/elections-table.component').then(
-        m => m.ElectionsTableComponent
-      )
+      import('./officers/officers-table/officers-table.component').then(m => m.OfficersComponent)
   }
 ];

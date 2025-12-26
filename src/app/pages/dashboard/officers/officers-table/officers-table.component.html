@@ -1,0 +1,6 @@
+<cs-crud-table
+  title="Officers"
+  [entries]="dataSource.entries()"
+  [columns]="columns()"
+  (dialogOpened)="openDialog($event, 'Officers')"
+/>
