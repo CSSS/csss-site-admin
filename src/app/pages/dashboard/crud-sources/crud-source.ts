@@ -51,7 +51,7 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   /**
    * The source observable fetches all the entries.
    */
-  protected abstract dataSource$: Observable<T[]>;
+  protected abstract dataSource$: Observable<T[] | Record<string, T>>;
 
   /**
    * Flag that indicates the source has been fully loaded.
