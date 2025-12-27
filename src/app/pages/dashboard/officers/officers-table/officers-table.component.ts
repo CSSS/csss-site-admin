@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
-import { OfficerInfoResponse } from '@api/backend-api/model/models';
+import { Officer } from '@api/backend-api';
 import {
   CrudTableColumn,
   CrudTableComponent
@@ -7,9 +7,9 @@ import {
 import { TableComponent } from '../../crud-components/crud-table/table-component';
 import { OfficersDialogComponent } from '../officers-dialog/officers-dialog.component';
 import {
-  OfficerInfoSourceEntry,
-  OfficersInfoSourceService
-} from '../officers-sources/officers-info.source.service';
+  OfficerSourceEntry,
+  OfficerSourceService
+} from '../officers-sources/officers.source.service';
 
 @Component({
   selector: 'cs-officers',
@@ -19,18 +19,18 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfficersComponent extends TableComponent<
-  OfficerInfoResponse,
-  OfficerInfoSourceEntry,
+  Officer,
+  OfficerSourceEntry,
   OfficersDialogComponent
 > {
   protected override dialogClass = OfficersDialogComponent;
 
-  protected override dataSource = inject(OfficersInfoSourceService);
+  protected override dataSource = inject(OfficerSourceService);
 
-  protected columns: Signal<CrudTableColumn<OfficerInfoResponse>[]> = computed(() => [
+  protected columns: Signal<CrudTableColumn<Officer>[]> = computed(() => [
     {
       label: 'Label',
-      key: 'Key'
+      key: 'term_id'
     }
   ]);
 }

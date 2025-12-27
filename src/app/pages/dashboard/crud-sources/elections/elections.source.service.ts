@@ -21,7 +21,12 @@ export class ElectionsSourceEntry extends CrudEntry<ElectionResponse> {
 @Injectable({
   providedIn: 'root'
 })
-export class ElectionsSourceService extends CrudSource<ElectionResponse, ElectionsSourceEntry> {
+export class ElectionsSourceService extends CrudSource<
+  ElectionResponse,
+  ElectionsSourceEntry,
+  ElectionParams,
+  ElectionUpdateParams
+> {
   protected override entryClass = ElectionsSourceEntry;
   electionsApi = inject(ElectionService);
 

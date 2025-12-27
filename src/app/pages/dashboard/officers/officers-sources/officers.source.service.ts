@@ -7,6 +7,7 @@ import {
   OfficersService,
   OfficerTerm
 } from '@api/backend-api';
+import { PartialNullable } from '@utils/type-utils';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { CrudEntry, CrudSource } from '../../crud-sources/crud-source';
 
@@ -17,6 +18,7 @@ export class OfficerSourceEntry extends CrudEntry<Officer> {
     super(term.id, {
       ...term,
       ...info,
+      csss_email: '',
       term_id: term.id
     });
   }
@@ -28,8 +30,8 @@ export class OfficerSourceEntry extends CrudEntry<Officer> {
 export class OfficerSourceService extends CrudSource<
   Officer,
   OfficerSourceEntry,
-  Partial<Officer>,
-  Partial<Officer>
+  OfficerCreate,
+  PartialNullable<Officer>
 > {
   protected override entryClass = OfficerSourceEntry;
   officersApi = inject(OfficersService);

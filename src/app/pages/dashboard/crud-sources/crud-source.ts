@@ -41,7 +41,7 @@ export abstract class CrudEntry<T> {
 export abstract class CrudSource<
   T extends Record<string, any>,
   E extends CrudEntry<T>,
-  C extends Partial<T>,
+  C extends PartialNullable<T>,
   U extends PartialNullable<T>
 > {
   /**

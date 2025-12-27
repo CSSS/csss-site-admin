@@ -12,13 +12,18 @@ import { Observable } from 'rxjs';
 export type DialogComponentConstructor<
   T extends Record<string, any>,
   E extends CrudEntry<T>,
-  D extends DialogComponent<T, E>
+  C extends PartialNullable<T>,
+  U extends PartialNullable<T>,
+  D extends DialogComponent<T, E, C, U>
 > = new (...args: any[]) => D;
 
 @Directive()
-export abstract class DialogComponent<T extends Record<string, any>, E extends CrudEntry<T>>
-  implements OnInit
-{
+export abstract class DialogComponent<
+  T extends Record<string, any>,
+  E extends CrudEntry<T>,
+  C extends PartialNullable<T>,
+  U extends PartialNullable<T>
+> implements OnInit {
   static dialogDefaults = {
     modal: true,
     closable: true,
@@ -43,17 +48,17 @@ export abstract class DialogComponent<T extends Record<string, any>, E extends C
   /**
    * The datasource that the entry is a part of.
    */
-  protected abstract dataSource: CrudSource<T, E>;
+  protected abstract dataSource: CrudSource<T, E, C, U>;
 
   /**
    * Takes all the values in the form fields and creates an object of the data type.
    */
-  protected abstract formToEntry(): T;
+  protected abstract formToEntry(): C;
 
   /**
    * Used to get the dirty values to create the patch request.
    */
-  protected abstract getDirtyValues(): PartialNullable<T>;
+  protected abstract getDirtyValues(): U;
 
   /**
    * The form in the dialog.
