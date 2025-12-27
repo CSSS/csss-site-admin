@@ -32,12 +32,18 @@ export abstract class CrudEntry<T> {
  * Made as a service so that data doesn't need to be fetched every time we load a page.
  * T = type of the entries
  * E = The type of the entries as CRUD entries
- * C = Parameters to create an entry
+ * C = Parameters to update an entry
+ * U = Parameters to update an entry
  */
 @Injectable({
   providedIn: 'root'
 })
-export abstract class CrudSource<T extends Record<string, any>, E extends CrudEntry<T>> {
+export abstract class CrudSource<
+  T extends Record<string, any>,
+  E extends CrudEntry<T>,
+  C extends Partial<T>,
+  U extends PartialNullable<T>
+> {
   /**
    * Class used to construct entries.
    */
@@ -51,7 +57,7 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   /**
    * The source observable fetches all the entries.
    */
-  protected abstract dataSource$: Observable<T[] | Record<string, T>>;
+  protected abstract dataSource$: Observable<T[]>;
 
   /**
    * Flag that indicates the source has been fully loaded.
@@ -71,12 +77,12 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   /**
    * Creates an observable that sends a request to create the entry on the backend.
    */
-  abstract createEntry$(newEntry: T): Observable<E>;
+  abstract createEntry$(newEntry: C): Observable<E>;
 
   /**
    * Creates an observable that sends a request to patch the entry on the backend.
    */
-  abstract updateEntry$(entry: E, params: PartialNullable<T>): Observable<E>;
+  abstract updateEntry$(entry: E, params: U): Observable<E>;
 
   /**
    * Fetches all the entries form the backend.

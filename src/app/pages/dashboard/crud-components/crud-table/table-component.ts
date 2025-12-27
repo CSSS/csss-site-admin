@@ -10,10 +10,10 @@ import { CrudTableColumn } from './crud-table.component';
  */
 @Directive()
 export abstract class TableComponent<
-    T extends Record<string, any>,
-    E extends CrudEntry<T>,
-    D extends DialogComponent<T, E>
-  >
+  T extends Record<string, any>, // API Type
+  E extends CrudEntry<T>, // Entry type
+  D extends DialogComponent<T, E> // Dialog type
+>
   implements OnInit, OnDestroy
 {
   /**
@@ -34,7 +34,7 @@ export abstract class TableComponent<
   /**
    * Reference to the dialog for this table.
    */
-  protected dialogRef?: DynamicDialogRef<D>;
+  protected dialogRef?: DynamicDialogRef<D> | null;
 
   /**
    * PrimeNG service that creates the dialog.
@@ -66,6 +66,6 @@ export abstract class TableComponent<
       data: entry
     });
 
-    this.dialogRef.onClose.subscribe(entry => entry);
+    this.dialogRef?.onClose.subscribe(entry => entry);
   }
 }

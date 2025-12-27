@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { OfficerInfoResponse, OfficerUpdate } from '@api/backend-api/model/models';
+import { Officer, OfficerUpdate } from '@api/backend-api/model/models';
 import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/dialog-component';
 import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
 import {
-  OfficersSourceEntry,
-  OfficersSourceService
-} from '../officers-sources/officers.source.service';
+  OfficerInfoSourceEntry,
+  OfficersInfoSourceService
+} from '../officers-sources/officers-info.source.service';
 
 @Component({
   selector: 'cs-officers-dialog',
@@ -15,17 +15,14 @@ import {
   styleUrl: './officers-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfficersDialogComponent extends DialogComponent<
-  OfficerInfoResponse,
-  OfficersSourceEntry
-> {
-  protected dataSource = inject(OfficersSourceService);
+export class OfficersDialogComponent extends DialogComponent<Officer, OfficerInfoSourceEntry> {
+  protected dataSource = inject(OfficersInfoSourceService);
 
   protected form = this.fb.group({
     name: this.fb.control('', Validators.required)
   });
 
-  protected override formToEntry(): OfficerInfoResponse {
+  protected override formToEntry(): Officer {
     const controls = this.form.controls;
     return {
       ...this.entry.data,
