@@ -40,7 +40,7 @@
           @if (column.cellTemplate || !column.key) {
             <ng-container *ngTemplateOutlet="column.cellTemplate; context: { $implicit: entry }" />
           } @else if (column.type === 'date') {
-            {{ entry.data[column.key] | date: 'medium' }}
+            {{ entry.data[column.key] | date: 'mediumDate' }}
           } @else if (column.type === 'externalLink' && entry.data[column.key]) {
             <a [href]="entry.data[column.key]">
               {{ entry.data[column.key] }} <i class="pi pi-external-link"></i>

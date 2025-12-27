@@ -29,8 +29,50 @@ export class OfficersComponent extends TableComponent<
 
   protected columns: Signal<CrudTableColumn<Officer>[]> = computed(() => [
     {
-      label: 'Label',
-      key: 'term_id'
+      label: 'Computing ID',
+      key: 'computing_id'
+    },
+    {
+      label: 'Legal Name',
+      key: 'legal_name'
+    },
+    {
+      label: 'Start Date',
+      key: 'start_date',
+      type: 'date'
+    },
+    {
+      label: 'End Date',
+      key: 'end_date',
+      type: 'date'
+    },
+    {
+      label: 'Discord ID',
+      key: 'discord_id'
+    },
+    {
+      label: 'Discord Name',
+      key: 'discord_name'
+    },
+    {
+      label: 'Discord Nickname',
+      key: 'discord_nickname'
+    },
+    {
+      label: 'Phone Number',
+      key: 'phone_number'
+    },
+    {
+      label: 'GitHub',
+      key: 'github_username'
+    },
+    {
+      label: 'Google Drive',
+      key: 'google_drive_email'
+    },
+    {
+      label: 'Photo URL',
+      key: 'photo_url'
     }
   ]);
 }
