@@ -1,0 +1,89 @@
+import { inject, Injectable } from '@angular/core';
+import {
+  Officer,
+  OfficerCreate,
+  OfficerInfo,
+  OfficerPositionEnum,
+  OfficersService,
+  OfficerTerm
+} from '@api/backend-api';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { CrudEntry, CrudSource } from '../../crud-sources/crud-source';
+
+export class OfficerSourceEntry extends CrudEntry<Officer> {
+  declare id: number; // declare overrides this to a number
+
+  constructor(term: OfficerTerm, info: OfficerInfo) {
+    super(term.id, {
+      ...term,
+      ...info,
+      term_id: term.id
+    });
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class OfficerSourceService extends CrudSource<
+  Officer,
+  OfficerSourceEntry,
+  Partial<Officer>,
+  Partial<Officer>
+> {
+  protected override entryClass = OfficerSourceEntry;
+  officersApi = inject(OfficersService);
+
+  protected override readonly PRIMARY_KEY = 'term_id';
+
+  // For now, only fetch the current officers
+  protected override dataSource$ = this.officersApi.getCurrentOfficers();
+
+  override createEntry$(newEntry: OfficerCreate): Observable<OfficerSourceEntry> {
+    // Only a single response is expected here
+    return this.officersApi.createOfficerTerm([newEntry]).pipe(
+      switchMap(res =>
+        forkJoin({
+          term: of(res[0]),
+          info: this.officersApi.getOfficerInfoById(newEntry.computing_id)
+        })
+      ),
+      map(({ term, info }) => {
+        return new OfficerSourceEntry(term, info);
+      }),
+      tap(entry => this.addEntry(entry))
+    );
+  }
+
+  override updateEntry$(
+    entry: OfficerSourceEntry,
+    params: Partial<Officer>
+  ): Observable<OfficerSourceEntry> {
+    if (!entry.data.computing_id) {
+      throw new Error('Cannot update officer info without computing ID');
+    }
+    return forkJoin({
+      term: this.officersApi.updateOfficerTermById(entry.id, params),
+      info: this.officersApi.updateOfficerInfo(entry.data.computing_id, params)
+    }).pipe(
+      map(({ term, info }) => new OfficerSourceEntry(term, info)),
+      tap(updatedEntry => this.updateEntry(updatedEntry))
+    );
+  }
+
+  override default(): OfficerSourceEntry {
+    return new OfficerSourceEntry(
+      {
+        id: 0,
+        computing_id: '',
+        position: OfficerPositionEnum.President,
+        start_date: new Date().toISOString(),
+        is_active: false
+      },
+      {
+        computing_id: '',
+        legal_name: ''
+      }
+    );
+  }
+}
