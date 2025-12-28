@@ -15,7 +15,6 @@ import { isoNaiveDatetime } from '@utils/string-utils';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
 import { DatepickerComponent } from '../../crud-components/crud-dialog/datepicker/datepicker.component';
 import { DialogComponent } from '../../crud-components/crud-dialog/dialog-component';
 import { InputComponent } from '../../crud-components/crud-dialog/input/input.component';
@@ -35,7 +34,6 @@ import { SlugPipe } from './pipes/slug.pipe';
     SelectComponent,
     DatepickerComponent,
     ListboxComponent,
-    CrudDialogComponent,
     InputTextModule,
     SlugPipe,
     FloatLabelModule

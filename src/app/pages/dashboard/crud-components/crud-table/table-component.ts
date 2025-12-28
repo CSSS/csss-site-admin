@@ -3,6 +3,7 @@ import { Directive, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { PartialNullable } from '@utils/type-utils';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Subject } from 'rxjs';
 import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
 import { DialogFooterComponent } from '../crud-dialog/footer/footer.component';
 import { CrudTableColumn } from './crud-table.component';
@@ -18,6 +19,7 @@ export abstract class TableComponent<
 >
   implements OnInit, OnDestroy
 {
+  submitHandler$ = new Subject<E | null>();
   /**
    * Class that represents the dialog component that this table uses.
    */
@@ -59,6 +61,7 @@ export abstract class TableComponent<
     if (this.dialogRef) {
       this.dialogRef.close();
     }
+    this.submitHandler$.complete();
   }
 
   /**
@@ -72,7 +75,8 @@ export abstract class TableComponent<
       ...DialogComponent.dialogDefaults,
       header: `${entry ? 'Edit' : 'New'} ${tableName} Entry`,
       data: {
-        entry
+        entry,
+        submitHandler: this.submitHandler$
       },
       templates: {
         footer: DialogFooterComponent

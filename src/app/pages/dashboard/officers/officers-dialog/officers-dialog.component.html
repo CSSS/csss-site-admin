@@ -1,4 +1,4 @@
-<cs-crud-dialog [formGroup]="form" (ngSubmit)="submit()">
+<form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
   <cs-input
     fieldId="officers-field__computing-id"
     label="Computing ID"
@@ -98,4 +98,4 @@
     formControlName="favourite_pl_1"
     [invalid]="isInvalid('favourite_pl_1')"
   />
-</cs-crud-dialog>
+</form>

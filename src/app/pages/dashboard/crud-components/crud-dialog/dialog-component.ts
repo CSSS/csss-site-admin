@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Directive, inject, OnInit } from '@angular/core';
-import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { Directive, inject, OnInit, viewChild } from '@angular/core';
+import { FormGroup, NgForm, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { PartialNullable } from '@utils/type-utils';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -30,16 +30,6 @@ export abstract class DialogComponent<
   };
 
   /**
-   * Reference to the PrimeNG dynamic dialog.
-   */
-  private ref = inject(DynamicDialogRef);
-
-  /**
-   * Configuration of the PrimeNG dynamic dialog.
-   */
-  private config: DynamicDialogConfig<any, { entry: E | null }> = inject(DynamicDialogConfig);
-
-  /**
    * The form builder for the dialog.
    */
   protected fb = inject(NonNullableFormBuilder);
@@ -49,8 +39,7 @@ export abstract class DialogComponent<
    */
   protected abstract dataSource: CrudSource<T, E, C, U>;
 
-  /**
-   * Takes all the values in the form fields and creates an object of the data type.
+  /** Takes all the values in the form fields and creates an object of the data type.
    */
   protected abstract formToEntry(): C;
 
@@ -79,14 +68,30 @@ export abstract class DialogComponent<
    */
   protected entry!: E;
 
+  /**
+   * Reference to the PrimeNG dynamic dialog.
+   */
+  private ref = inject(DynamicDialogRef);
+
+  /**
+   * Configuration of the PrimeNG dynamic dialog.
+   */
+  private config: DynamicDialogConfig<any, any> = inject(DynamicDialogConfig);
+
+  private formDir = viewChild<NgForm>('formDir');
+
   ngOnInit(): void {
-    if (!this.config.data?.entry) {
+    if (!this.config.data) {
+      throw new Error('DialogComponent must be opened in a DynamicDialog.');
+    }
+    if (!this.config.data.entry) {
       this.entry = this.dataSource.default();
       this.isEditing = false;
     } else {
       this.entry = this.config.data.entry;
     }
     this.patchForm();
+    this.config.data.submitHandler.subscribe(() => this.formDir()?.ngSubmit.emit());
   }
 
   /**

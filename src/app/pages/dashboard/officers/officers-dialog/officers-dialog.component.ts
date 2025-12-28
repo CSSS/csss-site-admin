@@ -6,7 +6,6 @@ import { DatepickerComponent } from '@pages/dashboard/crud-components/crud-dialo
 import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/dialog-component';
 import { InputComponent } from '@pages/dashboard/crud-components/crud-dialog/input/input.component';
 import { PartialNullable } from '@utils/type-utils';
-import { CrudDialogComponent } from '../../crud-components/crud-dialog/crud-dialog.component';
 import {
   OfficerSourceEntry,
   OfficerSourceService
@@ -14,7 +13,7 @@ import {
 
 @Component({
   selector: 'cs-officers-dialog',
-  imports: [ReactiveFormsModule, CrudDialogComponent, InputComponent, DatepickerComponent],
+  imports: [ReactiveFormsModule, InputComponent, DatepickerComponent],
   templateUrl: './officers-dialog.component.html',
   styleUrl: './officers-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

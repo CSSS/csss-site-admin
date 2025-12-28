@@ -1,4 +1,4 @@
-<cs-crud-dialog [formGroup]="form" (ngSubmit)="submit()">
+<form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
   <p-floatlabel>
     <input
       pInputText
@@ -86,4 +86,4 @@
     formControlName="surveyLink"
     [invalid]="isInvalid('surveyLink')"
   />
-</cs-crud-dialog>
+</form>
