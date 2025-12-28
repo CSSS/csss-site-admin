@@ -11,6 +11,7 @@ import {
   ElectionsSourceEntry,
   ElectionsSourceService
 } from '@pages/dashboard/crud-sources/elections/elections.source.service';
+import { isoNaiveDatetime } from '@utils/string-utils';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -117,9 +118,9 @@ export class ElectionsDialogComponent extends DialogComponent<
     const result: ElectionUpdateParams = {};
 
     result.type = this.getIfDirty('type');
-    result.datetime_start_nominations = this.getIfDirty('startNominations');
-    result.datetime_start_voting = this.getIfDirty('startVoting');
-    result.datetime_end_voting = this.getIfDirty('endVoting');
+    result.datetime_start_nominations = isoNaiveDatetime(this.getIfDirty('startNominations'));
+    result.datetime_start_voting = isoNaiveDatetime(this.getIfDirty('startVoting'));
+    result.datetime_end_voting = isoNaiveDatetime(this.getIfDirty('endVoting'));
     result.available_positions = this.getIfDirty('availablePositions');
     result.survey_link = this.getIfDirty('surveyLink');
 
