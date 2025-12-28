@@ -4,7 +4,6 @@ import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { PartialNullable } from '@utils/type-utils';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Observable } from 'rxjs';
 
 /**
  * Constructor required to pass instances of concrete dialog components.
@@ -38,7 +37,7 @@ export abstract class DialogComponent<
   /**
    * Configuration of the PrimeNG dynamic dialog.
    */
-  private config: DynamicDialogConfig<E, E> = inject(DynamicDialogConfig);
+  private config: DynamicDialogConfig<any, { entry: E | null }> = inject(DynamicDialogConfig);
 
   /**
    * The form builder for the dialog.
@@ -81,11 +80,11 @@ export abstract class DialogComponent<
   protected entry!: E;
 
   ngOnInit(): void {
-    if (!this.config.data) {
+    if (!this.config.data?.entry) {
       this.entry = this.dataSource.default();
       this.isEditing = false;
     } else {
-      this.entry = this.config.data;
+      this.entry = this.config.data.entry;
     }
     this.patchForm();
   }
@@ -99,12 +98,9 @@ export abstract class DialogComponent<
     if (!this.form.valid) {
       return;
     }
-    let apiCall: Observable<E>;
-    if (this.isEditing) {
-      apiCall = this.dataSource.updateEntry$(this.entry, this.getDirtyValues());
-    } else {
-      apiCall = this.dataSource.createEntry$(this.formToEntry());
-    }
+    const apiCall = this.isEditing
+      ? this.dataSource.updateEntry$(this.entry, this.getDirtyValues())
+      : this.dataSource.createEntry$(this.formToEntry());
     apiCall.subscribe(res => {
       this.ref.close(res);
     });
@@ -156,6 +152,7 @@ export abstract class DialogComponent<
    */
   protected getIfDirty(controlName: string): any | undefined {
     // TODO: Check arrays differently, since deselecting and reselecting the same option will always mark something as dirty.
+    // TODO: Make this generic
     const control = this.form.get(controlName);
     if (!control) {
       throw new Error(`No control ${controlName} in dialog.`);

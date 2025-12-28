@@ -4,6 +4,7 @@ import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source
 import { PartialNullable } from '@utils/type-utils';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
+import { DialogFooterComponent } from '../crud-dialog/footer/footer.component';
 import { CrudTableColumn } from './crud-table.component';
 
 /**
@@ -70,7 +71,12 @@ export abstract class TableComponent<
     this.dialogRef = this.dialogService.open(this.dialogClass, {
       ...DialogComponent.dialogDefaults,
       header: `${entry ? 'Edit' : 'New'} ${tableName} Entry`,
-      data: entry
+      data: {
+        entry
+      },
+      templates: {
+        footer: DialogFooterComponent
+      }
     });
 
     this.dialogRef?.onClose.subscribe(entry => entry);

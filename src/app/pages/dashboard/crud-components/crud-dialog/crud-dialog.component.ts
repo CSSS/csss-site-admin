@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'cs-crud-dialog',
@@ -12,4 +13,11 @@ import { DividerModule } from 'primeng/divider';
 })
 export class CrudDialogComponent {
   formGroup = input.required<FormGroup>();
+  private dialogRef = inject(DynamicDialogRef);
+
+  submit(): void {}
+
+  cancel(): void {
+    this.dialogRef.close();
+  }
 }

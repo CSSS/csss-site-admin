@@ -41,6 +41,7 @@ export class ElectionsTableComponent extends TableComponent<
 
   protected override dialogClass = ElectionsDialogComponent;
 
+  // TODO: Create the custom footer component
   /**
    * Needs to be a signal since the activeTemplate needs to be instantiated.
    */
