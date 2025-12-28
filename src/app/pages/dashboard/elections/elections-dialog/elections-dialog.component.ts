@@ -100,15 +100,15 @@ export class ElectionsDialogComponent extends DialogComponent<
     });
   }
 
-  protected override formToEntry(): ElectionResponse {
+  protected override formToEntry(): ElectionParams {
     const controls = this.form.controls;
     return {
       ...this.entry.data,
       name: controls.name.value,
       type: controls.type.value,
-      datetime_start_nominations: controls.startNominations.value.toISOString(),
-      datetime_start_voting: controls.startVoting.value.toISOString(),
-      datetime_end_voting: controls.endVoting.value.toISOString(),
+      datetime_start_nominations: isoNaiveDatetime(controls.startNominations.value) ?? '',
+      datetime_start_voting: isoNaiveDatetime(controls.startVoting.value) ?? '',
+      datetime_end_voting: isoNaiveDatetime(controls.endVoting.value) ?? '',
       available_positions: controls.availablePositions.value,
       survey_link: controls.surveyLink.value?.length > 0 ? controls.surveyLink.value : null
     };
