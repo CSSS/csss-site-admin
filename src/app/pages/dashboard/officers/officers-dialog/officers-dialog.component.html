@@ -1,1 +1,101 @@
-<cs-crud-dialog [formGroup]="form" (ngSubmit)="submit()"> </cs-crud-dialog>
+<cs-crud-dialog [formGroup]="form" (ngSubmit)="submit()">
+  <cs-input
+    fieldId="officers-field__computing-id"
+    label="Computing ID"
+    formControlName="computing_id"
+    [required]="true"
+    [invalid]="isInvalid('computing_id')"
+  />
+  <cs-input
+    fieldId="officers-field__legal-name"
+    label="Legal Name"
+    formControlName="legal_name"
+    [required]="true"
+    [invalid]="isInvalid('legal_name')"
+  />
+  <cs-datepicker
+    fieldId="officers-field__start-date"
+    label="Start Date"
+    formControlName="start_date"
+    [required]="true"
+    [invalid]="isInvalid('start_date')"
+  />
+  <cs-datepicker
+    fieldId="officers-field__end-date"
+    label="End Date"
+    formControlName="end_date"
+    [invalid]="isInvalid('end_date')"
+  />
+  <cs-input
+    fieldId="officers-field__nickname"
+    label="Legal Name"
+    formControlName="nickname"
+    [invalid]="isInvalid('nickname')"
+  />
+  <cs-input
+    fieldId="officers-field__discord-id"
+    label="Discord ID"
+    formControlName="discord_id"
+    [invalid]="isInvalid('discord_id')"
+  />
+  <cs-input
+    fieldId="officers-field__discord-name"
+    label="Discord Name"
+    formControlName="discord_name"
+    [invalid]="isInvalid('discord_name')"
+  />
+  <cs-input
+    fieldId="officers-field__discord-nickname"
+    label="Discord Nickname"
+    formControlName="discord_nickname"
+    [invalid]="isInvalid('discord_nickname')"
+  />
+  <cs-input
+    fieldId="officers-field__phone-number"
+    label="Phone Number"
+    formControlName="phone_number"
+    [invalid]="isInvalid('phone_number')"
+  />
+  <cs-input
+    fieldId="officers-field__github-username"
+    label="GitHub Username"
+    formControlName="github_username"
+    [invalid]="isInvalid('github_username')"
+  />
+  <cs-input
+    fieldId="officers-field__google-drive-email"
+    label="Google Drive Email"
+    formControlName="google_drive_email"
+    [invalid]="isInvalid('google_drive_email')"
+  />
+  <cs-input
+    fieldId="officers-field__photo-url"
+    label="Photo URL"
+    formControlName="photo_url"
+    [invalid]="isInvalid('photo_url')"
+  />
+  <cs-input
+    fieldId="officers-field__favourite-course-0"
+    label="Favourite Course 0"
+    formControlName="favourite_course_0"
+    [invalid]="isInvalid('favourite_course_0')"
+  />
+  <cs-input
+    fieldId="officers-field__favourite-course-1"
+    label="Favourite Course 1"
+    formControlName="favourite_course_1"
+    [invalid]="isInvalid('favourite_course_1')"
+  />
+  <cs-input
+    fieldId="officers-field__favourite-pl-0"
+    label="Favourite Programming Language 0"
+    formControlName="favourite_pl_0"
+    [invalid]="isInvalid('favourite_pl_0')"
+  />
+  <cs-input
+    fieldId="officers-field__favourite-pl-1"
+    label="Favourite Programming Language 1"
+    formControlName="favourite_pl_1"
+    [invalid]="isInvalid('favourite_pl_1')"
+  />
+</cs-crud-dialog>
