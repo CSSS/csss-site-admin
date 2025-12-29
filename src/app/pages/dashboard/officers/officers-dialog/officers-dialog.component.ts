@@ -35,27 +35,35 @@ export class OfficersDialogComponent extends DialogComponent<
     computing_id: this.fb.control<string>('', Validators.required),
     start_date: this.fb.control<Date>(new Date(), Validators.required),
     end_date: this.fb.control<Date | null>(null),
-    nickname: this.fb.control<string | null>(''),
-    biography: this.fb.control<string | null>(''),
-    discord_id: this.fb.control<string | null>(''),
-    discord_name: this.fb.control<string | null>(''),
-    discord_nickname: this.fb.control<string | null>(''),
-    phone_number: this.fb.control<string | null>(''),
-    github_username: this.fb.control<string | null>(''),
-    google_drive_email: this.fb.control<string | null>(''),
-    photo_url: this.fb.control<string | null>(''),
-    favourite_course_0: this.fb.control<string | null>(''),
-    favourite_course_1: this.fb.control<string | null>(''),
-    favourite_pl_0: this.fb.control<string | null>(''),
-    favourite_pl_1: this.fb.control<string | null>('')
+    nickname: this.fb.control<string | null>(null),
+    biography: this.fb.control<string | null>(null),
+    discord_id: this.fb.control<string | null>(null),
+    discord_name: this.fb.control<string | null>(null),
+    discord_nickname: this.fb.control<string | null>(null),
+    phone_number: this.fb.control<string | null>(null),
+    github_username: this.fb.control<string | null>(null),
+    google_drive_email: this.fb.control<string | null>(null),
+    photo_url: this.fb.control<string | null>(null),
+    favourite_course_0: this.fb.control<string | null>(null),
+    favourite_course_1: this.fb.control<string | null>(null),
+    favourite_pl_0: this.fb.control<string | null>(null),
+    favourite_pl_1: this.fb.control<string | null>(null)
   });
+
+  protected override patchForm(): void {
+    this.form.patchValue({
+      ...this.entry.data,
+      computing_id: this.entry.data.computing_id ?? '',
+      start_date: new Date(this.entry.data.start_date),
+      end_date: this.entry.data.end_date ? new Date(this.entry.data.end_date) : null
+    });
+  }
 
   protected override formToEntry(): OfficerCreate {
     const controls = this.form.controls;
     return {
       ...this.entry.data,
-      ...this.form.value,
-      computing_id: controls.computing_id.value,
+      ...this.form.getRawValue(),
       start_date: controls.start_date.value.toISOString(),
       end_date: controls.end_date.value?.toISOString() ?? null
     };
