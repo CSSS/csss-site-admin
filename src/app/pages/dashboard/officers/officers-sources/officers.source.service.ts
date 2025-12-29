@@ -14,6 +14,17 @@ import { CrudEntry, CrudSource } from '../../crud-sources/crud-source';
 export class OfficerSourceEntry extends CrudEntry<Officer> {
   declare id: number; // declare overrides this to a number
 
+  static fromOfficer(o: Officer): OfficerSourceEntry {
+    if (!o.computing_id) {
+      throw new Error('Cannot create OfficerSourceEntry without computing ID');
+    }
+
+    return new OfficerSourceEntry(
+      { ...o, id: o.term_id, computing_id: o.computing_id },
+      { ...o, computing_id: o.computing_id }
+    );
+  }
+
   constructor(term: OfficerTerm, info: OfficerInfo) {
     super(term.id, {
       ...term,
@@ -41,6 +52,20 @@ export class OfficerSourceService extends CrudSource<
   // For now, only fetch the current officers
   protected override dataSource$ = this.officersApi.getCurrentOfficers();
 
+  override fetch(): void {
+    this.dataSource$.subscribe({
+      next: res => {
+        // Wrap the entries so they're CRUD entries.
+        const entries = res.map(e => OfficerSourceEntry.fromOfficer(e));
+        if (this.sortFn) {
+          entries.sort(this.sortFn);
+        }
+        this.entries.set(entries);
+        this.loaded = true;
+      }
+    });
+  }
+
   override createEntry$(newEntry: OfficerCreate): Observable<OfficerSourceEntry> {
     // Only a single response is expected here
     return this.officersApi.createOfficerTerm([newEntry]).pipe(
@@ -59,7 +84,7 @@ export class OfficerSourceService extends CrudSource<
 
   override updateEntry$(
     entry: OfficerSourceEntry,
-    params: Partial<Officer>
+    params: PartialNullable<Officer>
   ): Observable<OfficerSourceEntry> {
     if (!entry.data.computing_id) {
       throw new Error('Cannot update officer info without computing ID');

@@ -5,7 +5,7 @@ import {
   inject,
   Signal,
 } from '@angular/core';
-import { <%= classify(name) %>Response } from '@api/backend-api/model/models';
+import { <%= classify(name) %> } from '@api/backend-api/model/models';
 import {
   <%= classify(name) %>SourceEntry,
   <%= classify(name) %>SourceService
@@ -25,7 +25,7 @@ import { <%= classify(name) %>DialogComponent } from '../<%= dasherize(name) %>-
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class <%= classify(name) %>Component extends TableComponent<
-  <%= classify(name) %>Response,
+  <%= classify(name) %>,
   <%= classify(name) %>SourceEntry,
   <%= classify(name) %>DialogComponent
 > {
@@ -33,10 +33,10 @@ export class <%= classify(name) %>Component extends TableComponent<
 
   protected override dataSource = inject(<%= classify(name) %>SourceService);
 
-  protected columns: Signal<CrudTableColumn<<%= classify(name) %>Response>[]> = computed(() => [
+  protected columns: Signal<CrudTableColumn<<%= classify(name) %>>[]> = computed(() => [
     {
-      label: 'Label',
-      key: 'Key'
+      label: 'Name',
+      key: 'name'
     },
   ]);
 }
