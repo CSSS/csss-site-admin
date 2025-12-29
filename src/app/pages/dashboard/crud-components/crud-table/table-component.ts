@@ -20,6 +20,7 @@ export abstract class TableComponent<
   implements OnInit, OnDestroy
 {
   submitHandler$ = new Subject<E | null>();
+
   /**
    * Class that represents the dialog component that this table uses.
    */

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Directive, inject, OnInit, viewChild } from '@angular/core';
+import { DestroyRef, Directive, inject, OnInit, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, NgForm, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { PartialNullable } from '@utils/type-utils';
@@ -78,7 +79,9 @@ export abstract class DialogComponent<
    */
   private config: DynamicDialogConfig<any, any> = inject(DynamicDialogConfig);
 
-  private formDir = viewChild<NgForm>('formDir');
+  private formDir = viewChild.required<NgForm>('formDir');
+
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     if (!this.config.data) {
@@ -91,7 +94,9 @@ export abstract class DialogComponent<
       this.entry = this.config.data.entry;
     }
     this.patchForm();
-    this.config.data.submitHandler.subscribe(() => this.formDir()?.ngSubmit.emit());
+    this.config.data.submitHandler
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.formDir().ngSubmit.emit());
   }
 
   /**
