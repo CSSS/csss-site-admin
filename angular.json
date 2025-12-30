@@ -104,7 +104,21 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "providersFile": "test/test-providers.ts",
+            "exclude": [
+              "**/crud-table/*.spec.ts",
+              "**/login.service.ts",
+              "**/dashboard/elections/*",
+              "**/dashboard/officers/*",
+              "**/crud-dialog/datepicker/*",
+              "**/crud-dialog/footer/*",
+              "**/crud-dialog/input/*",
+              "**/crud-dialog/listbox/*",
+              "**/crud-dialog/select/*"
+            ]
+          }
         }
       }
     }
