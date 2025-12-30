@@ -33,20 +33,11 @@ export class <%= classify(name) %>DialogComponent extends DialogComponent<
   );
 
   // TODO:
-  protected override formToEntry(): <%= classify(name) %> {
+  protected override initForm(): <%= classify(name) %> {
     const controls = this.form.controls;
     return {
       ...this.entry.data,
       name: controls.name.value
     };
-  }
-
-  // TODO:
-  protected getDirtyValues(): <%= classify(name) %>Update{
-    const result: <%= classify(name) %>Update = {};
-
-    result.name = this.getIfDirty('name');
-
-    return result;
   }
 }

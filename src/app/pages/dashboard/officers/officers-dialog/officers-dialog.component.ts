@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { Officer, OfficerCreate, OfficerPositionEnum } from '@api/backend-api/model/models';
-import { OfficerUpdate } from '@api/backend-api/model/officer-update';
+import { Officer, OfficerPositionEnum } from '@api/backend-api/model/models';
 import { DatepickerComponent } from '@pages/dashboard/crud-components/crud-dialog/datepicker/datepicker.component';
 import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/dialog-component';
 import { InputComponent } from '@pages/dashboard/crud-components/crud-dialog/input/input.component';
+import { isoNaiveDatetime } from '@utils/string-utils';
 import { PartialNullable } from '@utils/type-utils';
+import { FieldsetModule } from 'primeng/fieldset';
 import {
   OfficerSourceEntry,
   OfficerSourceService
@@ -13,17 +14,12 @@ import {
 
 @Component({
   selector: 'cs-officers-dialog',
-  imports: [ReactiveFormsModule, InputComponent, DatepickerComponent],
+  imports: [ReactiveFormsModule, InputComponent, DatepickerComponent, FieldsetModule],
   templateUrl: './officers-dialog.component.html',
   styleUrl: './officers-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfficersDialogComponent extends DialogComponent<
-  Officer,
-  OfficerSourceEntry,
-  OfficerCreate,
-  PartialNullable<Officer>
-> {
+export class OfficersDialogComponent extends DialogComponent<Officer, OfficerSourceEntry> {
   protected dataSource = inject(OfficerSourceService);
 
   protected form = this.fb.group({
@@ -59,19 +55,10 @@ export class OfficersDialogComponent extends DialogComponent<
     });
   }
 
-  protected override formToEntry(): OfficerCreate {
-    const controls = this.form.controls;
-    return {
-      ...this.entry.data,
-      ...this.form.getRawValue(),
-      start_date: controls.start_date.value.toISOString(),
-      end_date: controls.end_date.value?.toISOString() ?? null
-    };
-  }
-
-  protected getDirtyValues(): OfficerUpdate {
-    const result: OfficerUpdate = {};
-
+  protected override formToPatchBody(): PartialNullable<Officer> {
+    const result = super.formToPatchBody();
+    result.start_date = isoNaiveDatetime(this.getIfDirty('start_date'));
+    result.end_date = isoNaiveDatetime(this.getIfDirty('end_date'));
     return result;
   }
 }

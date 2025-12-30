@@ -38,12 +38,7 @@ export class OfficerSourceEntry extends CrudEntry<Officer> {
 @Injectable({
   providedIn: 'root'
 })
-export class OfficerSourceService extends CrudSource<
-  Officer,
-  OfficerSourceEntry,
-  OfficerCreate,
-  PartialNullable<Officer>
-> {
+export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry> {
   protected override entryClass = OfficerSourceEntry;
   officersApi = inject(OfficersService);
 

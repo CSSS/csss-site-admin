@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Directive, inject, OnDestroy, OnInit, Signal } from '@angular/core';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
-import { PartialNullable } from '@utils/type-utils';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject } from 'rxjs';
 import { DialogComponent, DialogComponentConstructor } from '../crud-dialog/dialog-component';
@@ -15,7 +14,7 @@ import { CrudTableColumn } from './crud-table.component';
 export abstract class TableComponent<
   T extends Record<string, any>, // API Type
   E extends CrudEntry<T>, // Entry type
-  D extends DialogComponent<T, E, PartialNullable<T>, PartialNullable<T>> // Dialog type
+  D extends DialogComponent<T, E> // Dialog type
 >
   implements OnInit, OnDestroy
 {
@@ -24,13 +23,7 @@ export abstract class TableComponent<
   /**
    * Class that represents the dialog component that this table uses.
    */
-  protected abstract dialogClass: DialogComponentConstructor<
-    T,
-    E,
-    PartialNullable<T>,
-    PartialNullable<T>,
-    D
-  >;
+  protected abstract dialogClass: DialogComponentConstructor<T, E, D>;
 
   /**
    * The columns of the table and how they should be displayed.
@@ -40,7 +33,7 @@ export abstract class TableComponent<
   /**
    * The data used for the table entries.
    */
-  protected abstract dataSource: CrudSource<T, E, PartialNullable<T>, PartialNullable<T>>;
+  protected abstract dataSource: CrudSource<T, E>;
 
   /**
    * Reference to the dialog for this table.
