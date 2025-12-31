@@ -6,6 +6,10 @@ export type PartialNullable<T> = {
   [K in keyof T]?: T[K] | null;
 };
 
+export type SerializeConfig<T extends Record<string, string | number | boolean | null | Date>> = {
+  [K in keyof T]?: (value: any) => T[K];
+};
+
 /**
  * Helper function to extract the value from the key of an object.
  */

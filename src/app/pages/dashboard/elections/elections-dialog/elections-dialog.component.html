@@ -31,9 +31,9 @@
     <cs-datepicker
       fieldId="elections-field__start-nominations"
       label="Start Nominations"
-      formControlName="startNominations"
+      formControlName="datetime_start_nominations"
       [required]="true"
-      [invalid]="isInvalid('startNominations') || form.hasError('nominationsTooLate')"
+      [invalid]="isInvalid('datetime_start_nominations') || form.hasError('nominationsTooLate')"
     />
     @if (hasDialogError('nominationsTooLate')) {
       <p-message severity="error" variant="simple">
@@ -45,9 +45,9 @@
     <cs-datepicker
       fieldId="elections-field__start-voting"
       label="Start Voting"
-      formControlName="startVoting"
+      formControlName="datetime_start_voting"
       [required]="true"
-      [invalid]="isInvalid('startVoting') || form.hasError('startVotingWrong')"
+      [invalid]="isInvalid('datetime_start_voting') || form.hasError('startVotingWrong')"
     />
     @if (hasDialogError('nominationsTooLate')) {
       <p-message severity="error" variant="simple">
@@ -59,9 +59,9 @@
     <cs-datepicker
       fieldId="elections-field__end-voting"
       label="End Voting"
-      formControlName="endVoting"
+      formControlName="datetime_end_voting"
       [required]="true"
-      [invalid]="isInvalid('endVoting') || form.hasError('endVotingTooEarly')"
+      [invalid]="isInvalid('datetime_end_voting') || form.hasError('endVotingTooEarly')"
     />
     @if (hasDialogError('endVotingTooEarly')) {
       <p-message severity="error" variant="simple">
@@ -72,18 +72,18 @@
   <cs-listbox
     fieldId="elections-field__available-positions"
     label="Available Positions"
-    formControlName="availablePositions"
+    formControlName="available_positions"
     [options]="officerPositions"
     dataKey="label"
     optionLabel="label"
     optionValue="value"
     [required]="true"
-    [invalid]="isInvalid('availablePositions')"
+    [invalid]="isInvalid('available_positions')"
   />
   <cs-input
     fieldId="elections-field__survey-link"
     label="Survey Link"
-    formControlName="surveyLink"
-    [invalid]="isInvalid('surveyLink')"
+    formControlName="survey_link"
+    [invalid]="isInvalid('survey_link')"
   />
 </form>

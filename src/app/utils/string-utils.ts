@@ -10,11 +10,6 @@ export function slugify(text: string): string {
     .replace(/[\W_]+/g, '-'); // replace non-word characters and underscores with hyphen
 }
 
-/**
- * Returns an ISO 8601 datetime string without timezone information.
- * @param date - Date to convert
- * @returns string in ISO 8601 format without timezone info
- */
-export function isoNaiveDatetime(date: Date | undefined): string | undefined {
-  return date?.toISOString().slice(0, -1) ?? undefined;
+export function toDate(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }

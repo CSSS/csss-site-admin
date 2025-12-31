@@ -7,7 +7,7 @@ import {
   TemplateRef,
   viewChild
 } from '@angular/core';
-import { ElectionResponse } from '@api/backend-api/model/models';
+import { ElectionParams, ElectionResponse } from '@api/backend-api/model/models';
 import {
   ElectionsSourceEntry,
   ElectionsSourceService
@@ -33,6 +33,7 @@ import { OfficerFormatPipe } from './officer-format/officer-format.pipe';
 export class ElectionsTableComponent extends TableComponent<
   ElectionResponse,
   ElectionsSourceEntry,
+  ElectionParams,
   ElectionsDialogComponent
 > {
   protected activeChipCell = viewChild.required<TemplateRef<unknown>>('activeChipCell');

@@ -3,7 +3,7 @@ import { DestroyRef, Directive, inject, OnInit, viewChild } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, NgForm, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
-import { PartialNullable } from '@utils/type-utils';
+import { PartialNullable, SerializeConfig } from '@utils/type-utils';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 /**
@@ -12,13 +12,15 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 export type DialogComponentConstructor<
   T extends Record<string, any>,
   E extends CrudEntry<T>,
-  D extends DialogComponent<T, E>
+  C extends Record<string, any>,
+  D extends DialogComponent<T, E, C>
 > = new (...args: any[]) => D;
 
 @Directive()
 export abstract class DialogComponent<
   T extends Record<string, any>,
-  E extends CrudEntry<T>
+  E extends CrudEntry<T>,
+  C extends Record<string, any>
 > implements OnInit {
   static dialogDefaults = {
     modal: true,
@@ -34,7 +36,7 @@ export abstract class DialogComponent<
   /**
    * The datasource that the entry is a part of.
    */
-  protected abstract dataSource: CrudSource<T, E>;
+  protected abstract dataSource: CrudSource<T, E, C>;
 
   /**
    * The form in the dialog.
@@ -80,7 +82,7 @@ export abstract class DialogComponent<
     } else {
       this.entry = this.config.data.entry;
     }
-    this.patchForm();
+    this.initForm();
     this.config.data.submitHandler
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.formDir().ngSubmit.emit());
@@ -96,11 +98,78 @@ export abstract class DialogComponent<
       return;
     }
     const apiCall = this.isEditing
-      ? this.dataSource.updateEntry$(this.entry, this.getDirtyValues())
-      : this.dataSource.createEntry$(this.formToEntry());
+      ? this.dataSource.updateEntry$(this.entry, this.formToPatchBody())
+      : this.dataSource.createEntry$(this.formToPostBody());
     apiCall.subscribe(res => {
       this.ref.close(res);
     });
+  }
+
+  /**
+   * Populates the form values with the entry you are editing.
+   * Override for items that need to be changed to certain interfaces.
+   */
+  protected initForm(): void {
+    this.form.setValue(this.entry.data);
+  }
+
+  /** Takes all the values in the form fields to create the post request.
+   */
+  protected formToPostBody(): C {
+    return {
+      ...this.form.value
+    };
+  }
+
+  /**
+   * Used to get the dirty values to create the patch request.
+   * By default, Dates are converted to ISO 8601 strings.
+   * Currently only goes one level deep.
+   */
+  protected formToPatchBody(config?: SerializeConfig<T>): PartialNullable<T> {
+    if (!this.form.dirty) {
+      return {};
+    }
+    const result: PartialNullable<T> = {};
+
+    for (const key of Object.keys(this.form.controls)) {
+      const control = this.form.get(key);
+      if (!control || control.pristine) {
+        continue;
+      }
+
+      const typedKey = key as keyof T;
+      if (config && config[typedKey] !== undefined) {
+        result[typedKey] = config[typedKey](control.value as T[keyof T]);
+        continue;
+      }
+
+      if (control.value instanceof Date) {
+        result[key as keyof T] = control.value.toISOString() as T[keyof T];
+        continue;
+      }
+
+      result[key as keyof T] = control.value;
+    }
+
+    return result;
+  }
+
+  /**
+   * Retrieves the value or returns undefined if the value has not been changed.
+   * Throws an error if the control does not exist.
+   *
+   * @param controlName - Name of the control in the form to check
+   * @returns The value of the control if it has been marked dirty, undefined otherwise.
+   */
+  protected getIfDirty(controlName: string): any | undefined {
+    // TODO: Check arrays differently, since deselecting and reselecting the same option will always mark something as dirty.
+    // TODO: Make this generic
+    const control = this.form.get(controlName);
+    if (!control) {
+      throw new Error(`No control ${controlName} in dialog.`);
+    }
+    return control?.dirty ? control.value : undefined;
   }
 
   /**
@@ -130,30 +199,5 @@ export abstract class DialogComponent<
     }
 
     return args.every(arg => this.form.hasError(arg));
-  }
-
-  /**
-   * Populates the form values with the entry you are editing.
-   * Override for items that need to be changed to certain interfaces.
-   */
-  protected patchForm(): void {
-    this.form.patchValue(this.entry);
-  }
-
-  /**
-   * Retrieves the value or returns undefined if the value has not been changed.
-   * Throws an error if the control does not exist.
-   *
-   * @param controlName - Name of the control in the form to check
-   * @returns The value of the control if it has been marked dirty, undefined otherwise.
-   */
-  protected getIfDirty(controlName: string): any | undefined {
-    // TODO: Check arrays differently, since deselecting and reselecting the same option will always mark something as dirty.
-    // TODO: Make this generic
-    const control = this.form.get(controlName);
-    if (!control) {
-      throw new Error(`No control ${controlName} in dialog.`);
-    }
-    return control?.dirty ? control.value : undefined;
   }
 }

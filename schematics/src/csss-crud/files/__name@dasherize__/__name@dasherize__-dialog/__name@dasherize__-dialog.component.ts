@@ -22,7 +22,8 @@ import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/di
 })
 export class <%= classify(name) %>DialogComponent extends DialogComponent<
   <%= classify(name) %>Response,
-  <%= classify(name) %>SourceEntry
+  <%= classify(name) %>SourceEntry,
+  <%= classify(name) %>Create
 > {
   protected dataSource = inject(<%= classify(name) %>SourceService);
 

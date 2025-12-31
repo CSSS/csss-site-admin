@@ -14,7 +14,8 @@ import { CrudTableColumn } from './crud-table.component';
 export abstract class TableComponent<
   T extends Record<string, any>, // API Type
   E extends CrudEntry<T>, // Entry type
-  D extends DialogComponent<T, E> // Dialog type
+  C extends Record<string, any>, // Create type
+  D extends DialogComponent<T, E, C> // Dialog type
 >
   implements OnInit, OnDestroy
 {
@@ -23,7 +24,7 @@ export abstract class TableComponent<
   /**
    * Class that represents the dialog component that this table uses.
    */
-  protected abstract dialogClass: DialogComponentConstructor<T, E, D>;
+  protected abstract dialogClass: DialogComponentConstructor<T, E, C, D>;
 
   /**
    * The columns of the table and how they should be displayed.
@@ -33,7 +34,7 @@ export abstract class TableComponent<
   /**
    * The data used for the table entries.
    */
-  protected abstract dataSource: CrudSource<T, E>;
+  protected abstract dataSource: CrudSource<T, E, C>;
 
   /**
    * Reference to the dialog for this table.

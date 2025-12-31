@@ -5,7 +5,10 @@ import {
   inject,
   Signal,
 } from '@angular/core';
-import { <%= classify(name) %> } from '@api/backend-api/model/models';
+import {
+  <%= classify(name) %>,
+  <%= classify(name) %>Create
+} from '@api/backend-api/model/models';
 import {
   <%= classify(name) %>SourceEntry,
   <%= classify(name) %>SourceService
@@ -27,6 +30,7 @@ import { <%= classify(name) %>DialogComponent } from '../<%= dasherize(name) %>-
 export class <%= classify(name) %>Component extends TableComponent<
   <%= classify(name) %>,
   <%= classify(name) %>SourceEntry,
+  <%= classify(name) %>Create,
   <%= classify(name) %>DialogComponent
 > {
   protected override dialogClass = <%= classify(name) %>DialogComponent;

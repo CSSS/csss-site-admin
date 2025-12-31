@@ -15,13 +15,9 @@ export class OfficerSourceEntry extends CrudEntry<Officer> {
   declare id: number; // declare overrides this to a number
 
   static fromOfficer(o: Officer): OfficerSourceEntry {
-    if (!o.computing_id) {
-      throw new Error('Cannot create OfficerSourceEntry without computing ID');
-    }
-
     return new OfficerSourceEntry(
-      { ...o, id: o.term_id, computing_id: o.computing_id },
-      { ...o, computing_id: o.computing_id }
+      { ...o, id: o.term_id, computing_id: o.computing_id ?? '' },
+      { ...o, computing_id: o.computing_id ?? '' }
     );
   }
 
@@ -38,7 +34,7 @@ export class OfficerSourceEntry extends CrudEntry<Officer> {
 @Injectable({
   providedIn: 'root'
 })
-export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry> {
+export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry, OfficerCreate> {
   protected override entryClass = OfficerSourceEntry;
   officersApi = inject(OfficersService);
 

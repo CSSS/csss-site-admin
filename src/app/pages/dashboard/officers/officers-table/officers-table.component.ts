@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
-import { Officer } from '@api/backend-api';
+import { Officer, OfficerCreate } from '@api/backend-api';
 import {
   CrudTableColumn,
   CrudTableComponent
@@ -12,15 +12,16 @@ import {
 } from '../officers-sources/officers.source.service';
 
 @Component({
-  selector: 'cs-officers',
+  selector: 'cs-officers-table',
   imports: [CrudTableComponent],
   templateUrl: './officers-table.component.html',
   styleUrl: './officers-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfficersComponent extends TableComponent<
+export class OfficersTableComponent extends TableComponent<
   Officer,
   OfficerSourceEntry,
+  OfficerCreate,
   OfficersDialogComponent
 > {
   protected override dialogClass = OfficersDialogComponent;

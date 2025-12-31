@@ -38,7 +38,11 @@ export abstract class CrudEntry<T> {
 @Injectable({
   providedIn: 'root'
 })
-export abstract class CrudSource<T extends Record<string, any>, E extends CrudEntry<T>> {
+export abstract class CrudSource<
+  T extends Record<string, any>,
+  E extends CrudEntry<T>,
+  C extends Record<string, any>
+> {
   /**
    * Class used to construct entries.
    */
@@ -72,7 +76,7 @@ export abstract class CrudSource<T extends Record<string, any>, E extends CrudEn
   /**
    * Creates an observable that sends a request to create the entry on the backend.
    */
-  abstract createEntry$(newEntry: PartialNullable<T>): Observable<E>;
+  abstract createEntry$(newEntry: C): Observable<E>;
 
   /**
    * Creates an observable that sends a request to patch the entry on the backend.

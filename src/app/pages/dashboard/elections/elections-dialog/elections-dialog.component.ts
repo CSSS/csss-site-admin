@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { ElectionResponse } from '@api/backend-api/model/election-response';
-import { ElectionUpdateParams } from '@api/backend-api/model/election-update-params';
 import {
   ElectionParams,
   ElectionTypeEnum,
@@ -11,7 +10,6 @@ import {
   ElectionsSourceEntry,
   ElectionsSourceService
 } from '@pages/dashboard/crud-sources/elections/elections.source.service';
-import { isoNaiveDatetime } from '@utils/string-utils';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -45,8 +43,7 @@ import { SlugPipe } from './pipes/slug.pipe';
 export class ElectionsDialogComponent extends DialogComponent<
   ElectionResponse,
   ElectionsSourceEntry,
-  ElectionParams,
-  ElectionUpdateParams
+  ElectionParams
 > {
   protected dataSource = inject(ElectionsSourceService);
 
@@ -54,14 +51,14 @@ export class ElectionsDialogComponent extends DialogComponent<
     {
       name: this.fb.control('', Validators.required),
       type: this.fb.control<ElectionTypeEnum>('general_election', Validators.required),
-      startNominations: this.fb.control(new Date(), Validators.required),
-      startVoting: this.fb.control(new Date(), Validators.required),
-      endVoting: this.fb.control(new Date(), Validators.required),
-      availablePositions: this.fb.control<OfficerPositionEnum[]>(
+      datetime_start_nominations: this.fb.control(new Date(), Validators.required),
+      datetime_start_voting: this.fb.control(new Date(), Validators.required),
+      datetime_end_voting: this.fb.control(new Date(), Validators.required),
+      available_positions: this.fb.control<OfficerPositionEnum[]>(
         [],
         [Validators.required, Validators.minLength(1)]
       ),
-      surveyLink: this.fb.control('')
+      survey_link: this.fb.control<string | null>('')
     },
     // `electionDatesValidator()` ensures that the dates are sequential to each other.
     // This means startNominations must be before start voting and start voting must be before end voting.
@@ -88,40 +85,22 @@ export class ElectionsDialogComponent extends DialogComponent<
     };
   });
 
-  protected override patchForm(): void {
+  protected override initForm(): void {
     this.form.patchValue({
       ...this.entry.data,
-      availablePositions: this.entry.data.available_positions,
-      startNominations: new Date(this.entry.data.datetime_start_nominations ?? ''),
-      startVoting: new Date(this.entry.data.datetime_start_voting ?? ''),
-      endVoting: new Date(this.entry.data.datetime_end_voting ?? '')
+      datetime_start_nominations: new Date(this.entry.data.datetime_start_nominations ?? ''),
+      datetime_start_voting: new Date(this.entry.data.datetime_start_voting ?? ''),
+      datetime_end_voting: new Date(this.entry.data.datetime_end_voting ?? '')
     });
   }
 
-  protected override formToEntry(): ElectionParams {
+  protected override formToPostBody(): ElectionParams {
     const controls = this.form.controls;
     return {
-      ...this.entry.data,
-      name: controls.name.value,
-      type: controls.type.value,
-      datetime_start_nominations: isoNaiveDatetime(controls.startNominations.value) ?? '',
-      datetime_start_voting: isoNaiveDatetime(controls.startVoting.value) ?? '',
-      datetime_end_voting: isoNaiveDatetime(controls.endVoting.value) ?? '',
-      available_positions: controls.availablePositions.value,
-      survey_link: controls.surveyLink.value?.length > 0 ? controls.surveyLink.value : null
+      ...this.form.getRawValue(),
+      datetime_start_nominations: controls.datetime_start_nominations.value.toISOString(),
+      datetime_start_voting: controls.datetime_start_voting.value.toISOString(),
+      datetime_end_voting: controls.datetime_end_voting.value.toISOString()
     };
-  }
-
-  protected getDirtyValues(): ElectionUpdateParams {
-    const result: ElectionUpdateParams = {};
-
-    result.type = this.getIfDirty('type');
-    result.datetime_start_nominations = isoNaiveDatetime(this.getIfDirty('startNominations'));
-    result.datetime_start_voting = isoNaiveDatetime(this.getIfDirty('startVoting'));
-    result.datetime_end_voting = isoNaiveDatetime(this.getIfDirty('endVoting'));
-    result.available_positions = this.getIfDirty('availablePositions');
-    result.survey_link = this.getIfDirty('surveyLink');
-
-    return result;
   }
 }

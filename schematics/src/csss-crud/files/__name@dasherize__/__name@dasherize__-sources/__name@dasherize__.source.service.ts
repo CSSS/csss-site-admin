@@ -13,7 +13,11 @@ export class <%= classify(name) %>SourceEntry extends CrudEntry<<%= classify(nam
 @Injectable({
   providedIn: 'root'
 })
-export class <%= classify(name) %>SourceService extends CrudSource<<%= classify(name) %>, <%= classify(name) %>SourceEntry>> {
+export class <%= classify(name) %>SourceService extends CrudSource<
+  <%= classify(name) %>,
+  <%= classify(name) %>SourceEntry>,
+  <%= classify(name) %>Create>
+> {
   protected override entryClass = <%= classify(name) %>SourceEntry;
   <%= classify(name) %>Api = inject(<%= classify(name) %>Service);
 
