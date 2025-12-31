@@ -17,21 +17,27 @@ export class TopBarComponent {
   protected auth = inject(CsssAuthService);
   protected menuItems: MenuItem[] = [
     {
+      label: 'Officers',
+      icon: PrimeIcons.CROWN,
+      routerLink: ['/dashboard/officers'],
+      routerLinkActiveOptions: { exact: true }
+    },
+    {
       label: 'Elections',
       icon: PrimeIcons.TICKET,
       routerLink: ['/dashboard/elections'],
       routerLinkActiveOptions: { exact: true }
     },
     {
-      label: 'Nominees',
-      icon: PrimeIcons.ADDRESS_BOOK,
-      routerLink: ['/dashboard/nominees'],
+      label: 'Candidates',
+      icon: PrimeIcons.USER_PLUS,
+      routerLink: ['/dashboard/candidates'],
       routerLinkActiveOptions: { exact: true }
     },
     {
-      label: 'Officers',
-      icon: PrimeIcons.CROWN,
-      routerLink: ['/dashboard/officers'],
+      label: 'Nominees',
+      icon: PrimeIcons.ADDRESS_BOOK,
+      routerLink: ['/dashboard/nominees'],
       routerLinkActiveOptions: { exact: true }
     }
   ];

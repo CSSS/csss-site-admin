@@ -76,12 +76,12 @@ export abstract class CrudSource<
   /**
    * Creates an observable that sends a request to create the entry on the backend.
    */
-  abstract createEntry$(newEntry: C): Observable<E>;
+  abstract createEntry$(newEntry: C, params?: Record<string, any>): Observable<E>;
 
   /**
    * Creates an observable that sends a request to patch the entry on the backend.
    */
-  abstract updateEntry$(entry: E, params: PartialNullable<T>): Observable<E>;
+  abstract updateEntry$(entry: E, new_values: PartialNullable<T>): Observable<E>;
 
   /**
    * Fetches all the entries form the backend.

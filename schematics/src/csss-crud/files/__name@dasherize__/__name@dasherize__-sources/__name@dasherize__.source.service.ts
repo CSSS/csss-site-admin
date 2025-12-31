@@ -23,7 +23,7 @@ export class <%= classify(name) %>SourceService extends CrudSource<
 
   protected override readonly PRIMARY_KEY = '';
 
-  protected override dataSource$ = this.<%= classify(name) %>Api.get<%= classify(name) %>();
+  protected override dataSource$ = this.<%= camelize(name) %>Api.get<%= classify(name) %>();
 
   override createEntry$(newEntry: <%= classify(name) %>Create): Observable<<%= classify(name) %>SourceEntry> {
     return this.<%= classify(name) %>Api.create<%= classify(name) %>(newEntry).pipe(
@@ -34,9 +34,9 @@ export class <%= classify(name) %>SourceService extends CrudSource<
 
   override updateEntry$(
     entry: <%= classify(name) %>SourceEntry,
-    params: <%= classify(name) %>Update
+    new_values: <%= classify(name) %>Update
   ): Observable<<%= classify(name) %>SourceEntry> {
-    return this.<%= classify(name) %>Api.update<%= classify(name) %>(entry.data[this.PRIMARY_KEY], params).pipe(
+    return this.<%= camelize(name) %>Api.update<%= classify(name) %>(entry.data[this.PRIMARY_KEY], new_values).pipe(
       map(res => new <%= classify(name) %>SourceEntry(res[this.PRIMARY_KEY], res)),
       tap(entry => this.updateEntry(entry))
     );

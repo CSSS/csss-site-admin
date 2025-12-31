@@ -25,7 +25,6 @@ export class NomineesDialogComponent extends DialogComponent<
   protected dataSource = inject(NomineesSourceService);
 
   protected form = this.fb.group({
-    computing_id: this.fb.control('', Validators.required),
     full_name: this.fb.control('', Validators.required),
     linked_in: this.fb.control<string | null>(null),
     instagram: this.fb.control<string | null>(null),

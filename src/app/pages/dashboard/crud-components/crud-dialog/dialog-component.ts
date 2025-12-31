@@ -110,7 +110,7 @@ export abstract class DialogComponent<
    * Override for items that need to be changed to certain interfaces.
    */
   protected initForm(): void {
-    this.form.setValue(this.entry.data);
+    this.form.patchValue(this.entry.data);
   }
 
   /** Takes all the values in the form fields to create the post request.

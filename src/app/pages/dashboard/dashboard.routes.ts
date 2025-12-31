@@ -16,6 +16,13 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'candidates',
+    loadComponent: () =>
+      import('./candidates/candidates-table/candidates-table.component').then(
+        m => m.CandidatesComponent
+      )
+  },
+  {
     path: 'nominees',
     loadComponent: () =>
       import('./nominees/nominees-table/nominees-table.component').then(m => m.NomineesComponent)
