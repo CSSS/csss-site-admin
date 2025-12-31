@@ -15,11 +15,11 @@ export class <%= classify(name) %>SourceEntry extends CrudEntry<<%= classify(nam
 })
 export class <%= classify(name) %>SourceService extends CrudSource<
   <%= classify(name) %>,
-  <%= classify(name) %>SourceEntry>,
-  <%= classify(name) %>Create>
+  <%= classify(name) %>SourceEntry,
+  <%= classify(name) %>Create
 > {
   protected override entryClass = <%= classify(name) %>SourceEntry;
-  <%= classify(name) %>Api = inject(<%= classify(name) %>Service);
+  <%= camelize(name) %>Api = inject(<%= classify(name) %>Service);
 
   protected override readonly PRIMARY_KEY = '';
 

@@ -22,12 +22,12 @@ export class TopBarComponent {
       routerLink: ['/dashboard/elections'],
       routerLinkActiveOptions: { exact: true }
     },
-    // {
-    //   label: 'Candidates',
-    //   icon: PrimeIcons.USERS,
-    //   routerLink: ['/dashboard/candidates/test-election-2'],
-    //   routerLinkActiveOptions: { exact: true }
-    // }
+    {
+      label: 'Nominees',
+      icon: PrimeIcons.ADDRESS_BOOK,
+      routerLink: ['/dashboard/nominees'],
+      routerLinkActiveOptions: { exact: true }
+    },
     {
       label: 'Officers',
       icon: PrimeIcons.CROWN,

@@ -1,0 +1,44 @@
+<form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
+  <p-floatlabel>
+    <input
+      pInputText
+      id="nominees-field__computing-id"
+      [value]="entry.id"
+      type="text"
+      [disabled]="true"
+      fluid
+    />
+    <label for="nominees-field__computing-id">Computing ID</label>
+  </p-floatlabel>
+  <cs-input
+    fieldId="nominees-field__full-name"
+    label="Full Name"
+    formControlName="full_name"
+    [required]="true"
+    [invalid]="isInvalid('full_name')"
+  />
+  <cs-input
+    fieldId="nominees-field__linked_in"
+    label="Linked In"
+    formControlName="linked_in"
+    [invalid]="isInvalid('linked_in')"
+  />
+  <cs-input
+    fieldId="nominees-field__instagram"
+    label="Instagram"
+    formControlName="instagram"
+    [invalid]="isInvalid('instagram')"
+  />
+  <cs-input
+    fieldId="nominees-field__email"
+    label="Email"
+    formControlName="email"
+    [invalid]="isInvalid('email')"
+  />
+  <cs-input
+    fieldId="nominees-field__discord-username"
+    label="Discord Username"
+    formControlName="discord_username"
+    [invalid]="isInvalid('discord_username')"
+  />
+</form>

@@ -2,6 +2,13 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'officers',
+    loadComponent: () =>
+      import('./officers/officers-table/officers-table.component').then(
+        m => m.OfficersTableComponent
+      )
+  },
+  {
     path: 'elections',
     loadComponent: () =>
       import('./elections/elections-table/elections-table.component').then(
@@ -9,10 +16,8 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'officers',
+    path: 'nominees',
     loadComponent: () =>
-      import('./officers/officers-table/officers-table.component').then(
-        m => m.OfficersTableComponent
-      )
+      import('./nominees/nominees-table/nominees-table.component').then(m => m.NomineesComponent)
   }
 ];

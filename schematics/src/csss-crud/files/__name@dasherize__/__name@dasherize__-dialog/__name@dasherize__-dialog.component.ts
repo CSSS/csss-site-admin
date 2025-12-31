@@ -21,7 +21,7 @@ import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/di
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class <%= classify(name) %>DialogComponent extends DialogComponent<
-  <%= classify(name) %>Response,
+  <%= classify(name) %>,
   <%= classify(name) %>SourceEntry,
   <%= classify(name) %>Create
 > {
@@ -32,13 +32,4 @@ export class <%= classify(name) %>DialogComponent extends DialogComponent<
       name: this.fb.control('', Validators.required),
     }
   );
-
-  // TODO:
-  protected override initForm(): <%= classify(name) %> {
-    const controls = this.form.controls;
-    return {
-      ...this.entry.data,
-      name: controls.name.value
-    };
-  }
 }
