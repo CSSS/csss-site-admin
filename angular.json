@@ -107,6 +107,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "providersFile": "test/test-providers.ts",
+            "setupFiles": ["test/test-setup.ts"],
             "exclude": [
               "**/crud-table/*.spec.ts",
               "**/login.service.ts",
