@@ -1,16 +1,12 @@
 @if (!loading()) {
   <form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
-    <p-floatlabel variant="in">
-      <input
-        pInputText
-        id="nominees-field__computing-id"
-        [value]="entry.id"
-        type="text"
-        [disabled]="true"
-        fluid
-      />
-      <label for="nominees-field__computing-id">Computing ID</label>
-    </p-floatlabel>
+    <cs-input
+      fieldId="nominees-field__computing-id"
+      label="Computing ID"
+      formControlName="computing_id"
+      [required]="true"
+      [invalid]="isInvalid('computing_id')"
+    />
     <cs-input
       fieldId="nominees-field__full-name"
       label="Full Name"

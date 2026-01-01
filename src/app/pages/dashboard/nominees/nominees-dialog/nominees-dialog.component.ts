@@ -3,8 +3,6 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Nominee, NomineeCreate } from '@api/backend-api/model/models';
 import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/dialog-component';
 import { InputComponent } from '@pages/dashboard/crud-components/crud-dialog/input/input.component';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { InputTextModule } from 'primeng/inputtext';
 import {
   NomineesSourceEntry,
   NomineesSourceService
@@ -12,7 +10,7 @@ import {
 
 @Component({
   selector: 'cs-nominees-dialog',
-  imports: [ReactiveFormsModule, InputComponent, FloatLabelModule, InputTextModule],
+  imports: [ReactiveFormsModule, InputComponent],
   templateUrl: './nominees-dialog.component.html',
   styleUrl: './nominees-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,10 +23,17 @@ export class NomineesDialogComponent extends DialogComponent<
   protected dataSource = inject(NomineesSourceService);
 
   protected form = this.fb.group({
+    computing_id: this.fb.control('', Validators.required),
     full_name: this.fb.control('', Validators.required),
     linked_in: this.fb.control<string | null>(null),
     instagram: this.fb.control<string | null>(null),
     email: this.fb.control<string | null>(null),
     discord_username: this.fb.control<string | null>(null)
   });
+
+  override setup(): void {
+    if (this.isEditing()) {
+      this.form.get('computing_id')?.disable();
+    }
+  }
 }
