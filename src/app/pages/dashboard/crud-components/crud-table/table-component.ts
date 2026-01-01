@@ -78,6 +78,9 @@ export abstract class TableComponent<
         entry,
         submitHandler: this.submitHandler$.pipe(takeUntilDestroyed(this.destroyRef))
       },
+      inputValues: {
+        isEditing: !!entry
+      },
       templates: {
         footer: DialogFooterComponent
       }

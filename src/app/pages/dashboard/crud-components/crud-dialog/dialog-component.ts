@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DestroyRef, Directive, inject, OnInit, signal, viewChild } from '@angular/core';
+import { DestroyRef, Directive, inject, input, OnInit, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, NgForm, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
@@ -32,6 +32,11 @@ export abstract class DialogComponent<
     closable: true,
     focusOnShow: false
   };
+
+  /**
+   * Flag that indicates the user is editing an existing entry.
+   */
+  protected isEditing = input.required<boolean>();
 
   /**
    * The form builder for the dialog.
@@ -72,11 +77,6 @@ export abstract class DialogComponent<
    */
   private config: DynamicDialogConfig<DialogConfigData<E>, any> = inject(DynamicDialogConfig);
 
-  /**
-   * Flag that indicates the user is editing an existing entry.
-   */
-  protected isEditing = signal<boolean>(!!this.config.data?.entry);
-
   private formDir = viewChild.required<NgForm>('formDir');
 
   // WARN: Be careful if you override this. Prefer to do it in `setup()`.
@@ -84,11 +84,10 @@ export abstract class DialogComponent<
     if (!this.config.data) {
       throw new Error('DialogComponent must be opened in a DynamicDialog.');
     }
-    if (!this.config.data.entry) {
-      this.entry = this.dataSource.default();
-    } else {
-      this.entry = this.config.data.entry;
-    }
+    this.entry =
+      !this.isEditing() || !this.config.data.entry
+        ? this.dataSource.default()
+        : this.config.data.entry;
     this.initForm();
     this.config.data.submitHandler
       .pipe(takeUntilDestroyed(this.destroyRef))
