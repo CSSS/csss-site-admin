@@ -1,0 +1,17 @@
+<p-floatlabel variant="in">
+  <textarea
+    pTextarea
+    [id]="fieldId()"
+    [disabled]="isDisabled"
+    [invalid]="isInvalid()"
+    [ngModel]="value"
+    (ngModelChange)="onChange($event)"
+    (blur)="onTouched()"
+    type="text"
+    fluid
+  ></textarea>
+  <label [for]="fieldId()">{{ label() }}</label>
+</p-floatlabel>
+@if (isRequiredMissing()) {
+  <p-message severity="error" variant="simple">"{{ label() }}" is required</p-message>
+}

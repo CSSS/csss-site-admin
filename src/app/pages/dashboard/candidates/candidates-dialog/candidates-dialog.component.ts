@@ -5,6 +5,7 @@ import { Candidate, CandidateCreate, OfficerPositionEnum } from '@api/backend-ap
 import { DialogComponent } from '@pages/dashboard/crud-components/crud-dialog/dialog-component';
 import { InputComponent } from '@pages/dashboard/crud-components/crud-dialog/input/input.component';
 import { SelectComponent } from '@pages/dashboard/crud-components/crud-dialog/select/select.component';
+import { TextareaComponent } from '@pages/dashboard/crud-components/crud-dialog/textarea/textarea.component';
 import { ElectionsSourceService } from '@pages/dashboard/crud-sources/elections/elections.source.service';
 import { officerLabels } from '@pages/dashboard/officers';
 import { SelectOptions } from '@utils/type-utils';
@@ -16,7 +17,7 @@ import {
 
 @Component({
   selector: 'cs-candidates-dialog',
-  imports: [ReactiveFormsModule, InputComponent, SelectComponent],
+  imports: [ReactiveFormsModule, InputComponent, SelectComponent, TextareaComponent],
   templateUrl: './candidates-dialog.component.html',
   styleUrl: './candidates-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
