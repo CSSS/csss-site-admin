@@ -1,39 +1,39 @@
-<form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
-  <cs-input
-    fieldId="candidates-field__computing-id"
-    label="Computing ID"
-    formControlName="computing_id"
-    [required]="true"
-    [invalid]="isInvalid('computing_id')"
-    [disabled]="isEditing"
-  />
-  <cs-select
-    fieldId="candidates-field__election"
-    label="Election"
-    formControlName="nominee_election"
-    [options]="positionOptions()"
-    dataKey="label"
-    optionLabel="label"
-    optionValue="value"
-    [required]="true"
-    [invalid]="isInvalid('nominee_election')"
-    [disabled]="isEditing"
-  />
-  <cs-select
-    fieldId="candidates-field__position"
-    label="Position"
-    formControlName="position"
-    [options]="positionOptions()"
-    dataKey="label"
-    optionLabel="label"
-    optionValue="value"
-    [required]="true"
-    [invalid]="isInvalid('position')"
-  />
-  <cs-input
-    fieldId="candidates-field__speech"
-    label="Speech"
-    formControlName="speech"
-    [invalid]="isInvalid('speech')"
-  />
-</form>
+@if (!loading()) {
+  <form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
+    <cs-input
+      fieldId="candidates-field__computing-id"
+      label="Computing ID"
+      formControlName="computing_id"
+      [required]="true"
+      [invalid]="isInvalid('computing_id')"
+    />
+    <cs-select
+      fieldId="candidates-field__election"
+      label="Election"
+      formControlName="nominee_election"
+      [options]="electionOptions()"
+      dataKey="label"
+      optionLabel="label"
+      optionValue="value"
+      [required]="true"
+      [invalid]="isInvalid('nominee_election')"
+    />
+    <cs-select
+      fieldId="candidates-field__position"
+      label="Position"
+      formControlName="position"
+      [options]="positionOptions()"
+      dataKey="label"
+      optionLabel="label"
+      optionValue="value"
+      [required]="true"
+      [invalid]="isInvalid('position')"
+    />
+    <cs-input
+      fieldId="candidates-field__speech"
+      label="Speech"
+      formControlName="speech"
+      [invalid]="isInvalid('speech')"
+    />
+  </form>
+}

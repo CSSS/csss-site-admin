@@ -3,7 +3,6 @@ import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideApi } from '@api/backend-api';
-import { OfficerFormatPipe } from '@pages/dashboard/elections/elections-table/officer-format/officer-format.pipe';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { environment } from 'src/environments/environment';
@@ -26,7 +25,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: DATE_PIPE_DEFAULT_OPTIONS,
       useValue: { timezone: '-0800' }
-    },
-    OfficerFormatPipe
+    }
   ]
 };

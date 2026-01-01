@@ -1,1 +1,3 @@
-<form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()"></form>
+@if (!loading()) {
+  <form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()"></form>
+}

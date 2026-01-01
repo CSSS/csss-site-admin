@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { Candidate, CandidateCreate } from '@api/backend-api/model/models';
+import { officerLabels } from '@pages/dashboard/officers';
+import { getValueOfKey } from '@utils/type-utils';
 import {
   CrudTableColumn,
   CrudTableComponent
@@ -39,7 +41,8 @@ export class CandidatesComponent extends TableComponent<
     },
     {
       label: 'Position',
-      key: 'position'
+      key: 'position',
+      transform: (value: string) => getValueOfKey(officerLabels, value) ?? value
     },
     {
       label: 'Speech',

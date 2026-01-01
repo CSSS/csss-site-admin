@@ -62,7 +62,6 @@ export abstract class TableComponent<
     if (this.dialogRef) {
       this.dialogRef.close();
     }
-    this.submitHandler$.complete();
   }
 
   /**
@@ -77,7 +76,7 @@ export abstract class TableComponent<
       header: `${entry ? 'Edit' : 'New'} ${tableName} Entry`,
       data: {
         entry,
-        submitHandler: this.submitHandler$
+        submitHandler: this.submitHandler$.pipe(takeUntilDestroyed(this.destroyRef))
       },
       templates: {
         footer: DialogFooterComponent

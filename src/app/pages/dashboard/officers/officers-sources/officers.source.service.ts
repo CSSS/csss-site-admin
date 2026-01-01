@@ -59,6 +59,7 @@ export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry
     );
   }
 
+  // TODO: Make update only send a minimal amount of updates
   override updateEntry$(
     entry: OfficerSourceEntry,
     params: PartialNullable<Officer>

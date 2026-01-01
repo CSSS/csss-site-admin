@@ -1,11 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DestroyRef, Directive, inject, OnInit, viewChild } from '@angular/core';
+import { DestroyRef, Directive, inject, OnInit, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, NgForm, NonNullableFormBuilder } from '@angular/forms';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { PartialNullable, SerializeConfig } from '@utils/type-utils';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Subject } from 'rxjs';
 
+export interface DialogConfigData<E> {
+  entry?: E;
+  submitHandler: Subject<E | null>;
+}
 /**
  * Constructor required to pass instances of concrete dialog components.
  */
@@ -49,14 +54,11 @@ export abstract class DialogComponent<
   protected formSubmitted = false;
 
   /**
-   * Flag that indicates the user is editing an existing entry.
-   */
-  protected isEditing = true;
-
-  /**
    * The original entry being edited.
    */
   protected entry!: E;
+
+  protected loading = signal<boolean>(true);
 
   protected destroyRef = inject(DestroyRef);
 
@@ -68,17 +70,22 @@ export abstract class DialogComponent<
   /**
    * Configuration of the PrimeNG dynamic dialog.
    */
-  private config: DynamicDialogConfig<any, any> = inject(DynamicDialogConfig);
+  private config: DynamicDialogConfig<DialogConfigData<E>, any> = inject(DynamicDialogConfig);
+
+  /**
+   * Flag that indicates the user is editing an existing entry.
+   */
+  protected isEditing = signal<boolean>(!!this.config.data?.entry);
 
   private formDir = viewChild.required<NgForm>('formDir');
 
+  // WARN: Be careful if you override this. Prefer to do it in `setup()`.
   ngOnInit(): void {
     if (!this.config.data) {
       throw new Error('DialogComponent must be opened in a DynamicDialog.');
     }
     if (!this.config.data.entry) {
       this.entry = this.dataSource.default();
-      this.isEditing = false;
     } else {
       this.entry = this.config.data.entry;
     }
@@ -86,7 +93,12 @@ export abstract class DialogComponent<
     this.config.data.submitHandler
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.formDir().ngSubmit.emit());
+    this.setup();
+    this.loading.set(false);
   }
+
+  // If you want to do setup, do it here.
+  setup(): void {}
 
   /**
    * Submits the form and tells the datasource to make the changes.
@@ -97,7 +109,7 @@ export abstract class DialogComponent<
     if (!this.form.valid) {
       return;
     }
-    const apiCall = this.isEditing
+    const apiCall = this.isEditing()
       ? this.dataSource.updateEntry$(this.entry, this.formToPatchBody())
       : this.dataSource.createEntry$(this.formToPostBody());
     apiCall.subscribe(res => {
@@ -153,23 +165,6 @@ export abstract class DialogComponent<
     }
 
     return result;
-  }
-
-  /**
-   * Retrieves the value or returns undefined if the value has not been changed.
-   * Throws an error if the control does not exist.
-   *
-   * @param controlName - Name of the control in the form to check
-   * @returns The value of the control if it has been marked dirty, undefined otherwise.
-   */
-  protected getIfDirty(controlName: string): any | undefined {
-    // TODO: Check arrays differently, since deselecting and reselecting the same option will always mark something as dirty.
-    // TODO: Make this generic
-    const control = this.form.get(controlName);
-    if (!control) {
-      throw new Error(`No control ${controlName} in dialog.`);
-    }
-    return control?.dirty ? control.value : undefined;
   }
 
   /**

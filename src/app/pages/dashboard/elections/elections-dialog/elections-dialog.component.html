@@ -1,90 +1,92 @@
-<form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
-  <p-floatlabel>
-    <input
-      pInputText
-      id="elections-field__slug"
-      [value]="form.get('name')?.value ?? '' | slug"
-      type="text"
-      [disabled]="true"
-      fluid
-    />
-    <label for="elections-field__slug">Slug</label>
-  </p-floatlabel>
-  <cs-input
-    fieldId="elections-field__name"
-    label="Election Name"
-    formControlName="name"
-    [required]="true"
-    [invalid]="isInvalid('name')"
-  />
-  <cs-select
-    fieldId="elections-field__type"
-    label="Election Type"
-    formControlName="type"
-    [options]="electionTypes"
-    dataKey="label"
-    optionLabel="label"
-    optionValue="value"
-    [required]="true"
-    [invalid]="isInvalid('type')"
-  />
-  <div>
-    <cs-datepicker
-      fieldId="elections-field__start-nominations"
-      label="Start Nominations"
-      formControlName="datetime_start_nominations"
+@if (!loading()) {
+  <form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
+    <p-floatlabel variant="in">
+      <input
+        pInputText
+        id="elections-field__slug"
+        [value]="form.get('name')?.value ?? '' | slug"
+        type="text"
+        [disabled]="true"
+        fluid
+      />
+      <label for="elections-field__slug">Slug</label>
+    </p-floatlabel>
+    <cs-input
+      fieldId="elections-field__name"
+      label="Election Name"
+      formControlName="name"
       [required]="true"
-      [invalid]="isInvalid('datetime_start_nominations') || form.hasError('nominationsTooLate')"
+      [invalid]="isInvalid('name')"
     />
-    @if (hasDialogError('nominationsTooLate')) {
-      <p-message severity="error" variant="simple">
-        Nominations must happen before the voting period
-      </p-message>
-    }
-  </div>
-  <div>
-    <cs-datepicker
-      fieldId="elections-field__start-voting"
-      label="Start Voting"
-      formControlName="datetime_start_voting"
+    <cs-select
+      fieldId="elections-field__type"
+      label="Election Type"
+      formControlName="type"
+      [options]="electionTypes"
+      dataKey="label"
+      optionLabel="label"
+      optionValue="value"
       [required]="true"
-      [invalid]="isInvalid('datetime_start_voting') || form.hasError('startVotingWrong')"
+      [invalid]="isInvalid('type')"
     />
-    @if (hasDialogError('nominationsTooLate')) {
-      <p-message severity="error" variant="simple">
-        Voting must start after nominations start and before end voting
-      </p-message>
-    }
-  </div>
-  <div>
-    <cs-datepicker
-      fieldId="elections-field__end-voting"
-      label="End Voting"
-      formControlName="datetime_end_voting"
+    <div>
+      <cs-datepicker
+        fieldId="elections-field__start-nominations"
+        label="Start Nominations"
+        formControlName="datetime_start_nominations"
+        [required]="true"
+        [invalid]="isInvalid('datetime_start_nominations') || form.hasError('nominationsTooLate')"
+      />
+      @if (hasDialogError('nominationsTooLate')) {
+        <p-message severity="error" variant="simple">
+          Nominations must happen before the voting period
+        </p-message>
+      }
+    </div>
+    <div>
+      <cs-datepicker
+        fieldId="elections-field__start-voting"
+        label="Start Voting"
+        formControlName="datetime_start_voting"
+        [required]="true"
+        [invalid]="isInvalid('datetime_start_voting') || form.hasError('startVotingWrong')"
+      />
+      @if (hasDialogError('nominationsTooLate')) {
+        <p-message severity="error" variant="simple">
+          Voting must start after nominations start and before end voting
+        </p-message>
+      }
+    </div>
+    <div>
+      <cs-datepicker
+        fieldId="elections-field__end-voting"
+        label="End Voting"
+        formControlName="datetime_end_voting"
+        [required]="true"
+        [invalid]="isInvalid('datetime_end_voting') || form.hasError('endVotingTooEarly')"
+      />
+      @if (hasDialogError('endVotingTooEarly')) {
+        <p-message severity="error" variant="simple">
+          End voting time must come after nominations and the start voting time.
+        </p-message>
+      }
+    </div>
+    <cs-listbox
+      fieldId="elections-field__available-positions"
+      label="Available Positions"
+      formControlName="available_positions"
+      [options]="officerPositions"
+      dataKey="label"
+      optionLabel="label"
+      optionValue="value"
       [required]="true"
-      [invalid]="isInvalid('datetime_end_voting') || form.hasError('endVotingTooEarly')"
+      [invalid]="isInvalid('available_positions')"
     />
-    @if (hasDialogError('endVotingTooEarly')) {
-      <p-message severity="error" variant="simple">
-        End voting time must come after nominations and the start voting time.
-      </p-message>
-    }
-  </div>
-  <cs-listbox
-    fieldId="elections-field__available-positions"
-    label="Available Positions"
-    formControlName="available_positions"
-    [options]="officerPositions"
-    dataKey="label"
-    optionLabel="label"
-    optionValue="value"
-    [required]="true"
-    [invalid]="isInvalid('available_positions')"
-  />
-  <cs-input
-    fieldId="elections-field__survey-link"
-    label="Survey Link"
-    formControlName="survey_link"
-    [invalid]="isInvalid('survey_link')"
-  />
-</form>
+    <cs-input
+      fieldId="elections-field__survey-link"
+      label="Survey Link"
+      formControlName="survey_link"
+      [invalid]="isInvalid('survey_link')"
+    />
+  </form>
+}

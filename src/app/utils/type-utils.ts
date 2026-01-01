@@ -11,6 +11,14 @@ export type SerializeConfig<T extends Record<string, string | number | boolean |
 };
 
 /**
+ * Type that represents the options for each `cs-select`
+ */
+export interface SelectOptions {
+  label: string;
+  value: string;
+}
+
+/**
  * Helper function to extract the value from the key of an object.
  */
 export function getValueOfKey<T extends Record<string, any>, K extends string>(
