@@ -1,6 +1,6 @@
 <cs-crud-table
   title="Nominees"
-  [entries]="dataSource.entries()"
+  [entries]="dataSourceService.entries()"
   [columns]="columns()"
   (dialogOpened)="openDialog($event, 'Nominees')"
 />

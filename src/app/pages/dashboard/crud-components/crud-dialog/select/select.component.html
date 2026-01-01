@@ -10,6 +10,7 @@
     [invalid]="isInvalid()"
     (onChange)="onChange($event.value)"
     (onBlur)="onTouched()"
+    appendTo="body"
   >
   </p-select>
   <label [for]="fieldId()">{{ label() }}</label>

@@ -6,7 +6,7 @@ import {
   ElectionStatusEnum,
   ElectionUpdateParams
 } from '@api/backend-api';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { CrudEntry, CrudSource } from '../crud-source';
 
 export class ElectionsSourceEntry extends CrudEntry<ElectionResponse> {
@@ -32,6 +32,13 @@ export class ElectionsSourceService extends CrudSource<
   protected override readonly PRIMARY_KEY = 'slug';
 
   protected override dataSource$ = this.electionsApi.getAllElections();
+
+  private fetchOneElectionEntry$(id: string): Observable<ElectionsSourceEntry> {
+    return this.electionsApi.getElectionByName(id).pipe(
+      map(res => new ElectionsSourceEntry(res[this.PRIMARY_KEY], res)),
+      tap(entry => this.addEntry(entry))
+    );
+  }
 
   override createEntry$(newEntry: ElectionParams): Observable<ElectionsSourceEntry> {
     return this.electionsApi.createElection(newEntry).pipe(
@@ -79,4 +86,15 @@ export class ElectionsSourceService extends CrudSource<
       new Date(a.data.datetime_start_nominations).getTime()
     );
   };
+
+  getElectionBySlug$(id: string): Observable<ElectionsSourceEntry | undefined> {
+    // Technically you could send a name, but just use slugs
+    if (this.loaded) {
+      const entry = this.getEntryById(id);
+      if (entry) {
+        return of(entry);
+      }
+    }
+    return this.fetchOneElectionEntry$(id);
+  }
 }

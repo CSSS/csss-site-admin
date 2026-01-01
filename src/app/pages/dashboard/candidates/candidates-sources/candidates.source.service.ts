@@ -14,6 +14,8 @@ export class CandidatesSourceEntry extends CrudEntry<Candidate> {
     return `${data.nominee_election}::${data.position}::${data.computing_id}`;
   }
 
+  declare id: string; // override id to be a string
+
   constructor(data: Candidate) {
     super(CandidatesSourceEntry.makeId(data), data);
   }
@@ -35,16 +37,6 @@ export class CandidatesSourceService extends CrudSource<
 
   protected override dataSource$ = this.candidatesApi.getCandidates();
 
-  override fetch(): void {
-    this.dataSource$.subscribe({
-      next: res => {
-        const entries = res.map(e => new CandidatesSourceEntry(e));
-        this.entries.set(entries);
-        this.loaded = true;
-      }
-    });
-  }
-
   override createEntry$(
     newEntry: CandidateCreate,
     params: { election: string }
@@ -63,13 +55,27 @@ export class CandidatesSourceService extends CrudSource<
       .updateCandidate(
         entry.data.nominee_election,
         entry.data[this.PRIMARY_KEY],
-        new_values.position ?? entry.data.position,
+        entry.data.position,
         new_values
       )
       .pipe(
         map(res => new CandidatesSourceEntry(res)),
-        tap(entry => this.updateEntry(entry))
+        tap(e => this.updateCandidate(e, entry.id))
       );
+  }
+
+  updateCandidate(updatedEntry: CandidatesSourceEntry, oldId: string): void {
+    this.entries.update(entries => {
+      const newEntries = [];
+      for (const e of entries) {
+        if (e.id === oldId) {
+          newEntries.push(updatedEntry);
+        } else {
+          newEntries.push(e);
+        }
+      }
+      return newEntries;
+    });
   }
 
   override default(): CandidatesSourceEntry {
@@ -79,5 +85,9 @@ export class CandidatesSourceService extends CrudSource<
       nominee_election: '',
       speech: ''
     });
+  }
+
+  protected override makeSourceEntry(data: Candidate): CandidatesSourceEntry {
+    return new CandidatesSourceEntry(data);
   }
 }

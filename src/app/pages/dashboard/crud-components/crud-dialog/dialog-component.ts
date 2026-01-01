@@ -58,6 +58,8 @@ export abstract class DialogComponent<
    */
   protected entry!: E;
 
+  protected destroyRef = inject(DestroyRef);
+
   /**
    * Reference to the PrimeNG dynamic dialog.
    */
@@ -69,8 +71,6 @@ export abstract class DialogComponent<
   private config: DynamicDialogConfig<any, any> = inject(DynamicDialogConfig);
 
   private formDir = viewChild.required<NgForm>('formDir');
-
-  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     if (!this.config.data) {

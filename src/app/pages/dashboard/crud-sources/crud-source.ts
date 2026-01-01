@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { PartialNullable } from '@utils/type-utils';
-import { Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 
 /**
  * Constructor required to create new CRUD entries.
@@ -44,21 +44,6 @@ export abstract class CrudSource<
   C extends Record<string, any>
 > {
   /**
-   * Class used to construct entries.
-   */
-  protected abstract entryClass: CrudEntryConstructor<T, E>;
-
-  /**
-   * The key that uniquely identifies each entry.
-   */
-  protected abstract readonly PRIMARY_KEY: keyof T;
-
-  /**
-   * The source observable fetches all the entries.
-   */
-  protected abstract dataSource$: Observable<T[]>;
-
-  /**
    * Flag that indicates the source has been fully loaded.
    */
   loaded = false;
@@ -67,6 +52,16 @@ export abstract class CrudSource<
    * The entries that have been fetched.
    */
   entries: WritableSignal<E[]> = signal([]);
+
+  /**
+   * The entries in a map with the key as the `id` and value as the entry.
+   */
+  private entryMap: Signal<Record<string | number, E>> = computed(() =>
+    this.entries().reduce((map: Record<string | number, E>, entry: E) => {
+      map[entry.id] = entry;
+      return map;
+    }, {})
+  );
 
   /**
    * Returns an entry with the default values.
@@ -84,21 +79,55 @@ export abstract class CrudSource<
   abstract updateEntry$(entry: E, new_values: PartialNullable<T>): Observable<E>;
 
   /**
+   * Class used to construct entries.
+   */
+  protected abstract entryClass: CrudEntryConstructor<T, E>;
+
+  /**
+   * The key that uniquely identifies each entry.
+   */
+  protected abstract readonly PRIMARY_KEY: keyof T;
+
+  /**
+   * The source observable fetches all the entries.
+   */
+  protected abstract dataSource$: Observable<T[]>;
+
+  /**
    * Fetches all the entries form the backend.
    * Override this to process the data after fetching.
    */
-  fetch(): void {
-    this.dataSource$.subscribe({
-      next: res => {
+  fetch(): Observable<E[]> {
+    return this.dataSource$.pipe(
+      map(res => {
         // Wrap the entries so they're CRUD entries.
-        const entries = res.map(e => new this.entryClass(e[this.PRIMARY_KEY], e));
+        return res.map(e => this.makeSourceEntry(e));
+      }),
+      tap(entries => {
         if (this.sortFn) {
           entries.sort(this.sortFn);
         }
         this.entries.set(entries);
         this.loaded = true;
-      }
-    });
+        console.info('Datasource loaded.');
+      })
+    );
+  }
+
+  /**
+   * Returns the current entries if already loaded, otherwise fetches them.
+   * @returns An observable of the entries.
+   */
+  getEntries(): Observable<E[]> {
+    return this.loaded ? of(this.entries()) : this.fetch();
+  }
+
+  getEntryById(id: string | number): E | undefined {
+    if (!this.loaded) {
+      console.error('This source is not loaded');
+      return undefined;
+    }
+    return this.entryMap()[id];
   }
 
   /**
@@ -134,6 +163,10 @@ export abstract class CrudSource<
       }
       return newEntries;
     });
+  }
+
+  protected makeSourceEntry(data: T): E {
+    return new this.entryClass(data[this.PRIMARY_KEY], data);
   }
 
   /**

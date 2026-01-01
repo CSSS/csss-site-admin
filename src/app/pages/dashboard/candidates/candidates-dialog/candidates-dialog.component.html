@@ -1,30 +1,32 @@
 <form #formDir="ngForm" class="dialog-form" [formGroup]="form" (ngSubmit)="submit()">
-  <p-floatlabel>
-    <input
-      pInputText
-      id="candidates-field__computing-id"
-      [value]="entry.data.computing_id"
-      type="text"
-      [disabled]="true"
-      fluid
-    />
-    <label for="candidates-field__computing-id">Computing ID</label>
-  </p-floatlabel>
-  <p-floatlabel>
-    <input
-      pInputText
-      id="candidates-field__election"
-      [value]="entry.data.nominee_election"
-      type="text"
-      [disabled]="true"
-      fluid
-    />
-    <label for="candidates-field__election">Election</label>
-  </p-floatlabel>
   <cs-input
+    fieldId="candidates-field__computing-id"
+    label="Computing ID"
+    formControlName="computing_id"
+    [required]="true"
+    [invalid]="isInvalid('computing_id')"
+    [disabled]="isEditing"
+  />
+  <cs-select
+    fieldId="candidates-field__election"
+    label="Election"
+    formControlName="nominee_election"
+    [options]="positionOptions()"
+    dataKey="label"
+    optionLabel="label"
+    optionValue="value"
+    [required]="true"
+    [invalid]="isInvalid('nominee_election')"
+    [disabled]="isEditing"
+  />
+  <cs-select
     fieldId="candidates-field__position"
     label="Position"
     formControlName="position"
+    [options]="positionOptions()"
+    dataKey="label"
+    optionLabel="label"
+    optionValue="value"
     [required]="true"
     [invalid]="isInvalid('position')"
   />

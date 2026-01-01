@@ -26,7 +26,7 @@ export class NomineesComponent extends TableComponent<
 > {
   protected override dialogClass = NomineesDialogComponent;
 
-  protected override dataSource = inject(NomineesSourceService);
+  protected override dataSourceService = inject(NomineesSourceService);
 
   protected columns: Signal<CrudTableColumn<Nominee>[]> = computed(() => [
     {

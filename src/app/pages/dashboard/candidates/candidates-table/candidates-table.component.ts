@@ -26,7 +26,7 @@ export class CandidatesComponent extends TableComponent<
 > {
   protected override dialogClass = CandidatesDialogComponent;
 
-  protected override dataSource = inject(CandidatesSourceService);
+  protected override dataSourceService = inject(CandidatesSourceService);
 
   protected columns: Signal<CrudTableColumn<Candidate>[]> = computed(() => [
     {

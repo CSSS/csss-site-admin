@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Directive, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { DestroyRef, Directive, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CrudEntry, CrudSource } from '@pages/dashboard/crud-sources/crud-source';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject } from 'rxjs';
@@ -34,7 +35,7 @@ export abstract class TableComponent<
   /**
    * The data used for the table entries.
    */
-  protected abstract dataSource: CrudSource<T, E, C>;
+  protected abstract dataSourceService: CrudSource<T, E, C>;
 
   /**
    * Reference to the dialog for this table.
@@ -42,13 +43,18 @@ export abstract class TableComponent<
   protected dialogRef?: DynamicDialogRef<D> | null;
 
   /**
-   * PrimeNG service that creates the dialog.
+   * Used to inform other objects that this component has been destroyed.
+   */
+  protected destroyRef = inject(DestroyRef);
+
+  /**
+   * PrimeNG service that manages the dialogs.
    */
   private dialogService = inject(DialogService);
 
   ngOnInit(): void {
-    if (!this.dataSource.loaded) {
-      this.dataSource.fetch();
+    if (!this.dataSourceService.loaded) {
+      this.dataSourceService.getEntries().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
   }
 

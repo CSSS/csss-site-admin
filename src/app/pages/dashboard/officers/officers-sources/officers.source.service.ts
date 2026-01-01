@@ -43,20 +43,6 @@ export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry
   // For now, only fetch the current officers
   protected override dataSource$ = this.officersApi.getCurrentOfficers();
 
-  override fetch(): void {
-    this.dataSource$.subscribe({
-      next: res => {
-        // Wrap the entries so they're CRUD entries.
-        const entries = res.map(e => OfficerSourceEntry.fromOfficer(e));
-        if (this.sortFn) {
-          entries.sort(this.sortFn);
-        }
-        this.entries.set(entries);
-        this.loaded = true;
-      }
-    });
-  }
-
   override createEntry$(newEntry: OfficerCreate): Observable<OfficerSourceEntry> {
     // Only a single response is expected here
     return this.officersApi.createOfficerTerm([newEntry]).pipe(
@@ -103,5 +89,9 @@ export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry
         legal_name: ''
       }
     );
+  }
+
+  protected override makeSourceEntry(data: Officer): OfficerSourceEntry {
+    return OfficerSourceEntry.fromOfficer(data);
   }
 }

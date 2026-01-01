@@ -91,5 +91,5 @@ export class ElectionsTableComponent extends TableComponent<
     }
   ]);
 
-  protected override dataSource = inject(ElectionsSourceService);
+  protected override dataSourceService = inject(ElectionsSourceService);
 }
