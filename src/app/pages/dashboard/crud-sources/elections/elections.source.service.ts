@@ -4,7 +4,8 @@ import {
   ElectionResponse,
   ElectionService,
   ElectionStatusEnum,
-  ElectionUpdateParams
+  ElectionUpdateParams,
+  SuccessResponse
 } from '@api/backend-api';
 import { map, Observable, of, tap } from 'rxjs';
 import { CrudEntry, CrudSource } from '../crud-source';
@@ -26,7 +27,10 @@ export class ElectionsSourceService extends CrudSource<
   ElectionsSourceEntry,
   ElectionParams
 > {
+  protected override SOURCE_NAME = 'Elections';
+
   protected override entryClass = ElectionsSourceEntry;
+
   electionsApi = inject(ElectionService);
 
   protected override readonly PRIMARY_KEY = 'slug';
@@ -55,6 +59,10 @@ export class ElectionsSourceService extends CrudSource<
       map(res => new ElectionsSourceEntry(res[this.PRIMARY_KEY], res)),
       tap(entry => this.updateEntry(entry))
     );
+  }
+
+  override deleteEntry$(entry: ElectionsSourceEntry): Observable<SuccessResponse> {
+    return this.electionsApi.deleteElection(entry.data[this.PRIMARY_KEY]);
   }
 
   override default(): ElectionsSourceEntry {

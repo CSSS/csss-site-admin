@@ -3,6 +3,7 @@
   [entries]="dataSourceService.entries()"
   [columns]="columns()"
   (dialogOpened)="openDialog($event, 'Elections')"
+  (deleteEntry)="deleteEntry($event)"
 />
 
 <!-- Template of the Active column cells -->

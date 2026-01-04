@@ -3,4 +3,5 @@
   [entries]="dataSourceService.entries()"
   [columns]="columns()"
   (dialogOpened)="openDialog($event, '<%= classify(name) %>')"
+  (deleteEntry)="deleteEntry($event)"
 />

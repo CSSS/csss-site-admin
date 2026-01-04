@@ -1,10 +1,6 @@
 <p-menubar [model]="menuItems">
   <ng-template #item let-item let-root="root">
-    <a
-      class="p-menubar-item-link"
-      [routerLink]="item.routerLink"
-      routerLinkActive="p-button-secondary"
-    >
+    <a class="p-menubar-item-link" [routerLink]="item.routerLink">
       <i [class]="item.icon"></i>
       <span>{{ item.label }}</span>
     </a>

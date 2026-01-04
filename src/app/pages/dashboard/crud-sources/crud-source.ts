@@ -1,6 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import {
+  computed,
+  DestroyRef,
+  inject,
+  Injectable,
+  Signal,
+  signal,
+  WritableSignal
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SuccessResponse } from '@api/backend-api';
 import { PartialNullable } from '@utils/type-utils';
+import { MessageService } from 'primeng/api';
 import { map, Observable, of, tap } from 'rxjs';
 
 /**
@@ -53,15 +64,7 @@ export abstract class CrudSource<
    */
   entries: WritableSignal<E[]> = signal([]);
 
-  /**
-   * The entries in a map with the key as the `id` and value as the entry.
-   */
-  private entryMap: Signal<Record<string | number, E>> = computed(() =>
-    this.entries().reduce((map: Record<string | number, E>, entry: E) => {
-      map[entry.id] = entry;
-      return map;
-    }, {})
-  );
+  protected destroyRef = inject(DestroyRef);
 
   /**
    * Returns an entry with the default values.
@@ -79,9 +82,19 @@ export abstract class CrudSource<
   abstract updateEntry$(entry: E, new_values: PartialNullable<T>): Observable<E>;
 
   /**
+   * Creates an observable that sends a request to delete the entry on the backend.
+   */
+  abstract deleteEntry$(entry: E): Observable<SuccessResponse>;
+
+  /**
    * Class used to construct entries.
    */
   protected abstract entryClass: CrudEntryConstructor<T, E>;
+
+  /**
+   * Name of the source.
+   */
+  protected abstract readonly SOURCE_NAME: string;
 
   /**
    * The key that uniquely identifies each entry.
@@ -92,6 +105,18 @@ export abstract class CrudSource<
    * The source observable fetches all the entries.
    */
   protected abstract dataSource$: Observable<T[]>;
+
+  /**
+   * The entries in a map with the key as the `id` and value as the entry.
+   */
+  private entryMap: Signal<Record<string | number, E>> = computed(() =>
+    this.entries().reduce((map: Record<string | number, E>, entry: E) => {
+      map[entry.id] = entry;
+      return map;
+    }, {})
+  );
+
+  private messageService = inject(MessageService);
 
   /**
    * Fetches all the entries form the backend.
@@ -122,9 +147,20 @@ export abstract class CrudSource<
     return this.loaded ? of(this.entries()) : this.fetch();
   }
 
+  /**
+   * Returns the entry if it's cached on the source.
+   *
+   * @param id -
+   * @returns
+   */
   getEntryById(id: string | number): E | undefined {
     if (!this.loaded) {
-      console.error('This source is not loaded');
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Source is not loaded',
+        detail: `${this.SOURCE_NAME} is not loaded`,
+        life: 5000
+      });
       return undefined;
     }
     return this.entryMap()[id];
@@ -163,6 +199,30 @@ export abstract class CrudSource<
       }
       return newEntries;
     });
+  }
+
+  deleteEntry(entry: E): void {
+    this.deleteEntry$(entry)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(res => {
+        if (!res.success) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Delete Failed',
+            detail: `Failed to delete "${entry.id}" from ${this.SOURCE_NAME} source`,
+            life: 5000
+          });
+          return;
+        }
+
+        this.entries.update(entries => entries.filter(e => e.id !== entry.id));
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `Deleted ${entry.id} from ${this.SOURCE_NAME} source`,
+          life: 5000
+        });
+      });
   }
 
   protected makeSourceEntry(data: T): E {

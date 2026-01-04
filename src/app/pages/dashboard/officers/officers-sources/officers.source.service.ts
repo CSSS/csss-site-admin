@@ -5,7 +5,8 @@ import {
   OfficerInfo,
   OfficerPositionEnum,
   OfficersService,
-  OfficerTerm
+  OfficerTerm,
+  SuccessResponse
 } from '@api/backend-api';
 import { PartialNullable } from '@utils/type-utils';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -35,7 +36,9 @@ export class OfficerSourceEntry extends CrudEntry<Officer> {
   providedIn: 'root'
 })
 export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry, OfficerCreate> {
+  protected override SOURCE_NAME = 'Officers';
   protected override entryClass = OfficerSourceEntry;
+
   officersApi = inject(OfficersService);
 
   protected override readonly PRIMARY_KEY = 'term_id';
@@ -74,6 +77,10 @@ export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry
       map(({ term, info }) => new OfficerSourceEntry(term, info)),
       tap(updatedEntry => this.updateEntry(updatedEntry))
     );
+  }
+
+  override deleteEntry$(entry: OfficerSourceEntry): Observable<SuccessResponse> {
+    return this.officersApi.deleteOfficerTermById(entry.data.term_id);
   }
 
   override default(): OfficerSourceEntry {

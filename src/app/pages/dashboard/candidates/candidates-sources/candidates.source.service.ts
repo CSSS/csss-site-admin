@@ -4,7 +4,8 @@ import {
   CandidateCreate,
   CandidateService,
   CandidateUpdate,
-  OfficerPositionEnum
+  OfficerPositionEnum,
+  SuccessResponse
 } from '@api/backend-api';
 import { map, Observable, tap } from 'rxjs';
 import { CrudEntry, CrudSource } from '../../crud-sources/crud-source';
@@ -29,6 +30,8 @@ export class CandidatesSourceService extends CrudSource<
   CandidatesSourceEntry,
   CandidateCreate
 > {
+  protected override SOURCE_NAME = 'Candidates';
+
   protected override entryClass = CandidatesSourceEntry;
 
   candidatesApi = inject(CandidateService);
@@ -62,6 +65,14 @@ export class CandidatesSourceService extends CrudSource<
         map(res => new CandidatesSourceEntry(res)),
         tap(e => this.updateCandidate(e, entry.id))
       );
+  }
+
+  override deleteEntry$(entry: CandidatesSourceEntry): Observable<SuccessResponse> {
+    return this.candidatesApi.deleteCandidate(
+      entry.data.nominee_election,
+      entry.data.position,
+      entry.data.computing_id
+    );
   }
 
   updateCandidate(updatedEntry: CandidatesSourceEntry, oldId: string): void {

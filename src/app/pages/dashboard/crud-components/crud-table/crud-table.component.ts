@@ -64,7 +64,20 @@ export class CrudTableComponent<T, E extends CrudEntry<T>> {
   dialogOpened = output<E | null>();
 
   /**
+   * Event emitter that indicates an entry must be deleted.
+   */
+  deleteEntry = output<E>();
+
+  /**
    * The currently selected entry.
    */
   protected selectedEntry: E | null = null;
+
+  deleteSelectedEntry(): void {
+    if (!this.selectedEntry) {
+      return;
+    }
+
+    this.deleteEntry.emit(this.selectedEntry);
+  }
 }

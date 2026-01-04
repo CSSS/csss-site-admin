@@ -88,4 +88,13 @@ export abstract class TableComponent<
 
     this.dialogRef?.onClose.subscribe(entry => entry);
   }
+
+  /**
+   * Calls the datasource to delete the entry.
+   *
+   * @param entry - The table entry to delete.
+   */
+  protected deleteEntry(entry: E): void {
+    this.dataSourceService.deleteEntry(entry);
+  }
 }

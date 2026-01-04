@@ -12,7 +12,13 @@
         label="Edit"
         severity="info"
       />
-      <p-button [disabled]="!selectedEntry" icon="pi pi-trash" label="Delete" severity="danger" />
+      <p-button
+        (onClick)="deleteSelectedEntry()"
+        [disabled]="!selectedEntry"
+        icon="pi pi-trash"
+        label="Delete"
+        severity="danger"
+      />
     </div>
   </ng-template>
 </p-toolbar>

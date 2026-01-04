@@ -21,6 +21,8 @@ export class <%= classify(name) %>SourceService extends CrudSource<
   protected override entryClass = <%= classify(name) %>SourceEntry;
   <%= camelize(name) %>Api = inject(<%= classify(name) %>Service);
 
+  protected override readonly SOURCE_NAME = '<%= classify(name) %>';
+
   protected override readonly PRIMARY_KEY = '';
 
   protected override dataSource$ = this.<%= camelize(name) %>Api.get<%= classify(name) %>();
@@ -40,6 +42,10 @@ export class <%= classify(name) %>SourceService extends CrudSource<
       map(res => new <%= classify(name) %>SourceEntry(res[this.PRIMARY_KEY], res)),
       tap(entry => this.updateEntry(entry))
     );
+  }
+
+  override deleteEntry$(entry: <%= classify(name) %>SourceEntry): Observable<SuccessResponse> {
+    return this.<%= camelize(name) %>Api.delete<%= classify(name) %>();
   }
 
   override default(): <%= classify(name) %>SourceEntry {
