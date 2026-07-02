@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { CsssAuthService } from '@pages/auth/csss-auth/csss-auth.service';
 import { MessageService } from 'primeng/api';
@@ -12,18 +12,18 @@ import { DialogService } from 'primeng/dynamicdialog';
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
-  private csssAuth = inject(CsssAuthService);
+export class AppComponent {
   private router = inject(Router);
+  private auth = inject(CsssAuthService);
 
-  ngOnInit(): void {
-    this.csssAuth.logIn$.subscribe({
-      next: () => {
-        this.router.navigate(['dashboard']);
-      },
-      error: err => {
-        throw new Error(err);
+  constructor() {
+    let wasAuthenticated = false;
+    effect(() => {
+      const authenticated = this.auth.isAuthenticated();
+      if (wasAuthenticated && !authenticated) {
+        this.router.navigate(['/']);
       }
+      wasAuthenticated = authenticated;
     });
   }
 }

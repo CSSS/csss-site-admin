@@ -46,7 +46,7 @@ export class TopBarComponent {
     {
       label: 'Log out',
       icon: PrimeIcons.SIGN_OUT,
-      command: () => console.log('Sign out')
+      command: () => this.auth.logOut()
     }
   ];
 }

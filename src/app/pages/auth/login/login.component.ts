@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CsssAuthService } from '../csss-auth/csss-auth.service';
+
+export const RETURN_URL_KEY = 'csss-return-url';
 
 @Component({
   selector: 'cs-login',
@@ -10,5 +13,18 @@ import { CsssAuthService } from '../csss-auth/csss-auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  auth = inject(CsssAuthService);
+  protected readonly auth = inject(CsssAuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  constructor() {
+    if (this.auth.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
+
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (returnUrl) {
+      sessionStorage.setItem(RETURN_URL_KEY, returnUrl);
+    }
+  }
 }

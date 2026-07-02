@@ -1,8 +1,14 @@
 import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideZonelessChangeDetection
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideApi } from '@api/backend-api';
+import { CsssAuthService } from '@pages/auth/csss-auth/csss-auth.service';
 import Aura from '@primeuix/themes/aura';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
@@ -11,6 +17,10 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAppInitializer(() => {
+      const auth = inject(CsssAuthService);
+      return auth.initialize();
+    }),
     provideZonelessChangeDetection(),
     provideHttpClient(),
     provideApi({
