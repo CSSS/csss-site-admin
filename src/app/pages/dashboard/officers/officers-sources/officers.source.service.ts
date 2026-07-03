@@ -52,7 +52,7 @@ export class OfficerSourceService extends CrudSource<Officer, OfficerSourceEntry
       switchMap(res =>
         forkJoin({
           term: of(res[0]),
-          info: this.officersApi.getOfficerInfoById(newEntry.computing_id)
+          info: this.officersApi.getOfficerInfoById('')
         })
       ),
       map(({ term, info }) => {

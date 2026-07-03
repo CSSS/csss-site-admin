@@ -18,7 +18,7 @@ import {
   styleUrl: './nominees-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NomineesComponent extends TableComponent<
+export class NomineesTableComponent extends TableComponent<
   Nominee,
   NomineesSourceEntry,
   NomineeCreate,

@@ -20,7 +20,7 @@ import {
   styleUrl: './candidates-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CandidatesComponent extends TableComponent<
+export class CandidatesTableComponent extends TableComponent<
   Candidate,
   CandidatesSourceEntry,
   CandidateCreate,

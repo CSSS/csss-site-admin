@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { AuthenticationService, SiteUser } from '@api/backend-api';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { RETURN_URL_KEY } from '../login/login.component';
 
-export const USER_STORAGE_KEY = 'sfu-user';
+export const RETURN_URL_KEY = 'csss-return-url';
+const DEFAULT_RETURN_URL = '/dashboard';
 
 @Injectable({
   providedIn: 'root'
@@ -56,14 +56,38 @@ export class CsssAuthService {
 
       const returnUrl = sessionStorage.getItem(RETURN_URL_KEY);
       sessionStorage.removeItem(RETURN_URL_KEY);
-      this.router.navigateByUrl(returnUrl ?? '/dashboard');
+      this.router.navigateByUrl(this.getSafeReturnUrl(returnUrl));
     } catch {
       this.user.set(undefined);
     }
   }
 
   async logOut(): Promise<void> {
-    await firstValueFrom(this.authApi.logout());
-    this.user.set(undefined);
+    try {
+      await firstValueFrom(this.authApi.logout());
+    } catch {
+      console.error('Failed to log out.');
+    } finally {
+      this.user.set(undefined);
+    }
+  }
+
+  private getSafeReturnUrl(returnUrl: string | null): string {
+    if (!returnUrl || !returnUrl.startsWith('/') || returnUrl.startsWith('//')) {
+      return DEFAULT_RETURN_URL;
+    }
+
+    try {
+      const url = new URL(returnUrl, window.location.origin);
+      const isDashboardRoute =
+        url.pathname === DEFAULT_RETURN_URL || url.pathname.startsWith('/dashboard/');
+      if (!isDashboardRoute) {
+        return DEFAULT_RETURN_URL;
+      }
+
+      return `${url.pathname}${url.search}${url.hash}`;
+    } catch {
+      return DEFAULT_RETURN_URL;
+    }
   }
 }

@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { CsssAuthService } from '../csss-auth/csss-auth.service';
-
-export const RETURN_URL_KEY = 'csss-return-url';
+import { CsssAuthService, RETURN_URL_KEY } from '../csss-auth/csss-auth.service';
 
 @Component({
   selector: 'cs-login',
